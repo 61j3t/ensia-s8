@@ -6,18 +6,24 @@ Course revision materials for ENSIA (École Nationale Supérieure d'Intelligence
 
 ```
 .
-└── BDAV/                              # Big Data Analytics & Visualization
+├── BigDataAnalytics&Visualisation/    # Big Data Analytics & Visualization (Dr F. Dahak)
+│   └── lectures/
+│       ├── 00_SYLLABUS_MAP.md          # Cross-chapter bird's-eye view
+│       ├── 0X_chapterX_topic.md        # Detailed study notes per chapter
+│       └── 0X_chapterX_topic.pdf       # Original lecture slides
+└── SpeechProcessing/                   # Speech Processing / DSP (Dr N. Nacereddine)
     └── lectures/
-        ├── 00_SYLLABUS_MAP.md         # Cross-chapter bird's-eye view
-        ├── 0X_chapterX_topic.md       # Detailed study notes per chapter
-        └── 0X_chapterX_topic.pdf      # Original lecture slides (F. Dahak, 2024/2025)
+        ├── 00_SYLLABUS_MAP.md
+        ├── 0X_chapterX_topic.md
+        └── 0X_chapterX_topic.pdf
 ```
 
 ## Courses
 
-| Code | Title | Status |
-|---|---|---|
-| **BDAV** | Big Data Analytics & Visualization | Notes complete (Ch 1-8) |
+| Folder | Title | Instructor | Status |
+|---|---|---|---|
+| **BigDataAnalytics&Visualisation** | Big Data Analytics & Visualization | Dr F. Dahak | Notes complete (Ch 1-8) |
+| **SpeechProcessing** | Speech Processing / Digital Signal Processing | Dr N. Nacereddine | Notes complete (Ch 1-10) |
 
 ## Per-chapter notes layout
 
