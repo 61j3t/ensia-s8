@@ -11,11 +11,16 @@ Course revision materials for ENSIA (École Nationale Supérieure d'Intelligence
 │       ├── 00_SYLLABUS_MAP.md          # Cross-chapter bird's-eye view
 │       ├── 0X_chapterX_topic.md        # Detailed study notes per chapter
 │       └── 0X_chapterX_topic.pdf       # Original lecture slides
-└── SpeechProcessing/                   # Speech Processing / DSP (Dr N. Nacereddine)
+├── SpeechProcessing/                   # Speech Processing / DSP (Dr N. Nacereddine)
+│   └── lectures/
+│       ├── 00_SYLLABUS_MAP.md
+│       ├── 0X_chapterX_topic.md
+│       └── 0X_chapterX_topic.pdf
+└── ComputerVision/                     # Computer Vision (Dr S.-A. Berrani)
     └── lectures/
         ├── 00_SYLLABUS_MAP.md
-        ├── 0X_chapterX_topic.md
-        └── 0X_chapterX_topic.pdf
+        ├── 0X_partX_topic.md
+        └── 0X_partX_topic.pdf
 ```
 
 ## Courses
@@ -24,6 +29,7 @@ Course revision materials for ENSIA (École Nationale Supérieure d'Intelligence
 |---|---|---|---|
 | **BigDataAnalytics&Visualisation** | Big Data Analytics & Visualization | Dr F. Dahak | Notes complete (Ch 1-8) |
 | **SpeechProcessing** | Speech Processing / Digital Signal Processing | Dr N. Nacereddine | Notes complete (Ch 1-10) |
+| **ComputerVision** | Computer Vision | Dr S.-A. Berrani | Notes complete (Part 1-14) |
 
 ## Per-chapter notes layout
 
