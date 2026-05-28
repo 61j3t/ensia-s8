@@ -12,9 +12,9 @@
 - **Three sound types**: voiced (periodic, vocal folds vibrating), unvoiced (turbulent noise, vocal folds open), plosive (silence + burst + aspiration/voicing).
 - **Formants** (F1, F2, F3, …) are spectral peaks corresponding to resonances of the vocal tract; they are the primary perceptual cues that distinguish vowels and other phonemes.
 - **Short-time analysis** is essential because speech is non-stationary — a frame of 10–30 ms is treated as locally stationary. Key time-domain measures: **Short-Time Energy (STE)**, **Zero-Crossing Rate (ZCR)**, **Short-Time Autocorrelation (STACF)**, and **AMDF**.
-- **Pitch (F0)** is the fundamental frequency of voiced excitation; F0 = 1/T_p where T_p is the pitch period. Autocorrelation peak-picking is the standard method for F0 estimation.
-- The **complete Z-domain model** is P_L(z) = R(z) · V(z) · G(z) · S(z), a cascade of radiation, vocal tract, glottal pulse, and impulse train models.
-- **LPC** (Linear Predictive Coding) estimates the all-pole vocal tract filter coefficients a_k, providing pole (formant) locations for coding and recognition.
+- **Pitch (F0)** is the fundamental frequency of voiced excitation; $F_0 = 1/T_p$ where $T_p$ is the pitch period. Autocorrelation peak-picking is the standard method for F0 estimation.
+- The **complete Z-domain model** is $P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)$, a cascade of radiation, vocal tract, glottal pulse, and impulse train models.
+- **LPC** (Linear Predictive Coding) estimates the all-pole vocal tract filter coefficients $a_k$, providing pole (formant) locations for coding and recognition.
 - **Spectrograms** visualize how spectral content evolves over time; wideband windows reveal formant tracks, narrowband windows reveal individual harmonics.
 
 ---
@@ -25,9 +25,9 @@
 
 #### 1.1. The speech processing pipeline
 
-Analog speech x_c(t) is sampled (A/D) to produce the discrete signal x[n], processed by an algorithm, then reconstructed (D/A) to x̂_c(t).
+Analog speech $x_c(t)$ is sampled (A/D) to produce the discrete signal $x[n]$, processed by an algorithm, then reconstructed (D/A) to $\hat{x}_c(t)$.
 
-The goal of **speech signal analysis** is to extract a **representation** from x[n] that is useful for downstream applications:
+The goal of **speech signal analysis** is to extract a **representation** from $x[n]$ that is useful for downstream applications:
 
 | Representation / Feature | Application |
 |---|---|
@@ -46,8 +46,8 @@ Because speech is **quasi-stationary** on short time scales but changes rapidly 
 x[n]  -->  short-time processing  -->  feature vector f[m]
 ```
 
-- x[n] = speech samples at, e.g., 8000 samples/sec
-- f[m] = {f1[m], f2[m], …, fL[m]}, extracted at ~100 frames/sec (one frame every 10 ms)
+- $x[n]$ = speech samples at, e.g., 8000 samples/sec
+- $f[m]$ = {f1[m], f2[m], …, fL[m]}, extracted at ~100 frames/sec (one frame every 10 ms)
 - L = size of feature vector (1 for pitch, 12 for autocorrelation, etc.)
 - Frames must be **short** (properties approximately constant within) and **overlapping** (>50% overlap, to avoid losing signal content at boundaries)
 
@@ -69,7 +69,7 @@ The speech production system (illustrated as a sagittal cross-section of the hum
 | **Velum** | Switch — opens/closes nasal cavity |
 | **Lips** | Radiation of sound into the air |
 
-The signal path in the time domain: e(t) [excitation, periodic puffs or noise] → Vocal Tract v(t) [resonant cavity, modulator] → s(t) [radiated speech wave].
+The signal path in the time domain: $e(t)$ [excitation, periodic puffs or noise] → Vocal Tract $v(t)$ [resonant cavity, modulator] → $s(t)$ [radiated speech wave].
 
 Three source types visible in the waveform of a mixed utterance (e.g., "sh-o-p"):
 - **"sh"** (unvoiced fricative): noisy, aperiodic
@@ -110,14 +110,14 @@ Example phonetic transcription: "My name is Larry" → /M/ /AY/ /N/ /EY/ /M/ /IH
 
 The speech production process is an **LTI system** that convolves the excitation with the vocal tract impulse response:
 
-- **Source** e(t): either a periodic pulse train (voiced) or broadband noise (unvoiced)
-- **System (vocal tract)** v(t): resonant cavity with multiple resonance frequencies (formants)
-- **Output** s(t) = e(t) * v(t) (convolution) → in frequency domain: S(Ω) = E(Ω) · V(Ω)
+- **Source** $e(t)$: either a periodic pulse train (voiced) or broadband noise (unvoiced)
+- **System (vocal tract)** $v(t)$: resonant cavity with multiple resonance frequencies (formants)
+- **Output** $s(t) = e(t) * v(t)$ (convolution) → in frequency domain: $S(\Omega) = E(\Omega) \cdot V(\Omega)$
 
 **Spectral picture of voiced speech:**
-- |E(Ω)|: a comb of harmonics spaced at 1/T_p (the pitch period), flat amplitude envelope
-- |V(Ω)|: a smooth envelope with resonance peaks at formant frequencies F1, F2, F3, …
-- |S(Ω)| = |E(Ω)| · |V(Ω)|: harmonics modulated by the formant envelope
+- $|E(\Omega)|$: a comb of harmonics spaced at $1/T_p$ (the pitch period), flat amplitude envelope
+- $|V(\Omega)|$: a smooth envelope with resonance peaks at formant frequencies F1, F2, F3, …
+- $|S(\Omega)| = |E(\Omega)| \cdot |V(\Omega)|$: harmonics modulated by the formant envelope
 
 #### 3.2. LTI block diagram (detailed model)
 
@@ -137,37 +137,37 @@ Each block and its parameters:
 
 | Block | Z-domain | Role |
 |---|---|---|
-| Impulse train generator | P(z) | p[n] = sum_k delta[n - kN_p]; models vocal fold openings |
-| Glottal pulse model | G(z) | Shapes impulses into realistic airflow pulses; introduces spectral tilt |
-| Voiced gain | — | u_v[n] = A_V · u_G[n]; controls voiced amplitude |
-| Noise generator | U(z) | w[n] ~ N(0, sigma^2); white Gaussian noise for unvoiced |
-| Noise gain | — | u_n[n] = A_N · w[n]; controls unvoiced amplitude |
+| Impulse train generator | $P(z)$ | $p[n] = \sum_k \delta[n - kN_p]$; models vocal fold openings |
+| Glottal pulse model | $G(z)$ | Shapes impulses into realistic airflow pulses; introduces spectral tilt |
+| Voiced gain | — | $u_v[n] = A_V \cdot u_G[n]$; controls voiced amplitude |
+| Noise generator | $U(z)$ | $w[n] \sim \mathcal{N}(0, \sigma^2)$; white Gaussian noise for unvoiced |
+| Noise gain | — | $u_n[n] = A_N \cdot w[n]$; controls unvoiced amplitude |
 | V/UV switch | — | Selects voiced or unvoiced path |
-| Vocal tract model | V(z) | All-pole filter; shapes spectrum into formant peaks |
-| Radiation model | R(z) | Models lip radiation; high-pass effect |
+| Vocal tract model | $V(z)$ | All-pole filter; shapes spectrum into formant peaks |
+| Radiation model | $R(z)$ | Models lip radiation; high-pass effect |
 
 #### 3.3. Impulse train generator
 
 The excitation for **voiced sounds** is a periodic impulse train:
 
-```
-s[n] = sum_k  delta[n - kT]
-```
+$$
+s[n] = \sum_{k=-\infty}^{\infty} \delta[n - kT]
+$$
 
-where T = pitch period (in samples), and k ranges over all integers.
+where $T$ = pitch period (in samples), and $k$ ranges over all integers.
 - Generates periodic impulses
 - Models vibration of vocal folds
-- Period T determines pitch: F0 = F_s / T
+- Period $T$ determines pitch: $F_0 = F_s / T$
 
 #### 3.4. Glottal pulse model G(z)
 
 The glottal pulse model converts ideal impulses into a realistic airflow waveform:
 
-```
-U_G(z) = G(z) · S(z)
-```
+$$
+U_G(z) = G(z) \cdot S(z)
+$$
 
-- Shapes impulses into smooth, asymmetric pulses (closed phase, open phase, return phase) with period P ≈ 5–30 ms (F0 ≈ 33–200 Hz for male, higher for female)
+- Shapes impulses into smooth, asymmetric pulses (closed phase, open phase, return phase) with period $P \approx$ 5–30 ms ($F_0 \approx$ 33–200 Hz for male, higher for female)
 - **Introduces spectral tilt**: the glottal pulse spectrum falls off at approximately -12 dB/octave
 - Models airflow through the vocal folds during the open phase
 
@@ -184,31 +184,33 @@ Glottal pulse time-domain shape (observed in a period of ~20 ms at 8 kHz):
 | Unvoiced | Broadband random noise | Aperiodic, noise-like |
 
 **Noise model:**
-```
-u_n[n] ~ N(0, sigma^2)
-```
-White Gaussian noise with zero mean and variance sigma^2. The voiced/unvoiced switch selects the appropriate excitation path.
+
+$$
+u_n[n] \sim \mathcal{N}(0,\, \sigma^2)
+$$
+
+White Gaussian noise with zero mean and variance $\sigma^2$. The voiced/unvoiced switch selects the appropriate excitation path.
 
 #### 3.6. Vocal tract model V(z)
 
 The vocal tract is modeled as an **all-pole (IIR) filter**:
 
-```
-V(z) = 1 / (1 + sum_{k=1}^{p} a_k · z^{-k})
-```
+$$
+V(z) = \frac{1}{1 + \sum_{k=1}^{p} a_k \cdot z^{-k}}
+$$
 
 - All-pole (purely recursive) — captures resonances (formants) efficiently
-- The order p is typically 8–14 for telephone speech (8 kHz sampling); higher for wideband
-- The denominator coefficients a_k are the **LPC coefficients** (see §8)
+- The order $p$ is typically 8–14 for telephone speech (8 kHz sampling); higher for wideband
+- The denominator coefficients $a_k$ are the **LPC coefficients** (see §8)
 - Shape depends on the **articulators** (tongue position, jaw height, lip rounding, velum state)
 
 #### 3.7. Radiation model R(z)
 
 The radiation of sound at the lips acts as a **first-order high-pass filter**:
 
-```
-R(z) = 1 - 0.99 z^{-1}   (general form: R(z) = 1 - alpha · z^{-1},  alpha ≈ 0.99)
-```
+$$
+R(z) = 1 - 0.99\, z^{-1} \qquad \text{(general form: } R(z) = 1 - \alpha z^{-1},\; \alpha \approx 0.99\text{)}
+$$
 
 - Differentiates the acoustic volume velocity at the lips into sound pressure
 - High-pass effect: boosts high frequencies by +6 dB/octave
@@ -218,26 +220,28 @@ R(z) = 1 - 0.99 z^{-1}   (general form: R(z) = 1 - alpha · z^{-1},  alpha ≈ 0
 
 The **complete speech production model** in Z-domain is a cascade:
 
-```
-P_L(z) = R(z) · V(z) · G(z) · S(z)
-```
+$$
+P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)
+$$
 
 - Source–filter cascade
 - Linear time-invariant approximation (valid over a short analysis frame)
-- Parameters to estimate from the signal: pitch period T (or N_p), voiced/unvoiced/silence decision, gains A_V and A_N, glottal pulse shape, vocal tract polynomial coefficients a_k, radiation model parameter alpha
+- Parameters to estimate from the signal: pitch period $T$ (or $N_p$), voiced/unvoiced/silence decision, gains $A_V$ and $A_N$, glottal pulse shape, vocal tract polynomial coefficients $a_k$, radiation model parameter $\alpha$
 
-**Analysis problem** (inverse): given s[n], estimate all model parameters.
+**Analysis problem** (inverse): given $s[n]$, estimate all model parameters.
 
 #### 3.9. Formants and poles of V(z)
 
 **Formants** are the spectral peaks in the speech spectrum, corresponding to resonances of the vocal tract. In the all-pole model:
-- Formants correspond to the **poles** of V(z)
+- Formants correspond to the **poles** of $V(z)$
 - Poles close to the unit circle in the Z-plane produce sharp, prominent resonance peaks
 - Each pole is a complex number:
-```
-z_k = r_k · e^{j omega_k}
-```
-where omega_k = formant angular frequency (in rad/sample) and r_k = bandwidth control (r_k → 1 means narrower bandwidth / sharper formant).
+
+$$
+z_k = r_k \cdot e^{j\omega_k}
+$$
+
+where $\omega_k$ = formant angular frequency (in rad/sample) and $r_k$ = bandwidth control ($r_k \to 1$ means narrower bandwidth / sharper formant).
 
 **Physical interpretation:**
 - Changing the vocal tract shape (articulators) moves the poles
@@ -273,11 +277,11 @@ Rules of thumb:
 
 #### 3.10. Connection to LPC
 
-**Linear Predictive Coding (LPC)** estimates the all-pole vocal tract filter coefficients a_k by minimizing prediction error:
+**Linear Predictive Coding (LPC)** estimates the all-pole vocal tract filter coefficients $a_k$ by minimizing prediction error:
 
-```
-V(z) = 1 / (1 + a_1 z^{-1} + a_2 z^{-2} + ... + a_p z^{-p})
-```
+$$
+V(z) = \frac{1}{1 + a_1 z^{-1} + a_2 z^{-2} + \cdots + a_p z^{-p}}
+$$
 
 LPC provides:
 - Pole locations (= formant frequencies and bandwidths)
@@ -292,27 +296,29 @@ LPC provides:
 
 All short-time measures follow the general form:
 
-```
-Q_{n-hat} = ( sum_{m=-inf}^{inf}  T(x[m]) · w-tilde[n-m] ) |_{n = n-hat}
-```
+$$
+Q_{\hat{n}} = \left( \sum_{m=-\infty}^{\infty} T(x[m]) \cdot \tilde{w}[\hat{n}-m] \right)\bigg|_{n=\hat{n}}
+$$
 
 where:
-- T( · ) is a linear or non-linear transformation of the signal
-- w-tilde[n] is a window function (usually finite length)
-- Q_{n-hat} is a local weighted average of T(x[n]) at time n = n-hat
+- $T(\cdot)$ is a linear or non-linear transformation of the signal
+- $\tilde{w}[n]$ is a window function (usually finite length)
+- $Q_{\hat{n}}$ is a local weighted average of $T(x[n])$ at time $n = \hat{n}$
 
-The window w-tilde slides along the signal; the output Q_{n-hat} is sampled at a rate F_s / R (much lower than F_s, e.g., 100/sec).
+The window $\tilde{w}$ slides along the signal; the output $Q_{\hat{n}}$ is sampled at a rate $F_s / R$ (much lower than $F_s$, e.g., 100/sec).
 
 #### 4.2. Short-Time Energy (STE)
 
 **Purpose:** differentiates voiced/unvoiced speech from silence (background noise).
 
 **Definition:**
-```
-E_{n-hat} = sum_{m=-inf}^{inf} [x[m] · w-tilde[n-hat - m]]^2
-           = sum_{m=-inf}^{inf}  x^2[m] · h[n-hat - m]
-```
-where h[n] = w-tilde^2[n] (the squared window acts as a low-pass filter).
+
+$$
+E_{\hat{n}} = \sum_{m=-\infty}^{\infty} \bigl[x[m] \cdot \tilde{w}[\hat{n} - m]\bigr]^2
+           = \sum_{m=-\infty}^{\infty} x^2[m] \cdot h[\hat{n} - m]
+$$
+
+where $h[n] = \tilde{w}^2[n]$ (the squared window acts as a low-pass filter).
 
 **Block diagram:**
 ```
@@ -321,7 +327,7 @@ x[n] ---> ( )^2 ---> x^2[n] ---> h[n] (lowpass) ---> E_{n-hat}   (at rate F_s/R)
 
 **Properties:**
 - Sensitive to large amplitude samples because of the squaring operation
-- As window length L increases, STE plots become smoother (averaging more samples)
+- As window length $L$ increases, STE plots become smoother (averaging more samples)
 - Provides the basis for **voiced/unvoiced** discrimination and for detecting **silence** (at medium-to-high SNR)
 - Both rectangular window (RW) and Hamming window (HW) versions exist; HW gives smoother result with less leakage
 
@@ -329,41 +335,47 @@ x[n] ---> ( )^2 ---> x^2[n] ---> h[n] (lowpass) ---> E_{n-hat}   (at rate F_s/R)
 
 An alternative to STE that is less sensitive to large outliers:
 
-```
-M_{n-hat} = sum_{m=-inf}^{inf} |x[m]| · w-tilde[n-hat - m]
-```
+$$
+M_{\hat{n}} = \sum_{m=-\infty}^{\infty} |x[m]| \cdot \tilde{w}[\hat{n} - m]
+$$
 
 - Weighted sum of magnitudes rather than squared values
-- Dynamic range of M_{n-hat} ≈ sqrt(dynamic range of E_{n-hat})
+- Dynamic range of $M_{\hat{n}} \approx \sqrt{\text{dynamic range of } E_{\hat{n}}}$
 - Level differences between voiced and unvoiced segments are smaller than with STE
 - Avoids multiplications (uses only absolute values) — computationally lighter
-- E_n and M_n can be sampled at ~100/sec for ~20 ms windows → efficient representation
+- $E_n$ and $M_n$ can be sampled at ~100/sec for ~20 ms windows → efficient representation
 
-**Comparison E_n vs. M_n:** differences most noticeable in unvoiced regions, where STE shows spikes from large samples that STM suppresses.
+**Comparison $E_n$ vs. $M_n$:** differences most noticeable in unvoiced regions, where STE shows spikes from large samples that STM suppresses.
 
 #### 4.4. Zero-Crossing Rate (ZCR)
 
 **Definition:** a zero crossing occurs when successive samples have different algebraic signs.
 
 **Formal definition:**
-```
-Z_{n-hat} = (1 / (2 L_eff)) · sum_{m=n-hat-L+1}^{n-hat} |sgn(x[m]) - sgn(x[m-1])| · w-tilde[n-hat - m]
-```
-where:
-- sgn(x[n]) = +1 if x[n] >= 0, -1 if x[n] < 0
-- For a rectangular window: w-tilde[n] = 1 for 0 <= n <= L-1, else 0; L_eff = L
 
-**Key property for a sinusoid at frequency F0:**
-```
-z_1 = 2 F_0 / F_s    crossings/sample    (ZCR proportional to frequency)
-z_M = M · (2 F_0 / F_s)   crossings per M samples
-```
+$$
+Z_{\hat{n}} = \frac{1}{2L_{\text{eff}}} \sum_{m=\hat{n}-L+1}^{\hat{n}} \bigl|\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])\bigr| \cdot \tilde{w}[\hat{n} - m]
+$$
+
+where:
+- $\operatorname{sgn}(x[n]) = +1$ if $x[n] \geq 0$, $-1$ if $x[n] < 0$
+- For a rectangular window: $\tilde{w}[n] = 1$ for $0 \leq n \leq L-1$, else $0$; $L_{\text{eff}} = L$
+
+**Key property for a sinusoid at frequency $F_0$:**
+
+$$
+z_1 = \frac{2F_0}{F_s} \quad \text{crossings/sample} \qquad \text{(ZCR proportional to frequency)}
+$$
+
+$$
+z_M = M \cdot \frac{2F_0}{F_s} \quad \text{crossings per } M \text{ samples}
+$$
 
 **Block diagram:**
 ```
 x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] ---> Z_{n-hat}
 ```
-(Same structural form as E_{n-hat} and M_{n-hat}.)
+(Same structural form as $E_{\hat{n}}$ and $M_{\hat{n}}$.)
 
 **Practical properties:**
 - High ZCR → high-frequency content → unvoiced
@@ -378,60 +390,62 @@ x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] --->
 
 #### 4.5. Short-Time Autocorrelation (STACF)
 
-**Definition:** the autocorrelation of a windowed segment at lag k:
+**Definition:** the autocorrelation of a windowed segment at lag $k$:
 
-```
-r_k = sum_{i=0}^{N-k-1}  s_i · s_{i+k}
-```
+$$
+r_k = \sum_{i=0}^{N-k-1} s_i \cdot s_{i+k}
+$$
 
-- r_0 = energy (the zero-lag value equals the signal energy in the window)
-- r_k is symmetric: r_{-k} = r_k
+- $r_0$ = energy (the zero-lag value equals the signal energy in the window)
+- $r_k$ is symmetric: $r_{-k} = r_k$
 
 **Properties:**
-- **Emphasises periodicity**: for a periodic signal with period T_0, r_k has peaks at k = T_0, 2T_0, 3T_0, …
+- **Emphasises periodicity**: for a periodic signal with period $T_0$, $r_k$ has peaks at $k = T_0, 2T_0, 3T_0, \ldots$
 - ACF is the basis for many spectrum analysis methods
-- STACF is the basis for most **pitch detectors** (fundamental frequency estimators): find the first peak of r_k beyond k = 0; the lag at the peak = pitch period T_0, so F_0 = F_s / T_0
+- STACF is the basis for most **pitch detectors** (fundamental frequency estimators): find the first peak of $r_k$ beyond $k = 0$; the lag at the peak = pitch period $T_0$, so $F_0 = F_s / T_0$
 - ACF is computationally expensive (inner loop for every data sample)
 - STACF is often combined with ZCR to build a voiced/unvoiced detector
 
-**Illustration of ACF for a voiced segment (L=401, f_s=8 kHz, f_0=148 Hz):**
-- T_p ≈ 54 samples
+**Illustration of ACF for a voiced segment ($L=401$, $f_s=8$ kHz, $f_0=148$ Hz):**
+- $T_p \approx 54$ samples
 - Waveform shows clear periodicity
 - ACF shows a prominent peak at lag ≈ 54 samples
-- Spectrum (Fourier of ACF) shows F_0 at 148 Hz and harmonics
+- Spectrum (Fourier of ACF) shows $F_0$ at 148 Hz and harmonics
 
 #### 4.6. Average Magnitude Difference Function (AMDF)
 
 **Definition:**
-```
-gamma_{n-hat}[k] = sum_{m=-inf}^{inf} |x[n-hat + m] · w-tilde_1[m]  -  x[n-hat + m - k] · w-tilde_2[m - k]|
-```
-where w-tilde_1[m] and w-tilde_2[m] are rectangular windows. If both windows have the same length, AMDF is structurally similar to STACF.
+
+$$
+\gamma_{\hat{n}}[k] = \sum_{m=-\infty}^{\infty} \bigl|x[\hat{n}+m]\cdot\tilde{w}_1[m] - x[\hat{n}+m-k]\cdot\tilde{w}_2[m-k]\bigr|
+$$
+
+where $\tilde{w}_1[m]$ and $\tilde{w}_2[m]$ are rectangular windows. If both windows have the same length, AMDF is structurally similar to STACF.
 
 **Properties:**
-- Used for F0 estimation instead of autocorrelation
-- Minimum of AMDF at lag k = T_0 (the pitch period)
+- Used for $F_0$ estimation instead of autocorrelation
+- Minimum of AMDF at lag $k = T_0$ (the pitch period)
 - Operations are subtractions and absolute values → much simpler than multiplications
 - Faster computation than autocorrelation
 
 **AMDF plots:**
-- Voiced (V): clearly periodic minima at multiples of T_0
+- Voiced (V): clearly periodic minima at multiples of $T_0$
 - Unvoiced (U): no clear minima, essentially flat and noisy
 
 ---
 
 ### 5. Frequency-domain analysis — Spectrograms by phoneme class
 
-The **spectrogram** is the standard time-frequency analysis tool for speech: it displays |STFT(omega, m)|^2 as a 2D image (time on x-axis, frequency on y-axis, intensity as color/darkness).
+The **spectrogram** is the standard time-frequency analysis tool for speech: it displays $|\text{STFT}(\omega, m)|^2$ as a 2D image (time on x-axis, frequency on y-axis, intensity as color/darkness).
 
-- **Wideband spectrogram** (short window ≈ 5 ms, T = 50 samples at 10 kHz): good time resolution, smeared frequency resolution → shows formant tracks as broad horizontal bands, visible pitch pulses
-- **Narrowband spectrogram** (long window ≈ 25 ms, T = 250 samples at 10 kHz): good frequency resolution → resolves individual harmonics (vertical striations), loses time resolution
+- **Wideband spectrogram** (short window ≈ 5 ms, $T = 50$ samples at 10 kHz): good time resolution, smeared frequency resolution → shows formant tracks as broad horizontal bands, visible pitch pulses
+- **Narrowband spectrogram** (long window ≈ 25 ms, $T = 250$ samples at 10 kHz): good frequency resolution → resolves individual harmonics (vertical striations), loses time resolution
 
 #### 5.1. Voiced vowels
 
-- Source e(t): quasi-periodic, period P (pitch period P ≈ 5–30 ms)
-- Fundamental: F_0 = 1/P
-- Spectrum S(Ω): harmonics at multiples of F_0, shaped by formant envelope
+- Source $e(t)$: quasi-periodic, period $P$ (pitch period $P \approx$ 5–30 ms)
+- Fundamental: $F_0 = 1/P$
+- Spectrum $S(\Omega)$: harmonics at multiples of $F_0$, shaped by formant envelope
 - Each vowel has a distinct formant configuration:
   - /i/ (eve): F1 low (~270 Hz), F2 high (~2290 Hz), F3 high (~3010 Hz); waveform shows low-frequency damped oscillation
   - /a/ (father): F1 high (~730 Hz), F2 moderate (~1090 Hz); waveform shows richer, more complex oscillation
@@ -512,11 +526,11 @@ Structure of a plosive event (both voiced and unvoiced):
 
 #### Example 1: Pitch period from autocorrelation
 
-Given speech sampled at F_s = 8000 Hz. The short-time autocorrelation of a voiced frame shows its first non-trivial peak at lag k = 54 samples.
+Given speech sampled at $F_s = 8000$ Hz. The short-time autocorrelation of a voiced frame shows its first non-trivial peak at lag $k = 54$ samples.
 
-- Pitch period in samples: T_p = 54
-- Pitch period in seconds: T_p = 54 / 8000 = 6.75 ms
-- Fundamental frequency: F_0 = F_s / T_p = 8000 / 54 ≈ 148 Hz
+- Pitch period in samples: $T_p = 54$
+- Pitch period in seconds: $T_p = 54 / 8000 = 6.75$ ms
+- Fundamental frequency: $F_0 = F_s / T_p = 8000 / 54 \approx 148$ Hz
 
 This is within the normal male speaker range (80–200 Hz).
 
@@ -526,37 +540,37 @@ A frame of speech has ZCR = 60 crossings per 15 ms window and STE very low. This
 
 #### Example 3: Source–filter model computation
 
-Given a voiced speech frame at F_s = 10 kHz, pitch period T = 50 samples, and a 10th-order vocal tract with poles at:
-- z_1 = 0.9 e^{j 2π × 800/10000} → F1 ≈ 800 Hz
-- z_2 = 0.85 e^{j 2π × 1800/10000} → F2 ≈ 1800 Hz
-- z_3 = 0.80 e^{j 2π × 2600/10000} → F3 ≈ 2600 Hz
+Given a voiced speech frame at $F_s = 10$ kHz, pitch period $T = 50$ samples, and a 10th-order vocal tract with poles at:
+- $z_1 = 0.9\, e^{j 2\pi \times 800/10000}$ → F1 ≈ 800 Hz
+- $z_2 = 0.85\, e^{j 2\pi \times 1800/10000}$ → F2 ≈ 1800 Hz
+- $z_3 = 0.80\, e^{j 2\pi \times 2600/10000}$ → F3 ≈ 2600 Hz
 - remaining poles at higher frequencies
 
-The complete spectrum |P_L(e^{jω})| shows harmonic lines spaced at F_0 = 200 Hz, shaped by the three dominant formant peaks.
+The complete spectrum $|P_L(e^{j\omega})|$ shows harmonic lines spaced at $F_0 = 200$ Hz, shaped by the three dominant formant peaks.
 
 #### Example 4: Wideband vs. narrowband spectrogram trade-off
 
-For speech at F_s = 10 kHz with pitch period in the range [5.5, 8] ms:
-- Wideband window T = 50/10000 = 5 ms: resolves formant tracks but does NOT resolve individual harmonics (each pitch period is too short to fit in the window)
-- Narrowband window T = 250/10000 = 25 ms: resolves individual harmonics (vertical striations) but smears formant transitions in time
+For speech at $F_s = 10$ kHz with pitch period in the range [5.5, 8] ms:
+- Wideband window $T = 50/10000 = 5$ ms: resolves formant tracks but does NOT resolve individual harmonics (each pitch period is too short to fit in the window)
+- Narrowband window $T = 250/10000 = 25$ ms: resolves individual harmonics (vertical striations) but smears formant transitions in time
 
 ---
 
 ### 7. Signal analysis system overview
 
-From the signal x[n], short-time analysis extracts an alternate representation Q_{n-hat}, which is then used for **parameter estimation** of the model:
+From the signal $x[n]$, short-time analysis extracts an alternate representation $Q_{\hat{n}}$, which is then used for **parameter estimation** of the model:
 
 ```
 x[n]  --[Short-Time Analysis]-->  Q_{n-hat}  --[Parameter Estimation]-->  Model parameters
 ```
 
 Model parameters include:
-- Pitch period N_p (or F_0)
+- Pitch period $N_p$ (or $F_0$)
 - Voiced / Unvoiced / Silence decision
-- Gain A_V or A_N
-- Vocal tract polynomial coefficients {a_1, a_2, …, a_p}
+- Gain $A_V$ or $A_N$
+- Vocal tract polynomial coefficients $\{a_1, a_2, \ldots, a_p\}$
 - Glottal pulse shape parameters
-- Radiation model parameter alpha
+- Radiation model parameter $\alpha$
 
 Applications downstream of parameter estimation: pitch shifting, time stretching, voice conversion (vocoder), speech coding, recognition.
 
@@ -571,20 +585,20 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 | **Unvoiced sound** | Sound produced with vocal folds open; turbulent noise excitation |
 | **Plosive (stop)** | Sound produced by complete oral closure followed by abrupt release; structured as silence–burst–aspiration–voicing |
 | **Formant** | Resonance of the vocal tract; appears as a spectral peak; labelled F1, F2, F3 in ascending frequency order |
-| **Fundamental frequency (F0)** | Lowest harmonic frequency of voiced speech; equals 1/pitch_period; perceived as "pitch" |
-| **Pitch period (T_p)** | Duration of one glottal cycle; T_p = 1/F_0 |
+| **Fundamental frequency (F0)** | Lowest harmonic frequency of voiced speech; equals $1/T_p$; perceived as "pitch" |
+| **Pitch period ($T_p$)** | Duration of one glottal cycle; $T_p = 1/F_0$ |
 | **Glottal pulse model G(z)** | Filter that shapes impulse train into realistic airflow waveform; introduces -12 dB/octave spectral tilt |
-| **Vocal tract model V(z)** | All-pole filter 1/(1 + sum a_k z^{-k}); resonances correspond to formants |
-| **Radiation model R(z)** | First-order high-pass filter R(z) = 1 - 0.99 z^{-1}; models lip radiation (+6 dB/octave boost) |
-| **LPC (Linear Predictive Coding)** | Method to estimate all-pole vocal tract coefficients a_k; used in speech coding and recognition |
+| **Vocal tract model V(z)** | All-pole filter $1/(1 + \sum a_k z^{-k})$; resonances correspond to formants |
+| **Radiation model R(z)** | First-order high-pass filter $R(z) = 1 - 0.99\,z^{-1}$; models lip radiation (+6 dB/octave boost) |
+| **LPC (Linear Predictive Coding)** | Method to estimate all-pole vocal tract coefficients $a_k$; used in speech coding and recognition |
 | **Phoneme** | Minimal unit of sound that distinguishes meaning; English has ~48 (ARPAbet) |
 | **ARPAbet** | Machine-readable phonetic alphabet for American English (48 symbols) |
-| **Short-Time Energy (STE)** | E_{n-hat} = sum x^2[m] h[n-hat-m]; measures local signal power; used for voicing detection |
-| **Short-Time Magnitude (STM)** | M_{n-hat} = sum |x[m]| w-tilde[n-hat-m]; less sensitive to outliers than STE |
+| **Short-Time Energy (STE)** | $E_{\hat{n}} = \sum x^2[m]\, h[\hat{n}-m]$; measures local signal power; used for voicing detection |
+| **Short-Time Magnitude (STM)** | $M_{\hat{n}} = \sum |x[m]|\, \tilde{w}[\hat{n}-m]$; less sensitive to outliers than STE |
 | **Zero-Crossing Rate (ZCR)** | Rate at which the speech waveform crosses zero; high for unvoiced, low for voiced |
-| **Autocorrelation (STACF)** | r_k = sum s_i · s_{i+k}; emphasises periodicity; peak at lag k = T_p used for pitch detection |
+| **Autocorrelation (STACF)** | $r_k = \sum s_i \cdot s_{i+k}$; emphasises periodicity; peak at lag $k = T_p$ used for pitch detection |
 | **AMDF** | Average Magnitude Difference Function; minimum at lag = pitch period; computationally lighter than ACF |
-| **Spectrogram** | Time-frequency representation |STFT(ω, m)|²; wideband shows formant tracks, narrowband shows harmonics |
+| **Spectrogram** | Time-frequency representation $|\text{STFT}(\omega, m)|^2$; wideband shows formant tracks, narrowband shows harmonics |
 | **VOT (Voice Onset Time)** | Time between plosive burst and onset of voicing; longer for unvoiced plosives |
 | **Voice bar** | Low-frequency voicing visible in spectrogram during voiced plosive closure |
 | **Diphthong** | Vowel with moving articulation; formants sweep continuously during production |
@@ -594,30 +608,30 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 
 ## Exam targets
 
-1. **Draw and label the complete source–filter block diagram** — impulse train generator, glottal pulse model G(z), voiced/unvoiced switch with gains A_V and A_N, random noise generator, vocal tract V(z), radiation model R(z). Label all Z-domain transfer functions.
+1. **Draw and label the complete source–filter block diagram** — impulse train generator, glottal pulse model $G(z)$, voiced/unvoiced switch with gains $A_V$ and $A_N$, random noise generator, vocal tract $V(z)$, radiation model $R(z)$. Label all Z-domain transfer functions.
 
 2. **Write the four component Z-domain equations** and the overall equation:
-   - Impulse train: s[n] = sum_k delta[n - kT]
-   - Glottal: U_G(z) = G(z) · S(z)
-   - Vocal tract: V(z) = 1 / (1 + sum_{k=1}^{p} a_k z^{-k})
-   - Radiation: R(z) = 1 - 0.99 z^{-1}
-   - Overall: P_L(z) = R(z) · V(z) · G(z) · S(z)
+   - Impulse train: $s[n] = \sum_k \delta[n - kT]$
+   - Glottal: $U_G(z) = G(z) \cdot S(z)$
+   - Vocal tract: $V(z) = 1 / (1 + \sum_{k=1}^{p} a_k z^{-k})$
+   - Radiation: $R(z) = 1 - 0.99\,z^{-1}$
+   - Overall: $P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)$
 
-3. **Explain formants as poles** of V(z): z_k = r_k e^{j omega_k}; what do r_k and omega_k control; why poles near the unit circle give sharp peaks.
+3. **Explain formants as poles** of $V(z)$: $z_k = r_k\, e^{j\omega_k}$; what do $r_k$ and $\omega_k$ control; why poles near the unit circle give sharp peaks.
 
-4. **Derive the Short-Time Energy formula** from the generic short-time processing equation. Explain why it is sensitive to large amplitudes and what the window h[n] = w-tilde^2[n] does.
+4. **Derive the Short-Time Energy formula** from the generic short-time processing equation. Explain why it is sensitive to large amplitudes and what the window $h[n] = \tilde{w}^2[n]$ does.
 
-5. **Write the ZCR formula** and derive that for a sinusoid at frequency F_0 sampled at F_s: ZCR = 2F_0/F_s crossings/sample. State what ZCR tells you about voiced vs. unvoiced speech.
+5. **Write the ZCR formula** and derive that for a sinusoid at frequency $F_0$ sampled at $F_s$: $\text{ZCR} = 2F_0/F_s$ crossings/sample. State what ZCR tells you about voiced vs. unvoiced speech.
 
-6. **Define the autocorrelation** r_k = sum s_i · s_{i+k}. State: (a) r_0 = energy; (b) why periodicity causes peaks at multiples of T_p; (c) how to estimate F_0 from the ACF peak location.
+6. **Define the autocorrelation** $r_k = \sum s_i \cdot s_{i+k}$. State: (a) $r_0$ = energy; (b) why periodicity causes peaks at multiples of $T_p$; (c) how to estimate $F_0$ from the ACF peak location.
 
-7. **Define the AMDF** gamma_{n-hat}[k]. Compare to ACF: same structural purpose (pitch detection), but uses absolute values and subtraction instead of multiplication → computationally lighter; minimum at k = T_p.
+7. **Define the AMDF** $\gamma_{\hat{n}}[k]$. Compare to ACF: same structural purpose (pitch detection), but uses absolute values and subtraction instead of multiplication → computationally lighter; minimum at $k = T_p$.
 
 8. **Identify phoneme classes from spectrograms**: given a spectrogram region, determine voiced/unvoiced, identify fricatives (broadband noise), plosives (silence gap + burst), nasals (low energy + spectral holes), diphthongs (moving formants), semivowels (slow formant transitions).
 
 9. **State the formant–articulation relationships**: F1 depends on jaw height; F2 depends on tongue front–back position; F3 very low → /R/.
 
-10. **Explain the role of LPC** in estimating the all-pole model: what the a_k coefficients represent physically, and how they are used in speech coding and recognition.
+10. **Explain the role of LPC** in estimating the all-pole model: what the $a_k$ coefficients represent physically, and how they are used in speech coding and recognition.
 
 11. **Explain the wideband vs. narrowband spectrogram trade-off**: short window → good time resolution, formant tracks; long window → good frequency resolution, individual harmonics visible.
 
@@ -625,11 +639,11 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 
 ## Pitfalls
 
-- **The radiation model R(z) = 1 - 0.99 z^{-1} is a high-pass (differentiator), not a low-pass.** It boosts high frequencies. Confusing its effect with the glottal model (which rolls off) is a common error.
+- **The radiation model $R(z) = 1 - 0.99\,z^{-1}$ is a high-pass (differentiator), not a low-pass.** It boosts high frequencies. Confusing its effect with the glottal model (which rolls off) is a common error.
 
-- **F0 is the fundamental frequency of the excitation, not of the vocal tract.** Formants F1, F2, F3 are resonances of the vocal tract. Do not confuse f_0 (pitch) with F1 (first formant).
+- **F0 is the fundamental frequency of the excitation, not of the vocal tract.** Formants F1, F2, F3 are resonances of the vocal tract. Do not confuse $f_0$ (pitch) with F1 (first formant).
 
-- **r_0 in the autocorrelation equals the signal ENERGY, not 1.** Normalised ACF has r_0 = 1; unnormalised does not. The first peak beyond lag 0 gives the pitch period.
+- **$r_0$ in the autocorrelation equals the signal ENERGY, not 1.** Normalised ACF has $r_0 = 1$; unnormalised does not. The first peak beyond lag 0 gives the pitch period.
 
 - **Short-Time Energy is sensitive to outlier samples** because of squaring; Short-Time Magnitude is less sensitive. Both are useful; STM has smaller dynamic range between voiced and unvoiced.
 
@@ -641,7 +655,7 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 
 - **Nasal consonants have spectral holes (anti-resonances)**, not just resonances. The coupling of the nasal cavity introduces zeros in the transfer function. A purely all-pole model cannot capture this exactly.
 
-- **The all-pole model V(z) is exact only for non-nasal voiced sounds.** Nasals and fricatives require a more general pole-zero (ARMA) model, though all-pole LPC is used in practice as an approximation.
+- **The all-pole model $V(z)$ is exact only for non-nasal voiced sounds.** Nasals and fricatives require a more general pole-zero (ARMA) model, though all-pole LPC is used in practice as an approximation.
 
 - **Formant values vary across speakers** because vocal tract length differs physiologically. Published tables are population averages.
 

@@ -6,7 +6,7 @@
 - Good features must be **invariant** to viewpoint, lighting, object deformation, and partial occlusion, and must be **unique** and **easy to extract**.
 - **Edges** are the primary feature type: pixels where intensity changes abruptly, caused by depth discontinuities, surface orientation changes, reflectance changes, or color changes.
 - Three edge profile models exist — **step**, **ramp**, and **roof** — and noise deforms all three away from their ideal shapes, making smoothing mandatory before differentiation.
-- **Gradient-based detection** finds edges as local maxima of the gradient magnitude; the 2D gradient gives both strength (S = ||∇I||) and direction (θ = arctan(∂I/∂y ÷ ∂I/∂x)).
+- **Gradient-based detection** finds edges as local maxima of the gradient magnitude; the 2D gradient gives both strength ($S = \|\nabla I\|$) and direction ($\theta = \arctan(\partial I/\partial y \div \partial I/\partial x)$).
 - **Laplacian-based detection** uses the second derivative; edges appear as **zero-crossings** where the Laplacian changes sign; it provides location only, not orientation.
 - Noise completely corrupts raw derivatives; the standard fix is to smooth first with a Gaussian, or equivalently convolve with the **Derivative of Gaussian** (DoG) or **Laplacian of Gaussian** (LoG) — a single precomputed kernel.
 - The lecture covers seven topics: edges, gradient detection, Laplacian detection, Canny detector, line/curve detection, Hough transform, and Harris corner detector (topics 4–7 are referenced in the roadmap on slide 7 but the detailed slides in this PDF end at topic III / noise treatment — the remainder form a natural sequel).
@@ -73,8 +73,8 @@ An edge detector produces three quantities per detected edge point:
 3. **Edge orientation** — the angle at which the edge is aligned (orthogonal to the gradient direction)
 
 **Distinction between direction and orientation:**
-- **Direction** refers to the way intensity changes from one side to the other (i.e., the gradient vector direction α).
-- **Orientation** is the angle of the edge itself, which is perpendicular: α − 90°.
+- **Direction** refers to the way intensity changes from one side to the other (i.e., the gradient vector direction $\alpha$).
+- **Orientation** is the angle of the edge itself, which is perpendicular: $\alpha - 90°$.
 
 **Performance requirements for a good edge detector:**
 1. High detection rate (find all real edges, no missed edges)
@@ -99,46 +99,39 @@ Noise deforms all three away from their ideal shapes — the same CT scan cross-
 
 #### 3.1 1-D intuition
 
-In 1-D, an edge = rapid change in intensity f(x). The **first derivative** df/dx peaks at the edge location:
-- Local **extrema** of df/dx indicate edges.
-- Local **maxima** of |df/dx| indicate edges with both location and strength.
+In 1-D, an edge = rapid change in intensity f(x). The **first derivative** $df/dx$ peaks at the edge location:
+- Local **extrema** of $df/dx$ indicate edges.
+- Local **maxima** of $|df/dx|$ indicate edges with both location and strength.
 
 #### 3.2 2-D gradient operator
 
-For a 2-D image I(x, y), the **gradient** is:
+For a 2-D image $I(x, y)$, the **gradient** is:
 
-```
-∇I = [∂I/∂x,  ∂I/∂y]
-```
+$$\nabla I = \left[\frac{\partial I}{\partial x},\ \frac{\partial I}{\partial y}\right]$$
 
-- A vertical edge (transition along x): ∇I = [∂I/∂x, 0]
-- A horizontal edge (transition along y): ∇I = [0, ∂I/∂y]
-- A diagonal edge: ∇I = [∂I/∂x, ∂I/∂y]
+- A vertical edge (transition along x): $\nabla I = [\partial I/\partial x,\ 0]$
+- A horizontal edge (transition along y): $\nabla I = [0,\ \partial I/\partial y]$
+- A diagonal edge: $\nabla I = [\partial I/\partial x,\ \partial I/\partial y]$
 
 **Gradient magnitude (edge strength):**
 
-```
-S = ||∇I|| = sqrt( (∂I/∂x)^2 + (∂I/∂y)^2 )
-```
+$$S = \|\nabla I\| = \sqrt{\left(\frac{\partial I}{\partial x}\right)^2 + \left(\frac{\partial I}{\partial y}\right)^2}$$
 
 **Gradient direction:**
 
-```
-θ = arctan( (∂I/∂y) / (∂I/∂x) )
-```
+$$\theta = \arctan\!\left(\frac{\partial I/\partial y}{\partial I/\partial x}\right)$$
 
 The gradient vector points in the direction of steepest intensity increase; the edge orientation is perpendicular to this.
 
 #### 3.3 Discrete approximation (convolution kernels)
 
-For a discrete image with pixel spacing ε, partial derivatives are approximated by finite differences over a 2×2 neighbourhood:
+For a discrete image with pixel spacing $\varepsilon$, partial derivatives are approximated by finite differences over a 2×2 neighbourhood:
 
-```
-∂I/∂x ≈ (1/2ε) * [(I_{i+1,j+1} − I_{i,j+1}) + (I_{i+1,j} − I_{i,j})]
-∂I/∂y ≈ (1/2ε) * [(I_{i+1,j+1} − I_{i+1,j}) + (I_{i,j+1} − I_{i,j})]
-```
+$$\frac{\partial I}{\partial x} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i,j+1}) + (I_{i+1,j} - I_{i,j})\right]$$
 
-Implemented as convolution with 2×2 kernels (up to 1/2ε scaling):
+$$\frac{\partial I}{\partial y} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i+1,j}) + (I_{i,j+1} - I_{i,j})\right]$$
+
+Implemented as convolution with 2×2 kernels (up to $1/2\varepsilon$ scaling):
 
 ```
 ∂I/∂x kernel:  [-1  1]      ∂I/∂y kernel:  [1   1]
@@ -168,16 +161,16 @@ Key trade-off: larger kernels average over more pixels → less noise but worse 
 
 #### 3.5 Thresholding
 
-After computing ||∇I(x,y)||, a decision must be made about which pixels are edges.
+After computing $\|\nabla I(x,y)\|$, a decision must be made about which pixels are edges.
 
 **Single threshold T:**
-- ||∇I(x,y)|| < T → definitely NOT an edge
-- ||∇I(x,y)|| ≥ T → definitely an edge
+- $\|\nabla I(x,y)\| < T$ → definitely NOT an edge
+- $\|\nabla I(x,y)\| \geq T$ → definitely an edge
 
-**Hysteresis (two thresholds T₀ < T₁):**
-- ||∇I(x,y)|| < T₀ → definitely NOT an edge
-- ||∇I(x,y)|| ≥ T₁ → definitely an edge
-- T₀ ≤ ||∇I(x,y)|| < T₁ → edge **only if a neighbouring pixel is definitely an edge**
+**Hysteresis (two thresholds $T_0 < T_1$):**
+- $\|\nabla I(x,y)\| < T_0$ → definitely NOT an edge
+- $\|\nabla I(x,y)\| \geq T_1$ → definitely an edge
+- $T_0 \leq \|\nabla I(x,y)\| < T_1$ → edge **only if a neighbouring pixel is definitely an edge**
 
 **Threshold pitfalls:**
 - Too high → real edges missed
@@ -191,28 +184,25 @@ Hysteresis avoids both extremes by allowing weak responses to "connect" to confi
 
 #### 4.1 Second derivative intuition
 
-The **second derivative** d²f/dx² has **zero-crossings** (sign changes from positive to negative or vice versa) exactly at edge locations — where the first derivative has its extrema. This gives a mathematically precise edge locator.
+The **second derivative** $d^2f/dx^2$ has **zero-crossings** (sign changes from positive to negative or vice versa) exactly at edge locations — where the first derivative has its extrema. This gives a mathematically precise edge locator.
 
 #### 4.2 The 2D Laplacian
 
 The **Laplacian** is the sum of the pure second partial derivatives:
 
-```
-∇²I = ∂²I/∂x² + ∂²I/∂y²
-```
+$$\nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}$$
 
 It measures how much a pixel's intensity differs from its neighbours in **all directions** simultaneously.
 
-**Edge detection rule:** Edges are **zero-crossings** in the Laplacian image — points where the sign of ∇²I changes.
+**Edge detection rule:** Edges are **zero-crossings** in the Laplacian image — points where the sign of $\nabla^2 I$ changes.
 
 **Important limitation:** The Laplacian does **not** provide the direction/orientation of edges. It gives location only.
 
 #### 4.3 Discrete Laplacian
 
-```
-∂²I/∂x² ≈ (1/ε²)(I_{i−1,j} − 2I_{i,j} + I_{i+1,j})
-∂²I/∂y² ≈ (1/ε²)(I_{i,j−1} − 2I_{i,j} + I_{i,j+1})
-```
+$$\frac{\partial^2 I}{\partial x^2} \approx \frac{1}{\varepsilon^2}(I_{i-1,j} - 2I_{i,j} + I_{i+1,j})$$
+
+$$\frac{\partial^2 I}{\partial y^2} \approx \frac{1}{\varepsilon^2}(I_{i,j-1} - 2I_{i,j} + I_{i,j+1})$$
 
 Three common discrete Laplacian convolution kernels:
 
@@ -248,39 +238,31 @@ Raw gradient computation on a noisy image completely obscures the true edge. The
 
 **Method 1 — Smooth then differentiate (two separate operations):**
 
-Convolve the image with a Gaussian n_σ, then take the gradient:
+Convolve the image with a Gaussian $n_\sigma$, then take the gradient:
 
-```
-∇(n_σ * f)
-```
+$$\nabla(n_\sigma * f)$$
 
 This works but requires two passes.
 
 **Method 2 — Derivative of Gaussian (single operation):**
 
-Since both ∇ and Gaussian convolution are linear:
+Since both $\nabla$ and Gaussian convolution are linear:
 
-```
-∇(n_σ * f) = (∇n_σ) * f
-```
+$$\nabla(n_\sigma * f) = (\nabla n_\sigma) * f$$
 
-Therefore, pre-compute ∇n_σ once and convolve directly with f. This single kernel performs smoothing and differentiation simultaneously. The result for a step-edge signal: the noisy f(x) produces a clean, localised peak in (∇n_σ) * f at the true edge location.
+Therefore, pre-compute $\nabla n_\sigma$ once and convolve directly with f. This single kernel performs smoothing and differentiation simultaneously. The result for a step-edge signal: the noisy f(x) produces a clean, localised peak in $(\nabla n_\sigma) * f$ at the true edge location.
 
 **Method 3 — Laplacian of Gaussian (LoG):**
 
 Analogously:
 
-```
-∇²(n_σ * f) = (∇²n_σ) * f
-```
+$$\nabla^2(n_\sigma * f) = (\nabla^2 n_\sigma) * f$$
 
 The **Laplacian of Gaussian** kernel is:
 
-```
-∇²G(x,y) = [(x² + y² + 2σ²) / σ⁴] * exp(−(x²+y²)/(2σ²))
-```
+$$\nabla^2 G(x,y) = \frac{x^2 + y^2 - 2\sigma^2}{\sigma^4} \cdot \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
 
-Its 1-D cross-section has a distinctive **inverted Mexican hat (sombrero)** shape with two zero-crossings at ±√2 σ from the centre. In 2D it looks like an inverted sombrero.
+Its 1-D cross-section has a distinctive **inverted Mexican hat (sombrero)** shape with two zero-crossings at $\pm\sqrt{2}\,\sigma$ from the centre. In 2D it looks like an inverted sombrero.
 
 A practical 5×5 discrete approximation of LoG:
 
@@ -294,7 +276,7 @@ A practical 5×5 discrete approximation of LoG:
 
 #### 5.3 Gradient vs. Laplacian comparison
 
-| Property | Gradient (∇) | Laplacian (∇²) |
+| Property | Gradient ($\nabla$) | Laplacian ($\nabla^2$) |
 |---|---|---|
 | **Output** | Location + magnitude + orientation | Location only |
 | **Detection criterion** | Threshold on maxima | Zero-crossings |
@@ -314,18 +296,18 @@ A practical 5×5 discrete approximation of LoG:
 - **Step edge** — Abrupt intensity jump; modelled as a Heaviside function.
 - **Ramp edge** — Gradual transition; slope inversely proportional to blurring degree.
 - **Roof edge** — Peaked profile; represents narrow ridges or thin structures.
-- **Gradient** (∇I) — Vector [∂I/∂x, ∂I/∂y]; points in direction of steepest ascent.
-- **Gradient magnitude** — S = ||∇I|| = sqrt((∂I/∂x)² + (∂I/∂y)²); measures edge strength.
-- **Edge direction** — The way intensity changes across the edge (gradient direction, angle α).
-- **Edge orientation** — The alignment angle of the edge itself (perpendicular to gradient, α − 90°).
+- **Gradient** ($\nabla I$) — Vector $[\partial I/\partial x,\ \partial I/\partial y]$; points in direction of steepest ascent.
+- **Gradient magnitude** — $S = \|\nabla I\| = \sqrt{(\partial I/\partial x)^2 + (\partial I/\partial y)^2}$; measures edge strength.
+- **Edge direction** — The way intensity changes across the edge (gradient direction, angle $\alpha$).
+- **Edge orientation** — The alignment angle of the edge itself (perpendicular to gradient, $\alpha - 90°$).
 - **Roberts / Prewitt / Sobel operators** — Discrete convolution kernels approximating image gradients.
 - **Thresholding** — Deciding which pixels are edges based on gradient magnitude.
 - **Hysteresis thresholding** — Two-threshold scheme: weak responses confirmed as edges only if adjacent to a strong edge.
-- **Laplacian** (∇²I) — Sum of second partial derivatives; measures deviation from local neighbourhood mean in all directions.
+- **Laplacian** ($\nabla^2 I$) — Sum of second partial derivatives $\partial^2 I/\partial x^2 + \partial^2 I/\partial y^2$; measures deviation from local neighbourhood mean in all directions.
 - **Zero-crossing** — A point where the Laplacian changes sign; indicates an edge.
-- **Derivative of Gaussian (DoG)** — Kernel ∇n_σ; combines smoothing and first-derivative in one convolution.
-- **Laplacian of Gaussian (LoG)** — Kernel ∇²G; combines Gaussian smoothing and Laplacian in one convolution; "Mexican hat" shape.
-- **σ (sigma)** — Standard deviation of the Gaussian; controls the scale at which features are detected.
+- **Derivative of Gaussian (DoG)** — Kernel $\nabla n_\sigma$; combines smoothing and first-derivative in one convolution.
+- **Laplacian of Gaussian (LoG)** — Kernel $\nabla^2 G$; combines Gaussian smoothing and Laplacian in one convolution; "Mexican hat" shape.
+- **$\sigma$ (sigma)** — Standard deviation of the Gaussian; controls the scale at which features are detected.
 
 ---
 
@@ -337,24 +319,24 @@ A practical 5×5 discrete approximation of LoG:
 
 3. **Describe the three edge profile models** (step, ramp, roof) — what intensity profile each has, what real-world situation it models, and why noise causes deviations.
 
-4. **State what an edge detector outputs** (position, magnitude, orientation). Distinguish direction from orientation (orientation = direction − 90°).
+4. **State what an edge detector outputs** (position, magnitude, orientation). Distinguish direction from orientation (orientation = direction $- 90°$).
 
 5. **Write and interpret the 2D gradient formulas:**
-   - ∇I = [∂I/∂x, ∂I/∂y]
-   - S = sqrt((∂I/∂x)² + (∂I/∂y)²)
-   - θ = arctan(∂I/∂y / ∂I/∂x)
+   - $\nabla I = [\partial I/\partial x,\ \partial I/\partial y]$
+   - $S = \sqrt{(\partial I/\partial x)^2 + (\partial I/\partial y)^2}$
+   - $\theta = \arctan(\partial I/\partial y\ /\ \partial I/\partial x)$
 
-6. **Write the discrete convolution kernels** for the Sobel 3×3 operator (both ∂/∂x and ∂/∂y versions). Explain the trade-off between kernel size, localization, and noise sensitivity.
+6. **Write the discrete convolution kernels** for the Sobel 3×3 operator (both $\partial/\partial x$ and $\partial/\partial y$ versions). Explain the trade-off between kernel size, localization, and noise sensitivity.
 
 7. **Explain single vs. hysteresis thresholding** — write the decision rule for each, and explain the failure modes of setting T too high or too low.
 
-8. **Define the Laplacian** ∇²I = ∂²I/∂x² + ∂²I/∂y². Explain why edges appear as zero-crossings. State the key limitation (no orientation).
+8. **Define the Laplacian** $\nabla^2 I = \partial^2 I/\partial x^2 + \partial^2 I/\partial y^2$. Explain why edges appear as zero-crossings. State the key limitation (no orientation).
 
 9. **Explain the noise problem** for derivative-based detectors (noise = rapid changes = same signature as edges). State the solution (smooth first).
 
-10. **Derive the Derivative of Gaussian trick**: ∇(n_σ * f) = (∇n_σ) * f — why this works (linearity of both operations) and why it is efficient (one precomputed kernel).
+10. **Derive the Derivative of Gaussian trick**: $\nabla(n_\sigma * f) = (\nabla n_\sigma) * f$ — why this works (linearity of both operations) and why it is efficient (one precomputed kernel).
 
-11. **State the LoG formula** and describe its shape (inverted sombrero / Mexican hat). Give the zero-crossing positions (±√2 σ from centre in 1-D).
+11. **State the LoG formula** and describe its shape (inverted sombrero / Mexican hat). Give the zero-crossing positions ($\pm\sqrt{2}\,\sigma$ from centre in 1-D).
 
 12. **Compare gradient vs. Laplacian** in a table: output information, detection criterion, linearity, number of convolutions required.
 
@@ -362,7 +344,7 @@ A practical 5×5 discrete approximation of LoG:
 
 ## Pitfalls
 
-- **Direction ≠ orientation.** Direction is the gradient vector direction (how intensity changes); orientation is the edge alignment angle, which is perpendicular (α − 90°). Mixing them up loses marks.
+- **Direction $\neq$ orientation.** Direction is the gradient vector direction (how intensity changes); orientation is the edge alignment angle, which is perpendicular ($\alpha - 90°$). Mixing them up loses marks.
 - **The Laplacian does not give edge orientation.** Only gradient-based methods provide orientation. A common error is claiming Laplacian gives full edge information.
 - **Zero-crossing detection requires checking the absolute difference**, not just the sign change — otherwise noise-induced micro sign-flips produce false edges.
 - **Single threshold is not the same as hysteresis.** In hysteresis, the middle-band pixel is ONLY an edge if it has a confirmed strong-edge neighbour. It is not automatically accepted.

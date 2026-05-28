@@ -40,26 +40,26 @@
 
 A 1-D sinusoid:
 
-    f(x) = A sin(2 pi u x + phi)
+$$f(x) = A \sin(2\pi u x + \phi)$$
 
 where:
 - x: spatial position
 - A: amplitude (peak value)
 - T: period (width of one complete cycle)
 - u: frequency = 1/T (cycles per unit length, in Hz for time signals)
-- phi: phase (shift in position, in radians)
+- $\phi$: phase (shift in position, in radians)
 
 A sinusoid is fully defined by: (1) amplitude, (2) frequency, (3) phase.
 
 **Euler's formula (the bridge):**
 
-    e^(i theta) = cos(theta) + i sin(theta)
+$$e^{i\theta} = \cos(\theta) + i\sin(\theta)$$
 
 This is verified by Taylor expansion: the even terms give cos, odd terms give sin. This allows complex exponentials to encode both cos and sin simultaneously, which is why the Fourier transform produces complex numbers.
 
 **Consequence:** A real cosine decomposes into two complex exponentials:
 
-    cos(2 pi k x) = (1/2)(e^(i2pikx) + e^(-i2pikx))
+$$\cos(2\pi k x) = \frac{1}{2}\left(e^{i2\pi kx} + e^{-i2\pi kx}\right)$$
 
 So a single cosine of frequency k contributes spectral energy at both +k and -k. This is why DFT spectra are symmetric.
 
@@ -69,20 +69,21 @@ So a single cosine of frequency k contributes spectral energy at both +k and -k.
 
 **Forward transform (continuous):**
 
-    F(u) = integral from -inf to +inf of f(x) e^(-i2pi u x) dx
+$$F(u) = \int_{-\infty}^{+\infty} f(x)\, e^{-i2\pi u x}\, dx$$
 
 **Inverse transform (continuous):**
 
-    f(x) = integral from -inf to +inf of F(u) e^(+i2pi u x) du
+$$f(x) = \int_{-\infty}^{+\infty} F(u)\, e^{+i2\pi u x}\, du$$
 
 **Key properties of F(u):**
-- F(u) is complex-valued: F(u) = Re{F(u)} + i Im{F(u)}
+- F(u) is complex-valued: $F(u) = \text{Re}\{F(u)\} + i\,\text{Im}\{F(u)\}$
 - Each F(u) encodes the amplitude and phase of the sinusoid of frequency u.
 
 **Extracting amplitude and phase:**
 
-    Amplitude:  A(u) = sqrt( Re{F(u)}^2 + Im{F(u)}^2 )
-    Phase:      phi(u) = atan2( Im{F(u)}, Re{F(u)} )
+$$A(u) = \sqrt{\text{Re}\{F(u)\}^2 + \text{Im}\{F(u)\}^2}$$
+
+$$\phi(u) = \text{atan2}\!\left(\text{Im}\{F(u)\},\, \text{Re}\{F(u)\}\right)$$
 
 Note: atan2 (not atan) is used because it preserves the correct quadrant. atan(y/x) gives the same result for (1,1) and (-1,-1), but atan2(1,1) = 45 deg and atan2(-1,-1) = 225 deg, which is the correct distinction.
 
@@ -90,9 +91,9 @@ Note: atan2 (not atan) is used because it preserves the correct quadrant. atan(y
 
 | Signal f(x) | Fourier Transform F(u) |
 |---|---|
-| cos(2 pi k x) | (1/2)[delta(u+k) + delta(u-k)] — two spikes at +/-k in Re part |
-| sin(2 pi k x) | (1/2i)[delta(u+k) - delta(u-k)] — two spikes in Im part, opposite signs |
-| Gaussian e^(-ax^2) | Gaussian (sqrt(pi/a)) e^(-pi^2 u^2 / a) — Gaussian maps to Gaussian |
+| $\cos(2\pi k x)$ | $(1/2)[\delta(u+k) + \delta(u-k)]$ — two spikes at +/-k in Re part |
+| $\sin(2\pi k x)$ | $(1/2i)[\delta(u+k) - \delta(u-k)]$ — two spikes in Im part, opposite signs |
+| Gaussian $e^{-ax^2}$ | Gaussian $\sqrt{\pi/a}\, e^{-\pi^2 u^2 / a}$ — Gaussian maps to Gaussian |
 | Sum of two cosines at k1, k2 | Four spikes at +/-k1, +/-k2 |
 
 The Gaussian self-similarity under FT is a crucial property: it means Gaussian filtering in space corresponds to Gaussian attenuation in the frequency domain, with no ringing.
@@ -103,36 +104,34 @@ The Gaussian self-similarity under FT is a crucial property: it means Gaussian f
 
 **1-D convolution definition:**
 
-    g(x) = f(x) * h(x) = integral from -inf to +inf of f(tau) h(x - tau) d tau
+$$g(x) = f(x) * h(x) = \int_{-\infty}^{+\infty} f(\tau)\, h(x - \tau)\, d\tau$$
 
 **Convolution theorem (derivation sketch):**
 Computing the FT of g(x) and expanding:
 
-    G(u) = integral g(x) e^(-i2pux) dx
-         = integral integral f(tau) h(x-tau) e^(-i2pux) d tau dx
-         = [integral f(tau) e^(-i2pu tau) d tau] x [integral h(x-tau) e^(-i2pu(x-tau)) dx]
-         = F(u) x H(u)
+$$G(u) = \int g(x)\, e^{-i2\pi ux}\, dx$$
+
+$$= \int\!\int f(\tau)\, h(x-\tau)\, e^{-i2\pi ux}\, d\tau\, dx$$
+
+$$= \left[\int f(\tau)\, e^{-i2\pi u\tau}\, d\tau\right] \times \left[\int h(x-\tau)\, e^{-i2\pi u(x-\tau)}\, dx\right]$$
+
+$$= F(u) \times H(u)$$
 
 **Result — the duality table:**
 
 | Spatial Domain | Frequency Domain |
 |---|---|
-| g(x) = f(x) * h(x)   (convolution) | G(u) = F(u) x H(u)   (multiplication) |
-| g(x) = f(x) x h(x)   (multiplication) | G(u) = F(u) * H(u)   (convolution) |
+| $g(x) = f(x) * h(x)$ (convolution) | $G(u) = F(u) \times H(u)$ (multiplication) |
+| $g(x) = f(x) \times h(x)$ (multiplication) | $G(u) = F(u) * H(u)$ (convolution) |
 
 **Practical workflow using the theorem:**
 
-    g(x) = f(x) * h(x)
-    
-           IFT
-    G(u) = F(u) x H(u)
-    
-    Steps: FT[f] -> F(u), FT[h] -> H(u), multiply pointwise -> G(u), IFT -> g(x)
+Steps: $\mathcal{F}[f] \to F(u)$, $\mathcal{F}[h] \to H(u)$, multiply pointwise $\to G(u)$, $\mathcal{F}^{-1} \to g(x)$
 
 This is more efficient than direct spatial convolution for large kernels.
 
 **Example: Gaussian smoothing via convolution theorem**
-A noisy signal f(x) has a broad frequency spectrum |F(u)| with significant high-frequency content. A Gaussian kernel h_sigma(x) has a narrow Gaussian spectrum |N_sigma(u)| centered at 0. Multiplying F(u) x N_sigma(u) suppresses the high-frequency noise components and leaves low-frequency structure. Taking the IFT gives the smoothed signal.
+A noisy signal f(x) has a broad frequency spectrum |F(u)| with significant high-frequency content. A Gaussian kernel $h_\sigma(x)$ has a narrow Gaussian spectrum $|N_\sigma(u)|$ centered at 0. Multiplying $F(u) \times N_\sigma(u)$ suppresses the high-frequency noise components and leaves low-frequency structure. Taking the IFT gives the smoothed signal.
 
 ---
 
@@ -140,11 +139,11 @@ A noisy signal f(x) has a broad frequency spectrum |F(u)| with significant high-
 
 **Continuous 2-D forward transform:**
 
-    F(u,v) = integral integral from -inf to +inf of f(x,y) e^(-i2pi(ux + vy)) dx dy
+$$F(u,v) = \int_{-\infty}^{+\infty}\!\int_{-\infty}^{+\infty} f(x,y)\, e^{-i2\pi(ux + vy)}\, dx\, dy$$
 
 **Continuous 2-D inverse transform:**
 
-    f(x,y) = integral integral from -inf to +inf of F(u,v) e^(+i2pi(ux + vy)) du dv
+$$f(x,y) = \int_{-\infty}^{+\infty}\!\int_{-\infty}^{+\infty} F(u,v)\, e^{+i2\pi(ux + vy)}\, du\, dv$$
 
 where u is the frequency along x and v is the frequency along y.
 
@@ -156,15 +155,15 @@ For an image f[m,n] of size M x N (m = 0...M-1 rows, n = 0...N-1 columns):
 
 **Forward DFT:**
 
-    F[p,q] = sum_{m=0}^{M-1} sum_{n=0}^{N-1} f[m,n] e^(-i2pi pm/M) e^(-i2pi qn/N)
+$$F[p,q] = \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} f[m,n]\, e^{-i2\pi pm/M}\, e^{-i2\pi qn/N}$$
 
-    for p = 0...M-1  and  q = 0...N-1
+for $p = 0\ldots M-1$ and $q = 0\ldots N-1$
 
 **Inverse DFT:**
 
-    f[m,n] = (1/MN) sum_{p=0}^{M-1} sum_{q=0}^{N-1} F[p,q] e^(+i2pi pm/M) e^(+i2pi qn/N)
+$$f[m,n] = \frac{1}{MN} \sum_{p=0}^{M-1} \sum_{q=0}^{N-1} F[p,q]\, e^{+i2\pi pm/M}\, e^{+i2\pi qn/N}$$
 
-    for m = 0...M-1  and  n = 0...N-1
+for $m = 0\ldots M-1$ and $n = 0\ldots N-1$
 
 **Why divide by MN in the inverse?**
 The DFT sums contributions from all MN pixels, so coefficients are MN times larger than the original values. The IDFT divides by MN to correctly reconstruct the original image.
@@ -173,9 +172,9 @@ The DFT sums contributions from all MN pixels, so coefficients are MN times larg
 
 | Convention | Forward | Inverse |
 |---|---|---|
-| 1 (MATLAB/NumPy default) | F = DFT(f) | f = (1/MN) IDFT(F) |
-| 2 | F = (1/MN) DFT(f) | f = IDFT(F) |
-| 3 (symmetric) | F = (1/sqrt(MN)) DFT(f) | f = (1/sqrt(MN)) IDFT(F) |
+| 1 (MATLAB/NumPy default) | F = DFT(f) | $f = \frac{1}{MN}$ IDFT(F) |
+| 2 | $F = \frac{1}{MN}$ DFT(f) | f = IDFT(F) |
+| 3 (symmetric) | $F = \frac{1}{\sqrt{MN}}$ DFT(f) | $f = \frac{1}{\sqrt{MN}}$ IDFT(F) |
 
 They only differ in where the normalization factor is placed; the pair always stays consistent.
 
@@ -185,12 +184,12 @@ They only differ in where the normalization factor is placed; the pair always st
 
 **What F[p,q] means:**
 - p = frequency along m (rows), q = frequency along n (columns).
-- The magnitude spectrum is typically displayed as log(|F[p,q]|) to compress the large dynamic range.
+- The magnitude spectrum is typically displayed as $\log(|F[p,q]|)$ to compress the large dynamic range.
 - The spectrum is visualized with the DC component at the center (after fftshift).
 
 **The DC coefficient:**
 
-    F[0,0] = sum_{m=0}^{M-1} sum_{n=0}^{N-1} f[m,n]
+$$F[0,0] = \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} f[m,n]$$
 
 This is MN times the mean brightness of the image. It represents the average intensity (zero-frequency component).
 
@@ -206,8 +205,8 @@ This is MN times the mean brightness of the image. It represents the average int
 Key rule: **orientation in image is perpendicular to orientation of energy in spectrum.**
 
 **Example spectra:**
-- A vertical sinusoidal grating f(x,y) = cos(2pi u0 x) gives exactly three bright points on the horizontal axis: the DC at (0,0), plus symmetric peaks at (+u0, 0) and (-u0, 0).
-- A higher-frequency grating gives the same pattern but with the ±u0 peaks farther from center.
+- A vertical sinusoidal grating $f(x,y) = \cos(2\pi u_0 x)$ gives exactly three bright points on the horizontal axis: the DC at (0,0), plus symmetric peaks at $(+u_0, 0)$ and $(-u_0, 0)$.
+- A higher-frequency grating gives the same pattern but with the $\pm u_0$ peaks farther from center.
 - A Rubik's cube (strong horizontal and vertical edges) gives an X-shaped spectrum with bright lines along both axes.
 - A baboon face image (complex texture, no dominant direction) gives a roughly isotropic spectrum concentrated near the center.
 - A pure noise image gives a nearly uniform flat spectrum — energy spread across all frequencies equally.
@@ -220,7 +219,7 @@ Key rule: **orientation in image is perpendicular to orientation of energy in sp
 
 1. Compute F[p,q] = DFT of input image f[m,n].
 2. Design filter transfer function H[p,q] in the frequency domain.
-3. Multiply: G[p,q] = F[p,q] x H[p,q]  (pointwise).
+3. Multiply: $G[p,q] = F[p,q] \times H[p,q]$ (pointwise).
 4. Compute g[m,n] = IDFT of G[p,q].
 5. Take the real part of g (small imaginary parts arise from numerical errors).
 
@@ -230,9 +229,9 @@ Key rule: **orientation in image is perpendicular to orientation of energy in sp
 
 The distance from the center of the spectrum to a point (u,v) is:
 
-    D(u,v) = sqrt(u^2 + v^2)
+$$D(u,v) = \sqrt{u^2 + v^2}$$
 
-All filter transfer functions H(u,v) depend on D(u,v) and a cutoff frequency D0.
+All filter transfer functions H(u,v) depend on D(u,v) and a cutoff frequency $D_0$.
 
 ---
 
@@ -240,40 +239,39 @@ All filter transfer functions H(u,v) depend on D(u,v) and a cutoff frequency D0.
 
 #### 9.1 Ideal Low-Pass Filter (ILPF)
 
-    H(u,v) = 1   if D(u,v) <= D0
-    H(u,v) = 0   if D(u,v) > D0
+$$H(u,v) = \begin{cases} 1 & \text{if } D(u,v) \leq D_0 \\ 0 & \text{if } D(u,v) > D_0 \end{cases}$$
 
-Shape: a flat disk of radius D0 centered at the origin in the frequency domain. Everything inside the disk passes; everything outside is blocked.
+Shape: a flat disk of radius $D_0$ centered at the origin in the frequency domain. Everything inside the disk passes; everything outside is blocked.
 
-**D0 is the cut-off frequency.** The point where H transitions from 1 to 0.
+**$D_0$ is the cut-off frequency.** The point where H transitions from 1 to 0.
 
 **Visual appearance of ILPF in spectrum:** a solid white circle (all values 1) on a black background (all values 0).
 
 **Effect on image:**
-- Larger D0 (e.g. 60): mild blurring, fine detail removed, image still recognisable.
-- Smaller D0 (e.g. 30): strong blurring, significant loss of detail, severe ringing artifacts visible as concentric ripples around edges.
+- Larger $D_0$ (e.g. 60): mild blurring, fine detail removed, image still recognisable.
+- Smaller $D_0$ (e.g. 30): strong blurring, significant loss of detail, severe ringing artifacts visible as concentric ripples around edges.
 
 **Ringing artifact (Gibbs phenomenon):** The abrupt brick-wall cutoff in the frequency domain corresponds to a sinc function in the spatial domain. The sinc's oscillatory tails cause ringing (bright and dark fringes) around sharp edges in the filtered image. This is the ILPF's major problem.
 
 #### 9.2 Butterworth Low-Pass Filter (BLPF)
 
-    H(u,v) = 1 / (1 + [D(u,v)/D0]^(2n))
+$$H(u,v) = \frac{1}{1 + \left[\dfrac{D(u,v)}{D_0}\right]^{2n}}$$
 
 where:
 - n is the **order** of the filter (controls steepness of the roll-off).
-- D0 is the cutoff frequency (at D(u,v) = D0, H = 0.5 regardless of n).
+- $D_0$ is the cutoff frequency (at $D(u,v) = D_0$, $H = 0.5$ regardless of n).
 
-**Profile shape:** At n=1 the roll-off is very gradual (slow transition). As n increases, the profile becomes steeper, approaching the ideal brick-wall at n → infinity. The filter in the frequency domain looks like a soft glowing blob (bright center fading toward edges), not a hard disk.
+**Profile shape:** At n=1 the roll-off is very gradual (slow transition). As n increases, the profile becomes steeper, approaching the ideal brick-wall at $n \to \infty$. The filter in the frequency domain looks like a soft glowing blob (bright center fading toward edges), not a hard disk.
 
 **Why BLPF is better than ILPF:** The gradual transition eliminates ringing artifacts because the corresponding spatial kernel decays smoothly without oscillatory tails.
 
 **Example results:**
-- n=2, D0=60: smooth blurring, no ringing, readable text still visible.
-- n=2, D0=30: stronger blurring, no ringing, detail lost but no ripples.
+- n=2, $D_0$=60: smooth blurring, no ringing, readable text still visible.
+- n=2, $D_0$=30: stronger blurring, no ringing, detail lost but no ripples.
 
 #### 9.3 Gaussian Low-Pass Filter (GLPF)
 
-    H(u,v) = e^(-D(u,v)^2 / (2 * D0^2))
+$$H(u,v) = e^{-D(u,v)^2 / (2D_0^2)}$$
 
 The filter profile is a 2-D Gaussian centered at the origin. It decays smoothly to zero with no abrupt cutoff.
 
@@ -281,7 +279,7 @@ The filter profile is a 2-D Gaussian centered at the origin. It decays smoothly 
 
 **Visual appearance in spectrum:** A smooth circular bright blob centered at origin.
 
-**Effect on image:** Progressive blurring as sigma increases, with perfectly smooth results and no artifacts.
+**Effect on image:** Progressive blurring as $\sigma$ increases, with perfectly smooth results and no artifacts.
 
 **Comparison: ILPF vs BLPF vs GLPF at same cutoff**
 - ILPF: sharpest effective cutoff, worst ringing.
@@ -296,40 +294,39 @@ High-pass = complement of low-pass: passes high frequencies, blocks low frequenc
 
 #### 10.1 Ideal High-Pass Filter (IHPF)
 
-    H(u,v) = 0   if D(u,v) <= D0
-    H(u,v) = 1   if D(u,v) > D0
+$$H(u,v) = \begin{cases} 0 & \text{if } D(u,v) \leq D_0 \\ 1 & \text{if } D(u,v) > D_0 \end{cases}$$
 
 The exact complement of the ILPF: a black disk on a white background in the frequency domain.
 
 **Effect on image:**
-- D0=60: edges and outlines visible, dark background, moderate ringing.
-- D0=30: stronger edge enhancement, more ringing, overall dark image (DC removed).
+- $D_0$=60: edges and outlines visible, dark background, moderate ringing.
+- $D_0$=30: stronger edge enhancement, more ringing, overall dark image (DC removed).
 
 Ringing is again the major problem, for the same reason as in ILPF.
 
 #### 10.2 Butterworth High-Pass Filter (BHPF)
 
-    H(u,v) = 1 / (1 + [D0/D(u,v)]^(2n))
+$$H(u,v) = \frac{1}{1 + \left[\dfrac{D_0}{D(u,v)}\right]^{2n}}$$
 
-Note the ratio is inverted compared to the BLPF: D0/D(u,v) instead of D(u,v)/D0. At D(u,v) = D0, H = 0.5. For D(u,v) >> D0, H -> 1 (high frequencies pass). For D(u,v) << D0, H -> 0 (low frequencies blocked).
+Note the ratio is inverted compared to the BLPF: $D_0/D(u,v)$ instead of $D(u,v)/D_0$. At $D(u,v) = D_0$, $H = 0.5$. For $D(u,v) \gg D_0$, $H \to 1$ (high frequencies pass). For $D(u,v) \ll D_0$, $H \to 0$ (low frequencies blocked).
 
-**Effect:** Smooth edge enhancement, no ringing artifacts, degree of sharpening controlled by n and D0.
+**Effect:** Smooth edge enhancement, no ringing artifacts, degree of sharpening controlled by n and $D_0$.
 
 **Example results:**
-- D0=60: fine edge lines preserved, background dark, no ringing.
-- D0=30: broader range of edges visible, more detail in the result.
+- $D_0$=60: fine edge lines preserved, background dark, no ringing.
+- $D_0$=30: broader range of edges visible, more detail in the result.
 
 #### 10.3 Gaussian High-Pass Filter (GHPF)
 
-    H(u,v) = 1 - e^(-D(u,v)^2 / (2 * D0^2))
+$$H(u,v) = 1 - e^{-D(u,v)^2 / (2D_0^2)}$$
 
-Complement of the GLPF: H_HPF = 1 - H_LPF. At D=0, H=0 (DC blocked). As D increases, H approaches 1. No ringing.
+Complement of the GLPF: $H_\text{HPF} = 1 - H_\text{LPF}$. At $D=0$, $H=0$ (DC blocked). As D increases, $H$ approaches 1. No ringing.
 
 ---
 
 ### 11. The Role of Phase vs Amplitude
 
-**Filtering so far has only modified the magnitude |F(u,v)|.** The phase carries separate and critical information.
+**Filtering so far has only modified the magnitude $|F(u,v)|$.** The phase carries separate and critical information.
 
 **Interpretation:**
 - **Amplitude** of each sinusoid determines intensity values in the image.
@@ -352,15 +349,15 @@ Complement of the GLPF: H_HPF = 1 - H_LPF. At D=0, H=0 (DC blocked). As D increa
 ### 12. Worked Example: Gaussian Filtering Pipeline
 
 **Spatial domain:**
-Image f(m,n) convolved with Gaussian kernel h_sigma(m,n) gives smoothed output g(m,n).
+Image $f(m,n)$ convolved with Gaussian kernel $h_\sigma(m,n)$ gives smoothed output $g(m,n)$.
 
 **Frequency domain equivalent:**
-1. DFT: F(p,q) = DFT[f(m,n)].
-2. DFT of Gaussian: N_sigma(p,q) = Gaussian spectrum (also Gaussian in frequency).
-3. Multiply: G(p,q) = F(p,q) x N_sigma(p,q).
-4. IDFT: g(m,n) = IDFT[G(p,q)].
+1. DFT: $F(p,q) = \mathcal{F}[f(m,n)]$.
+2. DFT of Gaussian: $N_\sigma(p,q)$ = Gaussian spectrum (also Gaussian in frequency).
+3. Multiply: $G(p,q) = F(p,q) \times N_\sigma(p,q)$.
+4. IDFT: $g(m,n) = \mathcal{F}^{-1}[G(p,q)]$.
 
-**Key observation:** The Gaussian kernel has a very narrow FT profile when sigma is small. Multiplying by this profile suppresses all high-frequency components, leaving only the low-frequency bulk of F(p,q). Larger sigma in spatial domain = broader Gaussian kernel = narrower FT profile = more aggressive high-frequency suppression = stronger blurring.
+**Key observation:** The Gaussian kernel has a very narrow FT profile when $\sigma$ is small. Multiplying by this profile suppresses all high-frequency components, leaving only the low-frequency bulk of $F(p,q)$. Larger $\sigma$ in spatial domain = broader Gaussian kernel = narrower FT profile = more aggressive high-frequency suppression = stronger blurring.
 
 ---
 
@@ -372,12 +369,12 @@ Image f(m,n) convolved with Gaussian kernel h_sigma(m,n) gives smoothed output g
 | **Fourier Transform (FT)** | Operation mapping a spatial signal f(x) to its frequency representation F(u); each F(u) encodes amplitude and phase of the frequency-u sinusoid. |
 | **Inverse Fourier Transform (IFT)** | Operation recovering f(x) from F(u). |
 | **DFT** | Discrete Fourier Transform — the sampled, finite version of FT used on digital images. |
-| **FFT** | Fast Fourier Transform — efficient O(MN log MN) algorithm to compute the DFT. Discovered early 1960s. |
-| **Amplitude spectrum** | |F(u,v)| — the magnitude of the complex DFT coefficients; typically displayed after log compression. |
-| **Phase spectrum** | angle(F(u,v)) — the phase angle of each DFT coefficient; encodes spatial positions of structures. |
+| **FFT** | Fast Fourier Transform — efficient $O(MN \log MN)$ algorithm to compute the DFT. Discovered early 1960s. |
+| **Amplitude spectrum** | $|F(u,v)|$ — the magnitude of the complex DFT coefficients; typically displayed after log compression. |
+| **Phase spectrum** | $\angle F(u,v)$ — the phase angle of each DFT coefficient; encodes spatial positions of structures. |
 | **DC coefficient** | F[0,0] = sum of all pixel values; represents the mean brightness scaled by MN. |
 | **Frequency (spatial)** | Rate at which intensity varies across the image. Low = smooth; High = edges/noise. |
-| **Cut-off frequency D0** | The frequency at which a filter transitions between passing and blocking; determines the spatial scale of the filtering effect. |
+| **Cut-off frequency $D_0$** | The frequency at which a filter transitions between passing and blocking; determines the spatial scale of the filtering effect. |
 | **Transfer function H(u,v)** | The frequency-domain representation of a filter; applied by pointwise multiplication with F(u,v). |
 | **Low-pass filter (LPF)** | Passes low frequencies, blocks high frequencies; produces smoothing/blurring. |
 | **High-pass filter (HPF)** | Passes high frequencies, blocks low frequencies; produces edge enhancement, reduces contrast. |
@@ -385,9 +382,9 @@ Image f(m,n) convolved with Gaussian kernel h_sigma(m,n) gives smoothed output g
 | **BLPF / BHPF** | Butterworth Low/High-Pass Filter — smooth roll-off parameterized by order n; no ringing. |
 | **GLPF / GHPF** | Gaussian Low/High-Pass Filter — Gaussian profile; no ringing, maps to spatial Gaussian kernel. |
 | **Ringing artifact** | Oscillatory fringes appearing around sharp edges after ILPF/IHPF filtering; caused by the sinc-shaped spatial kernel of the ideal filter. |
-| **Convolution theorem** | f * h in space ↔ F x H in frequency; multiplication in frequency domain is equivalent to convolution in spatial domain. |
-| **D(u,v)** | Euclidean distance from spectral origin: D(u,v) = sqrt(u^2 + v^2); all filter transfer functions depend on this. |
-| **Butterworth order n** | Controls roll-off steepness; n=1 is very gradual; n→∞ approaches ideal brick-wall. |
+| **Convolution theorem** | $f * h$ in space $\leftrightarrow$ $F \times H$ in frequency; multiplication in frequency domain is equivalent to convolution in spatial domain. |
+| **D(u,v)** | Euclidean distance from spectral origin: $D(u,v) = \sqrt{u^2 + v^2}$; all filter transfer functions depend on this. |
+| **Butterworth order n** | Controls roll-off steepness; n=1 is very gradual; $n\to\infty$ approaches ideal brick-wall. |
 
 ---
 
@@ -395,7 +392,7 @@ Image f(m,n) convolved with Gaussian kernel h_sigma(m,n) gives smoothed output g
 
 1. **Write the 2-D DFT forward and inverse formulas** and identify every symbol (f[m,n], F[p,q], M, N, p, q, the exponentials). State why the IDFT divides by MN.
 
-2. **State and prove (or sketch the proof of) the Convolution Theorem.** Show the derivation G(u) = F(u) H(u) starting from the definition of g(x) = f(x)*h(x) and taking its FT.
+2. **State and prove (or sketch the proof of) the Convolution Theorem.** Show the derivation $G(u) = F(u) H(u)$ starting from the definition of $g(x) = f(x)*h(x)$ and taking its FT.
 
 3. **Draw and describe the 5-step frequency-domain filtering pipeline**: DFT -> design H(u,v) -> pointwise multiply -> IDFT -> take real part.
 
@@ -407,7 +404,7 @@ Image f(m,n) convolved with Gaussian kernel h_sigma(m,n) gives smoothed output g
 
 7. **Explain what DC coefficient F[0,0] represents** and compute it symbolically.
 
-8. **Compare ILPF/BLPF/GLPF** at same cutoff D0: trade-off between sharpness of attenuation and ringing.
+8. **Compare ILPF/BLPF/GLPF** at same cutoff $D_0$: trade-off between sharpness of attenuation and ringing.
 
 9. **Explain amplitude vs phase**: which carries intensity information, which carries structural/positional information, and what happens to an image when each is discarded (with reference to the Curtis-Lim-Oppenheim experiment).
 

@@ -8,7 +8,7 @@
 
 - **Motion analysis** operates at three levels: **optical flow** (pixel displacements between two frames), **point tracking** (following feature points across many frames), and **object tracking** (predicting the state of an object across an entire video).
 - The **brightness-constancy assumption** — pixel intensity does not change as the pixel moves — is the fundamental constraint from which all classical optical-flow methods derive.
-- The **optical-flow constraint equation** `I_x u + I_y v + I_t = 0` gives one equation for two unknowns `(u, v)` at each pixel; this **underdetermination** is the **aperture problem**.
+- The **optical-flow constraint equation** $I_x u + I_y v + I_t = 0$ gives one equation for two unknowns $(u, v)$ at each pixel; this **underdetermination** is the **aperture problem**.
 - **Lucas-Kanade** resolves the aperture problem locally (assumes constant velocity in a small patch, solves an overdetermined least-squares system); **Horn-Schunck** resolves it globally (adds a spatial smoothness regularizer, solved iteratively); **pyramidal** extensions handle large displacements.
 - **Object tracking** requires two models: an **appearance model** (what the object looks like) and a **motion model** (where it is likely to be); trackers are classified as generative vs. discriminative, and online vs. offline.
 - Classical appearance models include SSD/NCC template matching, color histograms with MeanShift, and PCA-based subspace (IVT); discriminative models treat tracking as detection (online Boosting, MOSSE, KCF).
@@ -39,39 +39,39 @@ Motion in a video can be studied at increasing levels of abstraction:
 
 The key assumption is that the brightness of a moving pixel is preserved across frames:
 
-```
+$$
 I(x, y, t) = I(x + u, y + v, t + 1)
-```
+$$
 
-where `(u, v)` is the displacement (flow vector) at pixel `(x, y)` between frame `t` and `t+1`. This assumes:
+where $(u, v)$ is the displacement (flow vector) at pixel $(x, y)$ between frame $t$ and $t+1$. This assumes:
 1. **Constant brightness** — no illumination changes, no specular reflections.
-2. **Small displacements** — the Taylor expansion used in the derivation is first-order accurate only for small `(u, v)`.
+2. **Small displacements** — the Taylor expansion used in the derivation is first-order accurate only for small $(u, v)$.
 
 #### 2.2 Deriving the optical-flow constraint equation (OFCE)
 
-Expand `I(x+u, y+v, t+1)` by first-order Taylor series around `(x, y, t)`:
+Expand $I(x+u, y+v, t+1)$ by first-order Taylor series around $(x, y, t)$:
 
-```
-I(x+u, y+v, t+1) ≈ I(x,y,t) + I_x·u + I_y·v + I_t
-```
+$$
+I(x+u, y+v, t+1) \approx I(x,y,t) + I_x \cdot u + I_y \cdot v + I_t
+$$
 
-Substituting into the brightness-constancy equation and cancelling `I(x,y,t)`:
+Substituting into the brightness-constancy equation and cancelling $I(x,y,t)$:
 
-```
-I_x·u + I_y·v + I_t = 0          [OFCE]
-```
+$$
+I_x \cdot u + I_y \cdot v + I_t = 0 \qquad \text{[OFCE]}
+$$
 
 where:
-- `I_x = ∂I/∂x` — spatial gradient in x (computed with finite differences, e.g. Sobel)
-- `I_y = ∂I/∂y` — spatial gradient in y
-- `I_t = I(x,y,t+1) - I(x,y,t)` — temporal gradient (frame difference)
-- `(u, v)` — the two unknowns (horizontal and vertical flow components)
+- $I_x = \partial I / \partial x$ — spatial gradient in x (computed with finite differences, e.g. Sobel)
+- $I_y = \partial I / \partial y$ — spatial gradient in y
+- $I_t = I(x,y,t+1) - I(x,y,t)$ — temporal gradient (frame difference)
+- $(u, v)$ — the two unknowns (horizontal and vertical flow components)
 
 **The OFCE is one equation in two unknowns** — it is therefore underdetermined at a single pixel.
 
 #### 2.3 The aperture problem
 
-The aperture problem is the fundamental ambiguity in optical flow. When a local patch contains only an edge (a 1D signal), only the component of motion **perpendicular to the edge** can be measured. The component parallel to the edge is invisible. Geometrically, the OFCE constrains `(u, v)` to lie on a line in velocity space, not at a unique point.
+The aperture problem is the fundamental ambiguity in optical flow. When a local patch contains only an edge (a 1D signal), only the component of motion **perpendicular to the edge** can be measured. The component parallel to the edge is invisible. Geometrically, the OFCE constrains $(u, v)$ to lie on a line in velocity space, not at a unique point.
 
 Illustration (from slide): Three scenarios A, B, C show the same circle-inside-a-square viewed through a small aperture. In scenario A the object moves diagonally, but locally it looks the same as scenario B (pure vertical motion) because only the edge is visible. Only when the full boundary is visible (scenario C) does the true motion direction become determinable.
 
@@ -87,54 +87,55 @@ Illustration (from slide): Three scenarios A, B, C show the same circle-inside-a
 
 #### 3.1 Key assumption
 
-In a local window (neighborhood) of `n` pixels `q_1, q_2, …, q_n`, the flow `(V_x, V_y)` is assumed to be **constant**.
+In a local window (neighborhood) of $n$ pixels $q_1, q_2, \ldots, q_n$, the flow $(V_x, V_y)$ is assumed to be **constant**.
 
-This gives a system of `n` equations (one OFCE per pixel in the window):
+This gives a system of $n$ equations (one OFCE per pixel in the window):
 
-```
-I_x(q_1)·V_x + I_y(q_1)·V_y = −I_t(q_1)
-I_x(q_2)·V_x + I_y(q_2)·V_y = −I_t(q_2)
-          ⋮
-I_x(q_n)·V_x + I_y(q_n)·V_y = −I_t(q_n)
-```
 
-In matrix form: `A·v = b`, where:
+$$
+\begin{aligned}
+I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\
+I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\
+&\vdots \\
+I_x(q_n) V_x + I_y(q_n) V_y &= -I_t(q_n)
+\end{aligned}
+$$
 
-```
-     [I_x(q_1)  I_y(q_1)]       [V_x]       [-I_t(q_1)]
-A =  [I_x(q_2)  I_y(q_2)]   v = [V_y]   b = [-I_t(q_2)]
-     [    ⋮          ⋮   ]                   [    ⋮     ]
-     [I_x(q_n)  I_y(q_n)]                   [-I_t(q_n)]
-```
+In matrix form: $\mathbf{A} \mathbf{v} = \mathbf{b}$, where:
+
+$$
+\mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\ I_x(q_2) & I_y(q_2) \\ \vdots & \vdots \\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
+\mathbf{v} = \begin{bmatrix} V_x \\ V_y \end{bmatrix}, \quad
+\mathbf{b} = \begin{bmatrix} -I_t(q_1) \\ -I_t(q_2) \\ \vdots \\ -I_t(q_n) \end{bmatrix}
+$$
 
 #### 3.2 Least-squares solution
 
-The system is overdetermined (`n >> 2`), so solve via least squares `A^T A v = A^T b`:
+The system is overdetermined ($n \gg 2$), so solve via least squares $\mathbf{A}^\top \mathbf{A} \mathbf{v} = \mathbf{A}^\top \mathbf{b}$:
 
-```
-[V_x]   [Σ I_x²     Σ I_x I_y]^(-1)  [-Σ I_x I_t]
-[V_y] = [Σ I_x I_y  Σ I_y²   ]        [-Σ I_y I_t]
-```
+$$
+\begin{bmatrix} V_x \\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\ -\sum I_y I_t \end{bmatrix}
+$$
 
-where all sums are over pixels `q_i` in the local window.
+where all sums are over pixels $q_i$ in the local window.
 
-The 2×2 matrix `M = A^T A` is the **structure tensor** (same matrix used in Harris corner detection). Eigenvalues of `M` determine whether the flow can be solved:
+The 2×2 matrix $M = \mathbf{A}^\top \mathbf{A}$ is the **structure tensor** (same matrix used in Harris corner detection). Eigenvalues of $M$ determine whether the flow can be solved:
 - **Both eigenvalues large** → corner-like region → well-conditioned, unique solution.
 - **One large, one small** → edge region → aperture problem, solution only in one direction.
 - **Both small** → flat region → no gradient information, cannot estimate flow.
 
 #### 3.3 Algorithm steps
 
-1. Compute spatial gradients `I_x, I_y` using a derivative filter (e.g. Sobel).
-2. Compute temporal gradient `I_t` as frame difference.
-3. For each pixel, assemble `M = A^T A` and `b = A^T b` over the chosen window.
-4. Invert `M` (if well-conditioned) to get `(V_x, V_y)`.
+1. Compute spatial gradients $I_x, I_y$ using a derivative filter (e.g. Sobel).
+2. Compute temporal gradient $I_t$ as frame difference.
+3. For each pixel, assemble $M = \mathbf{A}^\top \mathbf{A}$ and $\mathbf{b} = \mathbf{A}^\top \mathbf{b}$ over the chosen window.
+4. Invert $M$ (if well-conditioned) to get $(V_x, V_y)$.
 
 **Properties:**
 - Local method (each pixel neighborhood independent).
 - Fast, real-time capable.
 - Fails for large displacements (small-displacement assumption).
-- Fails in uniform / low-texture regions (singular `M`).
+- Fails in uniform / low-texture regions (singular $M$).
 
 **Visual output:** A flow field over a football match scene shows green arrows at each pixel; arrows are longer and consistent where texture is rich, absent in uniform regions.
 
@@ -146,27 +147,30 @@ The 2×2 matrix `M = A^T A` is the **structure tensor** (same matrix used in Har
 
 Rather than restricting to a local window, Horn-Schunck adds a **global smoothness term**. The energy to minimize is:
 
-```
-E = ∬ [(I_x·u + I_y·v + I_t)²  +  α²(||∇u||² + ||∇v||²)] dx dy
-```
+$$
+E = \iint \left[ (I_x u + I_y v + I_t)^2 + \alpha^2 \left( \|\nabla u\|^2 + \|\nabla v\|^2 \right) \right] dx\, dy
+$$
 
 - First term: **brightness constancy** — penalizes OFCE violation.
-- Second term: **smoothness** — penalizes large spatial variations in the flow field; `α` is a regularization parameter balancing the two terms.
+- Second term: **smoothness** — penalizes large spatial variations in the flow field; $\alpha$ is a regularization parameter balancing the two terms.
 
 #### 4.2 Iterative algorithm
 
-Minimizing `E` with respect to `u` and `v` leads to coupled Euler-Lagrange equations, solved iteratively:
+Minimizing $E$ with respect to $u$ and $v$ leads to coupled Euler-Lagrange equations, solved iteratively:
 
-1. Compute local averages `u'_i` and `v'_i` of the current flow estimates at pixel `i`.
+1. Compute local averages $\bar{u}_i$ and $\bar{v}_i$ of the current flow estimates at pixel $i$.
 2. Compute the update scalar:
-   ```
-   update = (I_x·u'_i + I_y·v'_i + I_t) / (α² + I_x² + I_y²)
-   ```
+
+$$
+\text{update} = \frac{I_x \bar{u}_i + I_y \bar{v}_i + I_t}{\alpha^2 + I_x^2 + I_y^2}
+$$
+
 3. Update the flow:
-   ```
-   u_{i+1} = u'_i − I_x · update
-   v_{i+1} = v'_i − I_y · update
-   ```
+
+$$
+u_{i+1} = \bar{u}_i - I_x \cdot \text{update}, \qquad v_{i+1} = \bar{v}_i - I_y \cdot \text{update}
+$$
+
 4. Repeat until convergence.
 
 #### 4.3 Comparison with Lucas-Kanade
@@ -186,7 +190,7 @@ Minimizing `E` with respect to `u` and `v` leads to coupled Euler-Lagrange equat
 
 ### 5. Pyramidal optical flow (handling large displacements)
 
-Classical optical flow breaks for large displacements because the linearization (Taylor expansion) requires small `(u, v)`. The pyramid approach handles this via **coarse-to-fine estimation**:
+Classical optical flow breaks for large displacements because the linearization (Taylor expansion) requires small $(u, v)$. The pyramid approach handles this via **coarse-to-fine estimation**:
 
 **Algorithm:**
 1. Build an image pyramid: Level 0 = original; Level 1 = 1/2 resolution; …; Level n = 1/2^n resolution.
@@ -245,8 +249,8 @@ Classical methods rely on hand-crafted assumptions. Deep learning approaches ins
 
 #### 8.2 Online vs. offline
 
-- **Online tracker:** at frame `t`, the tracker has only seen frames up to `t`. Must make a decision with past and present information only. Suitable for real-time applications.
-- **Offline tracker:** at frame `t`, can access frames `t-k … t … t+m` (future frames). Can use global consistency for better accuracy and occlusion recovery. Not suitable for real-time.
+- **Online tracker:** at frame $t$, the tracker has only seen frames up to $t$. Must make a decision with past and present information only. Suitable for real-time applications.
+- **Offline tracker:** at frame $t$, can access frames $t-k \ldots t \ldots t+m$ (future frames). Can use global consistency for better accuracy and occlusion recovery. Not suitable for real-time.
 
 #### 8.3 Single-object vs. multi-object (MOT)
 
@@ -281,11 +285,11 @@ A motion model predicts the next position from previous positions.
 
 #### 10.2 Recursive Bayes filters
 
-State uncertainty is modeled probabilistically. The posterior `p(x_t | z_{1:t})` (distribution over position given all observations) is updated using:
+State uncertainty is modeled probabilistically. The posterior $p(x_t \mid z_{1:t})$ (distribution over position given all observations) is updated using:
 
-```
-Posterior ∝ Measurement likelihood × Predicted prior
-```
+$$
+\text{Posterior} \propto \text{Measurement likelihood} \times \text{Predicted prior}
+$$
 
 Visually: measurement distribution (peaked at observed position) convolved with motion distribution (spread by predicted velocity uncertainty) gives posterior (intermediate peak).
 
@@ -302,27 +306,33 @@ Visually: measurement distribution (peaked at observed position) convolved with 
 Track by finding the position in the next frame that best matches the object template from the previous frame.
 
 **SSD (Sum of Squared Differences):**
-```
-R(x, y) = Σ_{x',y'} (T(x', y') − I(x+x', y+y'))²
-```
-Minimum of R = best match position.
+
+$$
+R(x, y) = \sum_{x',y'} \bigl(T(x', y') - I(x+x', y+y')\bigr)^2
+$$
+
+Minimum of $R$ = best match position.
 
 **Correlation:**
-```
-R(x, y) = Σ_{x',y'} T(x', y') · I(x+x', y+y')
-```
+
+$$
+R(x, y) = \sum_{x',y'} T(x', y') \cdot I(x+x', y+y')
+$$
+
 Maximum = best match.
 
 **Normalized Cross-Correlation (NCC):**
-```
-R(x, y) = (1 / n·σ_I·σ_T) Σ_{x,y} (I(x,y) − μ_I)(T(x,y) − μ_T)
-```
+
+$$
+R(x, y) = \frac{1}{n \sigma_I \sigma_T} \sum_{x,y} \bigl(I(x,y) - \mu_I\bigr)\bigl(T(x,y) - \mu_T\bigr)
+$$
+
 Invariant to linear illumination changes. NCC produces much sharper, more discriminative response maps than SSD or raw correlation (shown in side-by-side comparison of response maps on a face tracking example).
 
 **Case study: NCC tracker**
-- At initialization, the visual model `M` is the object patch.
-- At each frame: compute NCC response map `R` by sliding the model over a search region around the predicted position.
-- Take the maximum of `R` as the new position.
+- At initialization, the visual model $M$ is the object patch.
+- At each frame: compute NCC response map $R$ by sliding the model over a search region around the predicted position.
+- Take the maximum of $R$ as the new position.
 - Optionally update the template.
 
 #### 11.2 Color histogram models and MeanShift
@@ -339,11 +349,13 @@ Invariant to linear illumination changes. NCC produces much sharper, more discri
 3. Move the window to that center.
 4. Repeat until convergence.
 
-**Bhattacharyya distance** measures similarity between two histograms `p` and `q`:
-```
-ρ(p, q) = Σ_{i=1}^{B} sqrt(p_i · q_i)
-```
-Higher ρ = more similar. Used as the similarity function in MeanShift tracking.
+**Bhattacharyya distance** measures similarity between two histograms $p$ and $q$:
+
+$$
+\rho(p, q) = \sum_{i=1}^{B} \sqrt{p_i \cdot q_i}
+$$
+
+Higher $\rho$ = more similar. Used as the similarity function in MeanShift tracking.
 
 **Case study: MeanShift tracker (Comaniciu et al., TPAMI 2003)**
 - Build a color histogram of the initial object region.
@@ -370,7 +382,7 @@ Higher ρ = more similar. Used as the similarity function in MeanShift tracking.
 - **Eigenvalues** = variance along each direction.
 - Keep top k eigenvectors → low-dimensional subspace.
 
-PCA transform: translate to origin (`t = μ`), rotate by the eigenvector matrix `R = U`.
+PCA transform: translate to origin ($t = \mu$), rotate by the eigenvector matrix $R = U$.
 
 **Subspace projection in tracking:**
 - Project a candidate patch onto the learned subspace.
@@ -409,7 +421,7 @@ This is **tracking as detection**: instead of storing a fixed template, a classi
 - **Cascade:** many weak classifiers (Haar feature thresholds) combined by AdaBoost. The cascade structure rejects obvious negatives early, so most background patches are rejected after a few stages.
 
 **Online Boosting for tracking (Grabner et al., CVPR/BMVC 2006):**
-- Pool of `N` weak classifiers (`h_1, …, h_N`), each with `M` possible weak learners.
+- Pool of $N$ weak classifiers ($h_1, \ldots, h_N$), each with $M$ possible weak learners.
 - At each frame, select the best weak learner per stage using a distribution model.
 - Frame loop: current position → evaluate classifier on sub-patches in a search region → build confidence map → find maximum → new position → update classifier.
 - The central square around the object is labeled positive (+); surrounding annular region is negative (−) for re-training.
@@ -422,27 +434,27 @@ This is **tracking as detection**: instead of storing a fixed template, a classi
 
 **Formulation:** correlation is convolution with a flipped signal. In the **Fourier domain**, correlation becomes element-wise multiplication:
 
-```
-G = F ★ H  →  Ĝ = F̂ ⊙ H̄
-```
+$$
+G = F \star H \quad \Rightarrow \quad \hat{G} = \hat{F} \odot \overline{\hat{H}}
+$$
 
-This allows computing correlation over the entire search region in O(n log n) using FFT, rather than O(n²) for direct sliding-window comparison.
+This allows computing correlation over the entire search region in $O(n \log n)$ using FFT, rather than $O(n^2)$ for direct sliding-window comparison.
 
 **Circularity issue:** DFT-based correlation is circular (wraps around). This causes **boundary effects** where the filter "sees" the image as tiling. Fix: apply a **Hanning window** (cosine-tapered window) to the search region patch before computing the FFT, smoothly zeroing the boundaries.
 
-**Correlation as a linear classifier:** template matching maximizes `<h, f>` where `h` is the filter (template) and `f` is the feature vector of a candidate patch. This is equivalent to a linear classifier with hyperplane `h^T f = 0`.
+**Correlation as a linear classifier:** template matching maximizes $\langle h, f \rangle$ where $h$ is the filter (template) and $f$ is the feature vector of a candidate patch. This is equivalent to a linear classifier with hyperplane $h^\top f = 0$.
 
-**Discriminative Correlation Filters (DCF):** instead of using the raw object appearance as the filter, **learn** the filter `F` such that:
+**Discriminative Correlation Filters (DCF):** instead of using the raw object appearance as the filter, **learn** the filter $F$ such that:
 
-```
-arg min_F ||T ★ F − G||²
-```
+$$
+\arg\min_{F} \| T \star F - G \|^2
+$$
 
-where `T` is the training example (object patch), and `G` is the **desired response** — a sharp Gaussian peak centered at the object location. The closed-form solution is computed in the Fourier domain. This is much more discriminative than naive correlation.
+where $T$ is the training example (object patch), and $G$ is the **desired response** — a sharp Gaussian peak centered at the object location. The closed-form solution is computed in the Fourier domain. This is much more discriminative than naive correlation.
 
 **Case study: MOSSE (Bolme et al., CVPR 2010) — Minimum Output Sum of Squared Error:**
-- Initialize the filter `F` to give a Gaussian response to the object patch.
-- At each frame: convolve the search region with `F` (via FFT); location of the maximum is the new object position; update `F` with the new patch.
+- Initialize the filter $F$ to give a Gaussian response to the object patch.
+- At each frame: convolve the search region with $F$ (via FFT); location of the maximum is the new object position; update $F$ with the new patch.
 - Visual: initialization frame shows a Gaussian response; subsequent frame shows the shifted peak at the new object location (a shifted spike in the response map).
 
 **KCF (Kernelized Correlation Filter):**
@@ -511,13 +523,13 @@ where `T` is the training example (object patch), and `G` is the **desired respo
 
 #### 16.2 Frame-to-frame matching
 
-For each pair of consecutive frames, define a **distance matrix** between all detected objects in frame `t` and all detections in frame `t+1`. Distances can be:
+For each pair of consecutive frames, define a **distance matrix** between all detected objects in frame $t$ and all detections in frame $t+1$. Distances can be:
 - **IoU (Intersection over Union)** — bounding box overlap.
 - **Pixel distance** — Euclidean distance between bounding box centers.
 - **3D distance** — using depth sensor data.
 - **Appearance similarity** — embedding distance from a re-identification model.
 
-Solve the assignment problem (minimize total matching cost) using the **Hungarian algorithm (bipartite matching)** — assigns each detection in frame `t` to the best detection in frame `t+1`.
+Solve the assignment problem (minimize total matching cost) using the **Hungarian algorithm (bipartite matching)** — assigns each detection in frame $t$ to the best detection in frame $t+1$.
 
 **Issues with frame-to-frame (local) matching:**
 - If the detector misses an object in one frame, the trajectory must be terminated; recovery is hard.
@@ -535,7 +547,7 @@ Solve the assignment problem (minimize total matching cost) using the **Hungaria
 **Appearance (Re-ID):** describe each detection with a feature embedding (HoG, deep embedding). Match using **cosine distance** or metric-learning distance. The Re-ID problem is a **retrieval** problem: given a new detection, find the stored identity it belongs to.
 
 **Motion models for MOT:**
-- **Individual:** Kalman filter with Nearly Constant Velocity model. Update equation: `μ_update = μ_predicted + K_g · Innovation` where `Innovation = measurement − prediction` and `K_g` is the Kalman gain.
+- **Individual:** Kalman filter with Nearly Constant Velocity model. Update equation: $\mu_{\text{update}} = \mu_{\text{predicted}} + K_g \cdot \text{Innovation}$ where $\text{Innovation} = \text{measurement} - \text{prediction}$ and $K_g$ is the Kalman gain.
 - **Group:** Social Force Models model interactions between pedestrians (goal-directed motion + repulsion from others + environmental constraints). Can be pre-trained from data.
 
 ---
@@ -566,21 +578,21 @@ The field is moving entirely toward **deep learning**:
 
 ## Key terms (glossary)
 
-- **Optical flow** — the apparent motion of pixel intensity patterns between two consecutive frames, represented as a 2D vector field `(u(x,y), v(x,y))`.
-- **Brightness-constancy assumption** — `I(x,y,t) = I(x+u, y+v, t+1)`; intensity of a moving pixel is unchanged.
-- **OFCE (Optical-Flow Constraint Equation)** — `I_x u + I_y v + I_t = 0`; one linear constraint on the 2D flow vector at each pixel.
+- **Optical flow** — the apparent motion of pixel intensity patterns between two consecutive frames, represented as a 2D vector field $(u(x,y), v(x,y))$.
+- **Brightness-constancy assumption** — $I(x,y,t) = I(x+u, y+v, t+1)$; intensity of a moving pixel is unchanged.
+- **OFCE (Optical-Flow Constraint Equation)** — $I_x u + I_y v + I_t = 0$; one linear constraint on the 2D flow vector at each pixel.
 - **Aperture problem** — the fundamental ambiguity: a local edge region only reveals the flow component perpendicular to the edge; motion parallel to the edge is undetectable.
 - **Lucas-Kanade** — local optical-flow method assuming constant velocity in a patch; solves an overdetermined least-squares system.
-- **Structure tensor** — the 2×2 matrix `M = A^T A` built from spatial gradients; its eigenvalues characterize the local flow solvability.
+- **Structure tensor** — the 2×2 matrix $M = \mathbf{A}^\top \mathbf{A}$ built from spatial gradients; its eigenvalues characterize the local flow solvability.
 - **Horn-Schunck** — global optical-flow method; minimizes a combined brightness-constancy + smoothness energy; iterative solution.
 - **Pyramidal optical flow** — coarse-to-fine strategy using image pyramids to handle large displacements.
 - **FlowNet / RAFT** — deep-learning optical-flow models trained on synthetic data.
 - **SSD / NCC** — Sum of Squared Differences / Normalized Cross-Correlation; simple template-matching similarity measures.
-- **Bhattacharyya distance** — `ρ(p,q) = Σ sqrt(p_i · q_i)`; histogram similarity measure used in MeanShift tracking.
+- **Bhattacharyya distance** — $\rho(p,q) = \sum \sqrt{p_i \cdot q_i}$; histogram similarity measure used in MeanShift tracking.
 - **MeanShift** — iterative mode-seeking algorithm; moves the search window toward the highest-density region in color probability space.
 - **PCA / IVT** — subspace appearance model; object patch is projected onto principal components; reconstruction error used as similarity.
 - **Concept drift** — gradual corruption of the appearance model when the tracker incorrectly updates with background.
-- **Discriminative Correlation Filter (DCF)** — filter learned to produce a desired Gaussian response to the object; trained via least squares in Fourier domain (MOSSE, KCF).
+- **Discriminative Correlation Filter (DCF)** — filter learned to produce a desired Gaussian response to the object; trained via $\arg\min_F \|T \star F - G\|^2$ in Fourier domain (MOSSE, KCF).
 - **MOSSE** — Minimum Output Sum of Squared Error; first DCF tracker; real-time capable.
 - **KCF** — Kernelized Correlation Filter; extends MOSSE to HOG features and kernel trick.
 - **HOG (Histogram of Oriented Gradients)** — gradient-based dense feature; similar to SIFT but computed on a dense grid.
@@ -604,13 +616,13 @@ The field is moving entirely toward **deep learning**:
 
 ## Exam targets
 
-1. **Derive the OFCE** from the brightness-constancy assumption using a first-order Taylor expansion. Write out the full equation `I_x u + I_y v + I_t = 0` and define each term.
+1. **Derive the OFCE** from the brightness-constancy assumption using a first-order Taylor expansion. Write out the full equation $I_x u + I_y v + I_t = 0$ and define each term.
 
-2. **Explain the aperture problem** — what ambiguity it creates, why a single edge gives only one constraint, and how it relates to the eigenvalues of the structure tensor `M`.
+2. **Explain the aperture problem** — what ambiguity it creates, why a single edge gives only one constraint, and how it relates to the eigenvalues of the structure tensor $M$.
 
-3. **Derive the Lucas-Kanade least-squares solution** — set up the overdetermined system `A·v = b` for a patch of n pixels, write the normal equations, and give the closed-form solution for `[V_x, V_y]^T`.
+3. **Derive the Lucas-Kanade least-squares solution** — set up the overdetermined system $\mathbf{A}\mathbf{v} = \mathbf{b}$ for a patch of $n$ pixels, write the normal equations, and give the closed-form solution for $[V_x, V_y]^\top$.
 
-4. **State the Horn-Schunck energy functional** (both the data term and the smoothness term), explain the role of `α`, and write out the iterative update equations.
+4. **State the Horn-Schunck energy functional** (both the data term and the smoothness term), explain the role of $\alpha$, and write out the iterative update equations.
 
 5. **Compare Lucas-Kanade and Horn-Schunck** across: motion assumption, large motion, speed, noise robustness, and occlusion.
 
@@ -622,7 +634,7 @@ The field is moving entirely toward **deep learning**:
 
 9. **Explain the structure tensor and its role** in determining where Lucas-Kanade can and cannot estimate flow.
 
-10. **Describe discriminative correlation filters** — the MOSSE objective `arg min_F ||T ★ F − G||²`, why the FFT is used, what circularity causes, and how the Hanning window fixes it.
+10. **Describe discriminative correlation filters** — the MOSSE objective $\arg\min_F \|T \star F - G\|^2$, why the FFT is used, what circularity causes, and how the Hanning window fixes it.
 
 11. **Explain SiamFC** — network architecture, why the template is not updated, how scale is estimated, pre-training procedure.
 
@@ -638,12 +650,12 @@ The field is moving entirely toward **deep learning**:
 
 - **Brightness constancy is not satisfied** in practice whenever there is illumination change, specular reflection, or camera noise. All classical optical-flow methods degrade under these conditions; deep learning methods are more robust.
 - **OFCE gives one equation for two unknowns** — students often forget that this means a single pixel's flow is underdetermined. Always state the aperture problem explicitly.
-- **Lucas-Kanade fails at edges, not just flat regions.** The structure tensor `M` has one large and one small eigenvalue at an edge, making the system ill-conditioned (rank-deficient), not just at uniform regions.
+- **Lucas-Kanade fails at edges, not just flat regions.** The structure tensor $M$ has one large and one small eigenvalue at an edge, making the system ill-conditioned (rank-deficient), not just at uniform regions.
 - **Small-displacement assumption** is violated in fast motion. LK/HS without pyramids silently produce wrong results — never assume they work at arbitrary speeds.
 - **Circular correlation in the Fourier domain** produces artifacts from boundary wrap-around. The Hanning window is the standard fix; without it, DCF trackers fail at the edges of the search region.
 - **Template tracking does not update** in basic NCC/SiamFC → fails on appearance change, but avoids concept drift. Updating → adapts to appearance change but risks drifting to background. Both are legitimate design choices with different failure modes.
 - **Concept drift** is a real failure mode for online discriminative trackers: if the classifier is incorrectly updated with background, future frames will be classified against an incorrect model. Hard negative mining and conservative updates are countermeasures.
 - **SOT vs. MOT are different problems** — do not conflate them. MOT requires re-identification (who is this person across frames), not just localization (where is this object).
-- **Bhattacharyya distance** `ρ(p,q) = Σ sqrt(p_i · q_i)` is a **similarity** measure (higher = more similar), not a distance in the strict sense. The Bhattacharyya **distance** is `D_B = -ln(ρ)`. The lecture uses ρ directly.
+- **Bhattacharyya distance** $\rho(p,q) = \sum \sqrt{p_i \cdot q_i}$ is a **similarity** measure (higher = more similar), not a distance in the strict sense. The Bhattacharyya **distance** is $D_B = -\ln(\rho)$. The lecture uses $\rho$ directly.
 - **IVT uses reprojection error as similarity** — low error means the candidate is well-reconstructed by the object subspace (good match); students sometimes invert this.
 - **The Hungarian algorithm** solves bipartite matching optimally in polynomial time. In MOT, missed detections mean a trajectory must be ended (or kept alive with a grace period); this is a design choice, not an inherent limitation of the algorithm.

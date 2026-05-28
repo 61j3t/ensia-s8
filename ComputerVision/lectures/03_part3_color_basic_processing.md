@@ -5,8 +5,8 @@
 - **Color is not a physical property** of the world — it is a consequence of how the eye senses light. The eye compresses the infinite-dimensional spectrum into just three numbers (S, M, L cone responses), making color perception many-to-one (metamerism).
 - **Three perceptual descriptors** — hue (what color), saturation (purity), brightness/luminance (how light) — underlie all color models and serve as the bridge between physics and perception.
 - **A color model (color space)** is a mathematical coordinate system + subspace where each color is a single point. Different tasks call for different spaces: RGB for displays, HSV/HSI for human-intuitive manipulation, CIE XYZ as the device-independent reference, CMYK for printing, YCbCr for video compression, CIE Lab for perceptually uniform color difference.
-- The **RGB cube** is the workhorse model: each pixel is a triplet (R, G, B) in [0, 255]^3. The diagonal from (0,0,0) black to (255,255,255) white is the grayscale axis.
-- **HSV conversion from RGB** is the most tested computation: normalize to [0,1], then V = max(r,g,b), S = (V − min)/V, H determined by which channel dominates — full worked example for RGB(255,0,0) → HSV(0°, 100%, 100%).
+- The **RGB cube** is the workhorse model: each pixel is a triplet (R, G, B) in $[0, 255]^3$. The diagonal from (0,0,0) black to (255,255,255) white is the grayscale axis.
+- **HSV conversion from RGB** is the most tested computation: normalize to $[0,1]$, then $V = \max(r,g,b)$, $S = (V - \min)/V$, H determined by which channel dominates — full worked example for RGB(255,0,0) → HSV(0°, 100%, 100%).
 - The **CIE 1931 chromaticity diagram** (horseshoe) separates color from brightness; a device's gamut is the triangle formed by its three primaries inside the diagram.
 - The slide set covers only color models (pages 1–67) — sampling, quantization, and basic pixel operations referenced in the part title appear to be in a companion part; all slide content is captured here.
 
@@ -68,17 +68,17 @@ Key insight: **2% of cones are blue-sensitive (S) yet they are the most sensitiv
 
 A color is perceived through **simultaneous stimulation** of all three cone types. The brain receives three numbers — the **tristimulus values** S, M, L:
 
-```
-S = integral of I(lambda) * S(lambda) d_lambda
-M = integral of I(lambda) * M(lambda) d_lambda
-L = integral of I(lambda) * L(lambda) d_lambda
-```
+$$S = \int I(\lambda)\, S(\lambda)\, d\lambda$$
+
+$$M = \int I(\lambda)\, M(\lambda)\, d\lambda$$
+
+$$L = \int I(\lambda)\, L(\lambda)\, d\lambda$$
 
 Where:
-- `I(lambda)` = incoming light spectrum (spectral power distribution).
-- `S(lambda), M(lambda), L(lambda)` = cone sensitivity functions.
+- $I(\lambda)$ = incoming light spectrum (spectral power distribution).
+- $S(\lambda), M(\lambda), L(\lambda)$ = cone sensitivity functions.
 
-**Critical insight**: The eye does NOT measure wavelength directly. It measures **three integrals of the spectrum**. The original spectral shape is lost once reduced to (S, M, L).
+**Critical insight**: The eye does NOT measure wavelength directly. It measures **three integrals of the spectrum**. The original spectral shape is lost once reduced to $(S, M, L)$.
 
 #### 2.4 Color blindness (color vision deficiency)
 
@@ -114,11 +114,11 @@ Experimental setup (figure description): One side of a split screen shows an RGB
 
 #### 3.2 CIE RGB color matching functions
 
-The resulting **CIE RGB color matching functions** r(lambda), g(lambda), b(lambda) (figure description):
+The resulting **CIE RGB color matching functions** $\bar{r}(\lambda), \bar{g}(\lambda), \bar{b}(\lambda)$ (figure description):
 - A plot from 360–760 nm on the x-axis, matching intensity on the y-axis.
-- The **blue (b)** curve peaks sharply at ~440 nm (peak ~0.31).
-- The **green (g)** curve peaks at ~520–560 nm (peak ~0.21).
-- The **red (r)** curve has a large peak at ~600 nm (peak ~0.34) and a **negative lobe** around 450 nm (dips to ~−0.1).
+- The **blue ($\bar{b}$)** curve peaks sharply at ~440 nm (peak ~0.31).
+- The **green ($\bar{g}$)** curve peaks at ~520–560 nm (peak ~0.21).
+- The **red ($\bar{r}$)** curve has a large peak at ~600 nm (peak ~0.34) and a **negative lobe** around 450 nm (dips to ~−0.1).
 
 **Important limitation**: Almost all colors can be matched, EXCEPT some shades between blue and green. For these, **a negative amount of red is needed** — physically this means adding red to the test side, not the reference side. The reason: the sensitivity regions of the three cone classes overlap, so green light activates the L (red) cone more than cyan test light does. To balance the response, you must subtract some red.
 
@@ -132,7 +132,7 @@ The three characteristics used to distinguish colors:
 
 - **Brightness**: achromatic notion of intensity — how much light is emitted or reflected.
 - Determines how dark or light a color appears without changing its hue.
-- Formula (Lightness in HSL): **L = (M + m) / 2**, where M = max(R,G,B), m = min(R,G,B).
+- Formula (Lightness in HSL): $L = \frac{M + m}{2}$, where $M = \max(R,G,B)$, $m = \min(R,G,B)$.
 
 #### 4.2 Hue
 
@@ -140,16 +140,16 @@ The three characteristics used to distinguish colors:
 - Hue is the foundation of color perception; it dates to Newton's color wheel.
 - A bright pink and a deep maroon share the **same hue (red)** but differ in saturation and luminance.
 - On the **color wheel** (figure description): a circular disc with R at top, G at bottom-right, B at bottom-left. Between them: Yellow (R-G), Cyan (G-B), Magenta (B-R). Any position 0°–360° is a hue.
-- Formula: H = 0 if R = G = B (achromatic); otherwise a value 0–255 (or 0–360°) split into three strips: G→B, B→R, R→G gradients.
+- Formula: $H = 0$ if $R = G = B$ (achromatic); otherwise a value 0–255 (or 0–360°) split into three strips: G→B, B→R, R→G gradients.
 
 #### 4.3 Saturation
 
 - **Saturation**: the "relative purity" — how much white light is mixed with the hue. From gray (0 saturation) to pure vivid color (full saturation).
 - High saturation: vivid, bold colors. Low saturation: muted, washed-out, closer to gray.
-- Formula: S = 0 if R = G = B; otherwise:
-  - If L < 128: **S = 255 × (M − m) / (M + m)**
-  - If L >= 128: **S = 255 × (M − m) / (511 − (M + m))**
-  - Where M = max(R,G,B), m = min(R,G,B), L = (M+m)/2.
+- Formula: $S = 0$ if $R = G = B$; otherwise:
+  - If $L < 128$: $S = \frac{255 \times (M - m)}{M + m}$
+  - If $L \geq 128$: $S = \frac{255 \times (M - m)}{511 - (M + m)}$
+  - Where $M = \max(R,G,B)$, $m = \min(R,G,B)$, $L = (M+m)/2$.
 
 #### 4.4 Relationship (figure description)
 
@@ -182,7 +182,7 @@ Summary table:
 
 #### 6.1 Structure: the color cube
 
-RGB = additive color model. Each color is a point (R, G, B) in [0, 255]^3 (or normalized [0, 1]^3).
+RGB = additive color model. Each color is a point $(R, G, B)$ in $[0, 255]^3$ (or normalized $[0, 1]^3$).
 
 **The RGB cube** (figure description):
 - A cube with three axes: R (red), G (green), B (blue).
@@ -211,12 +211,12 @@ RGB = additive color model. Each color is a point (R, G, B) in [0, 255]^3 (or no
 - The exact gamut depends on the physical display hardware.
 
 **Problem 2 — Perceptually non-linear**:
-- Two points at distance d in one part of RGB space may be perceptually very different.
-- Two other points at the same distance d in another part may look identical.
+- Two points at distance $d$ in one part of RGB space may be perceptually very different.
+- Two other points at the same distance $d$ in another part may look identical.
 - RGB is not aligned with human color perception.
 
 **Problem 3 — Unintuitive**:
-- It is not easy to determine which (R, G, B) values produce a given perceived color (e.g., "rust orange" requires knowing specific R, G, B ratios).
+- It is not easy to determine which $(R, G, B)$ values produce a given perceived color (e.g., "rust orange" requires knowing specific R, G, B ratios).
 
 ---
 
@@ -230,13 +230,9 @@ These primaries are **mathematical constructs** — they do not correspond to re
 
 **RGB → XYZ conversion matrix**:
 
-```
-[X]       1       [0.49    0.31    0.20  ] [R]
-[Y]  =  ------  × [0.17697 0.81240 0.01063] [G]
-[Z]     0.17697   [0.00    0.01    0.99  ] [B]
-```
+$$\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\ 0.17697 & 0.81240 & 0.01063 \\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\ G \\ B \end{bmatrix}$$
 
-Or compactly: **[X, Y, Z]^T = M × [R, G, B]^T**
+Or compactly: $[X, Y, Z]^T = M \cdot [R, G, B]^T$
 
 Key property: **Y corresponds to luminance**.
 
@@ -259,13 +255,9 @@ Limitations:
 
 Dividing XYZ values by their sum removes the luminance component:
 
-```
-x = X / (X+Y+Z)
-y = Y / (X+Y+Z)
-z = Z / (X+Y+Z)
-```
+$$x = \frac{X}{X+Y+Z}, \quad y = \frac{Y}{X+Y+Z}, \quad z = \frac{Z}{X+Y+Z}$$
 
-Note: x + y + z = 1, so z = 1 − x − y. Only **two coordinates (x, y) are needed** to fully describe chromaticity. This gives the **CIE 1931 chromaticity diagram**.
+Note: $x + y + z = 1$, so $z = 1 - x - y$. Only **two coordinates $(x, y)$ are needed** to fully describe chromaticity. This gives the **CIE 1931 chromaticity diagram**.
 
 ---
 
@@ -273,7 +265,7 @@ Note: x + y + z = 1, so z = 1 − x − y. Only **two coordinates (x, y) are nee
 
 #### 8.1 What it is
 
-- A **2D representation** of all colors perceivable by the average human eye, plotted in (x, y) space.
+- A **2D representation** of all colors perceivable by the average human eye, plotted in $(x, y)$ space.
 - Each point corresponds to a chromaticity (color) **independent of brightness** — luminance information (Y) is discarded.
 - XYZ tells us *how much light* AND *what color*. The chromaticity diagram tells us *what color only*.
 
@@ -281,10 +273,10 @@ Note: x + y + z = 1, so z = 1 − x − y. Only **two coordinates (x, y) are nee
 
 The diagram is a horseshoe/tongue shape:
 
-1. **Chromaticity coordinates (x, y)**: x-axis (0–0.8), y-axis (0–0.9).
+1. **Chromaticity coordinates $(x, y)$**: x-axis (0–0.8), y-axis (0–0.9).
 2. **Spectral locus (outer curved edge)**: represents pure monochromatic (single-wavelength) colors. Each point on the curved boundary corresponds to a single wavelength from ~400 nm (violet, bottom-left) going clockwise through green (top, ~520 nm), yellow, orange, to red (~700 nm, bottom-right).
 3. **Purple line (straight bottom edge)**: connects the red and blue ends of the spectrum. Represents **non-spectral purples** — colors that do not appear in the rainbow and can only be produced by mixing red and blue.
-4. **White point (D65 Standard Illuminant)**: located near the center of the diagram (~x=0.31, y=0.33), labeled as "Point of Equal Energy."
+4. **White point (D65 Standard Illuminant)**: located near the center of the diagram (~$x=0.31$, $y=0.33$), labeled as "Point of Equal Energy."
 5. **Gamut triangle**: any display device is represented by a triangle whose vertices are its three primaries (R, G, B). Colors inside the triangle are reproducible; colors outside are out-of-gamut.
 
 #### 8.3 Color mixing property
@@ -299,7 +291,7 @@ Figure description: The chromaticity diagram with several overlapping triangles 
 
 #### 8.5 Important limitation
 
-The chromaticity diagram is **not perceptually uniform**: equal distances in (x, y) space do NOT correspond to equal perceived color differences. This motivated the development of perceptually uniform spaces (CIE Lab).
+The chromaticity diagram is **not perceptually uniform**: equal distances in $(x, y)$ space do NOT correspond to equal perceived color differences. This motivated the development of perceptually uniform spaces (CIE Lab).
 
 #### 8.6 Color model as a triangle
 
@@ -350,84 +342,78 @@ In **OpenCV** (slightly different encoding):
 
 ### 10. RGB → HSV Conversion (Full Algorithm)
 
-**Step 1**: Normalize RGB to [0, 1]:
-```
-r = R/255,  g = G/255,  b = B/255
-```
+**Step 1**: Normalize RGB to $[0, 1]$:
+
+$$r = \frac{R}{255}, \quad g = \frac{G}{255}, \quad b = \frac{B}{255}$$
 
 **Step 2**: Compute Value:
-```
-V = max(r, g, b)
-```
+
+$$V = \max(r, g, b)$$
 
 **Step 3**: Compute Saturation:
-- If V = 0 (color is black): S = 0.
-- Otherwise: **S = (V − min(r, g, b)) / V**
+- If $V = 0$ (color is black): $S = 0$.
+- Otherwise: $S = \frac{V - \min(r, g, b)}{V}$
 
 **Step 4**: Compute Hue:
-- Let Delta = V − min(r, g, b)
-- If Delta = 0: H = 0 (achromatic).
+- Let $\Delta = V - \min(r, g, b)$
+- If $\Delta = 0$: $H = 0$ (achromatic).
 - Otherwise:
 
-```
-H = 0°   + 60° × (g−b)/Delta,   if V = r  (dominant channel is red)
-H = 120° + 60° × (b−r)/Delta,   if V = g  (dominant channel is green)
-H = 240° + 60° × (r−g)/Delta,   if V = b  (dominant channel is blue)
-```
+$$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}$$
 
-- If H is negative, add 360° to bring into [0°, 360°].
+- If $H$ is negative, add 360° to bring into $[0°, 360°]$.
 
 **Intuition**:
-- V = max(r,g,b): how bright is the color? (dominated by brightest channel)
-- S: how different are the channels from each other? Equal = gray = no saturation.
-- H: which channel dominates, and by how much? Maps to an angle on the color wheel.
+- $V = \max(r,g,b)$: how bright is the color? (dominated by brightest channel)
+- $S$: how different are the channels from each other? Equal = gray = no saturation.
+- $H$: which channel dominates, and by how much? Maps to an angle on the color wheel.
 
 **RGB → HSV is not creating new information; it reorganizes color information into perceptual dimensions.**
 
 #### Worked example: RGB(255, 0, 0) → HSV
 
-```
-Normalize:    r = 1,  g = 0,  b = 0
-Value:        V = max(1, 0, 0) = 1
-Saturation:   S = (1 − 0) / 1 = 1
-Delta:        Delta = 1 − 0 = 1
-Hue:          V = r, so H = 0° + 60° × (0−0)/1 = 0°
+$$\text{Normalize:} \quad r = 1,\; g = 0,\; b = 0$$
 
-Result: HSV(0°, 100%, 100%) — pure red
-```
+$$V = \max(1, 0, 0) = 1$$
+
+$$S = \frac{1 - 0}{1} = 1$$
+
+$$\Delta = 1 - 0 = 1$$
+
+$$V = r, \text{ so } H = 0° + 60° \times \frac{0 - 0}{1} = 0°$$
+
+**Result: HSV(0°, 100%, 100%) — pure red**
 
 ---
 
 ### 11. HSV → RGB Conversion (Full Algorithm)
 
-A four-step process (H in [0°, 360°], S and V in [0, 1]):
+A four-step process ($H$ in $[0°, 360°]$, $S$ and $V$ in $[0, 1]$):
 
-**Step 1 — Input normalization**: ensure H in [0°, 360°], S and V in [0, 1].
+**Step 1 — Input normalization**: ensure $H \in [0°, 360°]$, $S$ and $V \in [0, 1]$.
 
 **Step 2 — Compute base values**:
-```
-C (chroma) = V × S
-X = C × (1 − |(H/60°) mod 2 − 1|)
-m = V − C
-```
+
+$$C = V \times S$$
+
+$$X = C \times \left(1 - \left|\left(\frac{H}{60°}\right) \bmod 2 - 1\right|\right)$$
+
+$$m = V - C$$
 
 **Step 3 — Assign pre-shift RGB based on hue sector**:
 
-| Hue range | (R', G', B') |
+| Hue range | $(R', G', B')$ |
 |---|---|
-| 0° ≤ H < 60° | (C, X, 0) |
-| 60° ≤ H < 120° | (X, C, 0) |
-| 120° ≤ H < 180° | (0, C, X) |
-| 180° ≤ H < 240° | (0, X, C) |
-| 240° ≤ H < 300° | (X, 0, C) |
-| 300° ≤ H < 360° | (C, 0, X) |
+| $0° \leq H < 60°$ | $(C, X, 0)$ |
+| $60° \leq H < 120°$ | $(X, C, 0)$ |
+| $120° \leq H < 180°$ | $(0, C, X)$ |
+| $180° \leq H < 240°$ | $(0, X, C)$ |
+| $240° \leq H < 300°$ | $(X, 0, C)$ |
+| $300° \leq H < 360°$ | $(C, 0, X)$ |
 
-**Step 4 — Adjust to [0, 255]**:
-```
-R = (R' + m) × 255
-G = (G' + m) × 255
-B = (B' + m) × 255
-```
+**Step 4 — Adjust to $[0, 255]$**:
+
+$$R = (R' + m) \times 255, \quad G = (G' + m) \times 255, \quad B = (B' + m) \times 255$$
 
 ---
 
@@ -444,9 +430,9 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
 
 | Component | Formula | Interpretation |
 |---|---|---|
-| **V (HSV)** | max(R, G, B) / 255 | Brightness from brightest channel |
-| **L (HSL)** | (max + min) / (2 × 255) | Midpoint — perceptual brightness (closer to human vision) |
-| **I (HSI)** | (R + G + B) / (3 × 255) | Average — overall intensity (better for grayscale) |
+| **V (HSV)** | $\max(R, G, B) / 255$ | Brightness from brightest channel |
+| **L (HSL)** | $(\max + \min) / (2 \times 255)$ | Midpoint — perceptual brightness (closer to human vision) |
+| **I (HSI)** | $(R + G + B) / (3 \times 255)$ | Average — overall intensity (better for grayscale) |
 
 ---
 
@@ -474,7 +460,7 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
   - **L**: Lightness (0 = black, 100 = white).
   - **A**: Green–red axis (negative = green side, positive = red side).
   - **B**: Blue–yellow axis (negative = blue side, positive = yellow side).
-- Applications: color correction, image processing, quality control (measuring color difference ΔE).
+- Applications: color correction, image processing, quality control (measuring color difference $\Delta E$).
 - Conversion: Lab ↔ XYZ ↔ RGB.
 
 ---
@@ -499,7 +485,7 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
 | **HSV/HSI/HSL** | Intuitive, separates color from brightness, easy thresholding | Not perceptually uniform, hue unstable near gray, device-dependent | Color segmentation, tracking, CV heuristics |
 | **CIE XYZ** | Device-independent, based on vision experiments, foundation of all spaces | Not perceptually uniform, not displayable, includes non-visible colors | Color definition, conversion, standards |
 | **Chromaticity (x,y)** | Removes brightness, useful for color comparison | Loses luminance, not perceptually uniform | Illumination analysis, color consistency |
-| **CIE Lab** | Approx. perceptually uniform, meaningful ΔE distances, separates L from chroma | Computationally heavier, requires XYZ conversion | Color difference, quality control, correction |
+| **CIE Lab** | Approx. perceptually uniform, meaningful $\Delta E$ distances, separates L from chroma | Computationally heavier, requires XYZ conversion | Color difference, quality control, correction |
 | **CMYK** | Matches subtractive printing process, efficient ink usage | Device-dependent, not perceptual, limited gamut | Printing, publishing, graphic arts |
 | **YCbCr** | Efficient compression, separates brightness from color, matches human sensitivity | Not perceptual, not intuitive, slightly device-dependent | JPEG, MPEG, video, TV |
 
@@ -513,15 +499,15 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
 - **Metamerism** — two physically different spectra that produce identical tristimulus values (S,M,L) and therefore look the same color. Color is many-to-one from spectrum to perception.
 - **Hue** — the dominant wavelength / color identity (red, green, blue, etc.); angle 0°–360° on the color wheel.
 - **Saturation** — purity of the hue; relative amount of white mixed in. 0 = gray, 1 = pure vivid color.
-- **Brightness / Luminance / Lightness / Value / Intensity** — different measures of how light/dark a color is (V = max channel, L = midpoint, I = average).
+- **Brightness / Luminance / Lightness / Value / Intensity** — different measures of how light/dark a color is ($V = \max$ channel, $L =$ midpoint, $I =$ average).
 - **Color model / Color space** — a coordinate system + subspace where each color is a single point.
-- **RGB** — additive model; color as (R,G,B) ∈ [0,255]^3; cube geometry; device-dependent.
+- **RGB** — additive model; color as $(R,G,B) \in [0,255]^3$; cube geometry; device-dependent.
 - **HSV** — Hue-Saturation-Value; cone geometry; perceptually intuitive; used for color manipulation.
-- **HSI** — Hue-Saturation-Intensity; bicone geometry; I = average of RGB.
-- **HSL** — Hue-Saturation-Lightness; L = (max+min)/2; closer to human brightness perception.
+- **HSI** — Hue-Saturation-Intensity; bicone geometry; $I = \text{average of RGB}$.
+- **HSL** — Hue-Saturation-Lightness; $L = (\max+\min)/2$; closer to human brightness perception.
 - **CIE XYZ** — device-independent reference space with virtual primaries; all matching functions non-negative; Y = luminance.
-- **Chromaticity coordinates** — (x, y) = normalized XYZ; removes luminance; maps color independent of brightness.
-- **CIE 1931 chromaticity diagram** — horseshoe-shaped 2D plot of all human-perceivable colors in (x,y) space; spectral locus on outer curved edge.
+- **Chromaticity coordinates** — $(x, y) =$ normalized XYZ; removes luminance; maps color independent of brightness.
+- **CIE 1931 chromaticity diagram** — horseshoe-shaped 2D plot of all human-perceivable colors in $(x,y)$ space; spectral locus on outer curved edge.
 - **Spectral locus** — the curved outer boundary of the chromaticity diagram; represents pure monochromatic colors 400–700 nm.
 - **Gamut** — the set of colors a device can reproduce; represented as a triangle in the chromaticity diagram.
 - **CMYK** — subtractive model for printing; Cyan, Magenta, Yellow, Key(Black).
@@ -542,21 +528,21 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
 
 2. **Define metamerism** and explain why it exists (compression from infinite-dimensional spectrum to 3 numbers). State the implication: color alone is unreliable in computer vision.
 
-3. **State the three color characteristics** (hue, saturation, brightness) and give their precise definitions. Know the formulas: L = (M+m)/2, S formula for HSL, H = 0 if R=G=B.
+3. **State the three color characteristics** (hue, saturation, brightness) and give their precise definitions. Know the formulas: $L = (M+m)/2$, $S$ formula for HSL, $H = 0$ if $R=G=B$.
 
 4. **Describe the RGB cube** — corners and their colors, the diagonal grayscale axis, device-dependence, and the two key problems (limited gamut, perceptually non-linear).
 
-5. **RGB → HSV conversion** — reproduce the full algorithm (normalize, V = max, S = (V−min)/V, H piecewise formula) and the worked example for RGB(255,0,0) → HSV(0°,100%,100%).
+5. **RGB → HSV conversion** — reproduce the full algorithm (normalize, $V = \max$, $S = (V-\min)/V$, $H$ piecewise formula) and the worked example for RGB(255,0,0) → HSV(0°,100%,100%).
 
-6. **HSV → RGB conversion** — reproduce the four-step algorithm (compute C, X, m; assign sector; final adjustment).
+6. **HSV → RGB conversion** — reproduce the four-step algorithm (compute $C$, $X$, $m$; assign sector; final adjustment).
 
 7. **Explain CIE XYZ**: why virtual primaries, the RGB→XYZ matrix, what Y represents, why device-independent, and when to use it (define/convert, not display).
 
-8. **Describe the CIE 1931 chromaticity diagram**: horseshoe shape, spectral locus, purple line, white point, gamut triangle. Explain what chromaticity coordinates (x,y) are and how they're derived. State the key limitation (not perceptually uniform).
+8. **Describe the CIE 1931 chromaticity diagram**: horseshoe shape, spectral locus, purple line, white point, gamut triangle. Explain what chromaticity coordinates $(x,y)$ are and how they're derived. State the key limitation (not perceptually uniform).
 
-9. **Compare HSV, HSI, HSL**: how V, L, I differ (max vs. midpoint vs. average).
+9. **Compare HSV, HSI, HSL**: how $V$, $L$, $I$ differ (max vs. midpoint vs. average).
 
-10. **Complete color space comparison**: for each of RGB, HSV, CIE XYZ, chromaticity (x,y), CIE Lab, CMYK, YCbCr — state strengths, weaknesses, and typical application.
+10. **Complete color space comparison**: for each of RGB, HSV, CIE XYZ, chromaticity $(x,y)$, CIE Lab, CMYK, YCbCr — state strengths, weaknesses, and typical application.
 
 11. **Color blindness types**: protanopia (missing L-cone), tritanopia (missing M-cone), monochromacy. Describe the Ishihara test.
 
@@ -565,13 +551,13 @@ Both HSI and HSL are **perceptual color spaces** that separate chromatic compone
 ## Pitfalls
 
 - **The eye does NOT measure wavelength**: it measures three integrals (S, M, L). Students often confuse "wavelength = color" — this is only approximately true.
-- **Metamerism means RGB alone is not a reliable color descriptor**: two physically different objects may produce the same (R,G,B) under one light and different values under another.
-- **HSV V ≠ luminance**: V = max(R,G,B) which is not a perceptual brightness; L (HSL) and I (HSI) are different from V and from each other.
-- **Hue is undefined when S = 0** (achromatic/gray pixels). Any H value is valid for gray. Many algorithms break on this edge case.
+- **Metamerism means RGB alone is not a reliable color descriptor**: two physically different objects may produce the same $(R,G,B)$ under one light and different values under another.
+- **HSV V ≠ luminance**: $V = \max(R,G,B)$ which is not a perceptual brightness; $L$ (HSL) and $I$ (HSI) are different from $V$ and from each other.
+- **Hue is undefined when $S = 0$** (achromatic/gray pixels). Any $H$ value is valid for gray. Many algorithms break on this edge case.
 - **CIE XYZ primaries are NOT real lights**: they are mathematical constructs. You cannot build a "pure X lamp." This is often confused with real physical primaries.
 - **The chromaticity diagram is NOT perceptually uniform**: green occupies a disproportionately large area relative to perceptual differences; red and blue differences are compressed.
 - **Standard observer = only 17 British subjects**: the CIE 1931 standard is an approximation of a very small and non-representative sample.
 - **OpenCV HSV ranges differ from standard**: H is 0–179 (not 0–360), S and V are 0–255 (not 0–100%). Confusing these ranges causes incorrect color thresholding.
 - **CMYK is subtractive, RGB is additive**: mixing all RGB primaries → white; mixing all CMY primaries → (muddy) black/dark. Never confuse the mixing models.
-- **Negative RGB matching coefficients**: the CIE RGB matching function r(lambda) goes negative near 450 nm — this is not an error, it reflects the real overlap of cone sensitivities.
+- **Negative RGB matching coefficients**: the CIE RGB matching function $\bar{r}(\lambda)$ goes negative near 450 nm — this is not an error, it reflects the real overlap of cone sensitivities.
 - **Gamut is device-specific**: sRGB, Adobe RGB, and Apple RGB all have different gamuts; colors in one may be out-of-gamut in another. Always specify which RGB standard you are using.

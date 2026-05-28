@@ -111,7 +111,7 @@ Steps:
 2. **Repeat for each mean m_i:**
    - a. Place a kernel window of size **W** around `m_i`.
    - b. Compute the local centroid `m` of all points inside the window; assign `m_i = m`.
-   - c. Stop if `|| m_i^(t+1) - m_i^(t) || < ε` (shift is smaller than threshold).
+   - c. Stop if $\|m_i^{(t+1)} - m_i^{(t)}\| < \varepsilon$ (shift is smaller than threshold).
 3. **Assign:** pixels whose trajectories converge to the **same mode** belong to the same cluster (segment).
 
 **Intuition (density landscape):** Each hill in the density surface represents one cluster. Pixels "climb" the nearest hill by repeatedly computing the local centroid. Red dots on the 3-D density surface diagram mark the peaks (modes), and the arrows show pixels flowing uphill toward them.
@@ -312,19 +312,15 @@ Elastic deformation was key to teaching the network to generalise to the natural
 
 U-Net uses **pixel-wise softmax** followed by **cross-entropy loss**:
 
-**Softmax** converts raw logits `a_k(x)` into class probabilities for pixel x:
+**Softmax** converts raw logits $a_k(x)$ into class probabilities for pixel $x$:
 
-```
-p_k(x) = exp(a_k(x)) / sum_{k'} exp(a_{k'}(x))
-```
+$$p_k(x) = \frac{\exp(a_k(x))}{\sum_{k'} \exp(a_{k'}(x))}$$
 
 **Cross-entropy loss** (minimised over all pixels):
 
-```
-H(p, q) = - sum_x  p(x) * log q(x)
-```
+$$H(p, q) = -\sum_x p(x) \log q(x)$$
 
-where `p(x)` is the ground-truth distribution (one-hot) and `q(x)` is the predicted distribution. The loss is computed **for every pixel** in the segmentation map — this makes U-Net a fully dense prediction model.
+where $p(x)$ is the ground-truth distribution (one-hot) and $q(x)$ is the predicted distribution. The loss is computed **for every pixel** in the segmentation map — this makes U-Net a fully dense prediction model.
 
 ---
 
@@ -352,7 +348,7 @@ where `p(x)` is the ground-truth distribution (one-hot) and `q(x)` is the predic
 - **Decoder (expanding path)** — U-Net's right half; up-convolution + concatenation, channels halve at each step.
 - **Skip connections** — direct paths from encoder feature maps to the corresponding decoder level; concatenated along the channel axis to restore spatial detail.
 - **Pixel-wise softmax** — softmax applied independently to each pixel's class logits.
-- **Cross-entropy loss** — loss function summed over all pixels: `H(p,q) = -sum_x p(x) log q(x)`.
+- **Cross-entropy loss** — loss function summed over all pixels: $H(p,q) = -\sum_x p(x) \log q(x)$.
 - **Elastic deformation** — augmentation simulating non-rigid tissue deformation; key for biomedical U-Net training.
 - **FCN** — Fully Convolutional Network; early deep segmentation model, predecessor to U-Net.
 - **Mask R-CNN** — instance segmentation network combining object detection with per-object pixel masks.
@@ -369,7 +365,7 @@ where `p(x)` is the ground-truth distribution (one-hot) and `q(x)` is the predic
 
 4. **Describe K-Means for segmentation:** algorithm steps, the role of K, and the effect of adding spatial coordinates (x, y) to the feature vector. Explain why K=2 gives a coarser result than K=8.
 
-5. **Describe Mean Shift for segmentation:** the kernel density estimation idea, the hill-climbing metaphor, the full algorithm (initialise, kernel window, centroid update, convergence criterion `|| m_i^(t+1) - m_i^(t) || < ε`), and cluster assignment. Compare to K-Means.
+5. **Describe Mean Shift for segmentation:** the kernel density estimation idea, the hill-climbing metaphor, the full algorithm (initialise, kernel window, centroid update, convergence criterion $\|m_i^{(t+1)} - m_i^{(t)}\| < \varepsilon$), and cluster assignment. Compare to K-Means.
 
 6. **Compare K-Means and Mean Shift** on the four properties: ease of use, sensitivity to initialisation, handling of outliers, number of clusters.
 
@@ -387,7 +383,7 @@ where `p(x)` is the ground-truth distribution (one-hot) and `q(x)` is the predic
 
 13. **Trace image sizes through U-Net** for a 256×256 input: after pool1 → 128×128; pool2 → 64×64; pool3 → 32×32; pool4 → 16×16 (bottleneck); up1 → 32×32; up2 → 64×64; up3 → 128×128; up4 → 256×256 (output).
 
-14. **Write the U-Net loss function:** pixel-wise softmax formula `p_k(x) = e^{a_k(x)} / sum_{k'} e^{a_{k'}(x)}`; cross-entropy `H(p,q) = -sum_x p(x) log q(x)`. Explain why the loss is computed per pixel.
+14. **Write the U-Net loss function:** pixel-wise softmax formula $p_k(x) = \frac{e^{a_k(x)}}{\sum_{k'} e^{a_{k'}(x)}}$; cross-entropy $H(p,q) = -\sum_x p(x) \log q(x)$. Explain why the loss is computed per pixel.
 
 15. **Describe U-Net training settings:** optimizer (SGD), momentum (0.99), batch size (1), data augmentation (especially elastic deformation), and why augmentation was critical (only ~30 training images).
 

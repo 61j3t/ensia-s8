@@ -35,21 +35,21 @@ In the presence of noise, smoothing before differentiation is essential.
 
 ### 2. Image gradient — first-derivative approach
 
-For a continuous 2D image f(x, y), the **gradient** is:
+For a continuous 2D image $f(x, y)$, the **gradient** is:
 
-    nabla f = [df/dx, df/dy]
+$$\nabla f = \left[\frac{\partial f}{\partial x},\ \frac{\partial f}{\partial y}\right]$$
 
 The **gradient magnitude** (edge strength):
 
-    ||nabla f|| = sqrt( (df/dx)^2 + (df/dy)^2 )
+$$\|\nabla f\| = \sqrt{\left(\frac{\partial f}{\partial x}\right)^2 + \left(\frac{\partial f}{\partial y}\right)^2}$$
 
 Approximation for speed:
 
-    ||nabla f|| ≈ |df/dx| + |df/dy|
+$$\|\nabla f\| \approx \left|\frac{\partial f}{\partial x}\right| + \left|\frac{\partial f}{\partial y}\right|$$
 
 The **gradient direction** (angle of maximum intensity change, perpendicular to the edge):
 
-    theta = arctan( (df/dy) / (df/dx) )
+$$\theta = \arctan\!\left(\frac{\partial f / \partial y}{\partial f / \partial x}\right)$$
 
 For discrete images, derivatives are approximated by finite differences.
 
@@ -61,8 +61,7 @@ For discrete images, derivatives are approximated by finite differences.
 
 Detects diagonal edges. Very sensitive to noise because the kernel is tiny.
 
-    Gx = [ 1   0 ]        Gy = [  0   1 ]
-         [ 0  -1 ]             [ -1   0 ]
+$$G_x = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} \qquad G_y = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$$
 
 Apply each kernel by convolution; compute magnitude.
 
@@ -70,22 +69,19 @@ Apply each kernel by convolution; compute magnitude.
 
 Averages over 3 rows/columns before differencing — slightly more noise-robust than Roberts.
 
-    Gx = [ -1   0   1 ]       Gy = [ -1  -1  -1 ]
-         [ -1   0   1 ]            [  0   0   0 ]
-         [ -1   0   1 ]            [  1   1   1 ]
+$$G_x = \begin{bmatrix} -1 & 0 & 1 \\ -1 & 0 & 1 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -1 & -1 \\ 0 & 0 & 0 \\ 1 & 1 & 1 \end{bmatrix}$$
 
 #### 3.3 Sobel operator (3x3) — most commonly used
 
 Weights the central row/column by 2 for better noise suppression.
 
-    Gx = [ -1   0   1 ]       Gy = [ -1  -2  -1 ]
-         [ -2   0   2 ]            [  0   0   0 ]
-         [ -1   0   1 ]            [  1   2   1 ]
+$$G_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}$$
 
-Gradient magnitude:  M(x,y) = sqrt(Gx^2 + Gy^2)
-Gradient direction:  theta(x,y) = arctan(Gy / Gx)
+Gradient magnitude: $M(x,y) = \sqrt{G_x^2 + G_y^2}$
 
-**Worked example (Sobel Gx on a 3x3 patch):**
+Gradient direction: $\theta(x,y) = \arctan(G_y / G_x)$
+
+**Worked example (Sobel $G_x$ on a 3x3 patch):**
 
     Patch:   50  50  80       Gx response at centre = (-1)(50) + (0)(50) + (1)(80)
              50  50  80                               + (-2)(50) + (0)(50) + (2)(80)
@@ -98,13 +94,13 @@ Gradient direction:  theta(x,y) = arctan(Gy / Gx)
 
 The **Laplacian** is the sum of second partial derivatives:
 
-    nabla^2 f = d^2f/dx^2 + d^2f/dy^2
+$$\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}$$
 
 Discrete 3x3 approximation:
 
-    [ 0   1   0 ]
-    [ 1  -4   1 ]       (or with diagonals: replace -4 with -8 and add 1s at corners)
-    [ 0   1   0 ]
+$$\begin{bmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{bmatrix}$$
+
+(or with diagonals: replace $-4$ with $-8$ and add $1$s at corners)
 
 **Key property:** Edges correspond to **zero-crossings** of the Laplacian (where the second derivative changes sign), not to its maxima. This gives sub-pixel edge localization.
 
@@ -116,17 +112,17 @@ Discrete 3x3 approximation:
 
 ### 5. Laplacian-of-Gaussian (LoG) — Marr-Hildreth detector
 
-Convolving the image with a Gaussian g_sigma and then taking the Laplacian:
+Convolving the image with a Gaussian $g_\sigma$ and then taking the Laplacian:
 
-    LoG(x,y) = nabla^2 [g_sigma(x,y) * I(x,y)]
+$$\text{LoG}(x,y) = \nabla^2 [g_\sigma(x,y) * I(x,y)]$$
 
 Because convolution is linear and shift-invariant, this equals:
 
-    [nabla^2 g_sigma(x,y)] * I(x,y)
+$$[\nabla^2 g_\sigma(x,y)] * I(x,y)$$
 
 So you can precompute the LoG kernel once and apply it to the image directly. The LoG kernel in 2D is:
 
-    LoG(x,y) = -1/(pi * sigma^4) * [1 - (x^2+y^2)/(2*sigma^2)] * exp(-(x^2+y^2)/(2*sigma^2))
+$$\text{LoG}(x,y) = -\frac{1}{\pi \sigma^4} \left[1 - \frac{x^2+y^2}{2\sigma^2}\right] \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
 
 This is the famous **"Mexican hat"** function (positive central peak, negative surrounding ring).
 
@@ -135,7 +131,7 @@ This is the famous **"Mexican hat"** function (positive central peak, negative s
 2. Find zero-crossings — pixels where the LoG changes sign between adjacent pixels.
 3. Optional: threshold zero-crossings by the gradient magnitude to remove weak responses.
 
-**sigma controls scale:** large sigma = coarse-scale edges, small sigma = fine-scale edges.
+$\sigma$ controls scale: large $\sigma$ = coarse-scale edges, small $\sigma$ = fine-scale edges.
 
 ---
 
@@ -143,11 +139,11 @@ This is the famous **"Mexican hat"** function (positive central peak, negative s
 
 #### 6.1 Optimality criteria (Canny 1986)
 
-Canny formulated edge detection mathematically and looked for the optimal filter F. He defined two objective functions:
-- **Lambda(F)**: large if F produces good **localization** (detected edge close to true edge).
-- **Sigma(F)**: large if F produces good **detection** (high signal-to-noise ratio).
+Canny formulated edge detection mathematically and looked for the optimal filter $F$. He defined two objective functions:
+- $\Lambda(F)$: large if $F$ produces good **localization** (detected edge close to true edge).
+- $\Sigma(F)$: large if $F$ produces good **detection** (high signal-to-noise ratio).
 
-**Problem:** Find the filter F that maximizes the product Lambda(F) * Sigma(F), subject to the constraint that a **single peak** is generated at a step edge (no multiple responses).
+**Problem:** Find the filter $F$ that maximizes the product $\Lambda(F) \cdot \Sigma(F)$, subject to the constraint that a **single peak** is generated at a step edge (no multiple responses).
 
 This mathematical optimization led to the following three criteria:
 
@@ -163,11 +159,11 @@ Canny showed that the optimal 1D filter satisfying these criteria is well approx
 
 One way to use both the gradient (for direction and magnitude) and the Laplacian (for precise localization via zero-crossings):
 
-1. Smooth with Gaussian: `n_sigma * I`
-2. Compute gradient: `nabla(n_sigma) * I`
-3. Find gradient magnitude: `||nabla(n_sigma) * I||`
-4. Find gradient direction: `n_hat = [nabla(n_sigma)*I] / ||nabla(n_sigma)*I||`
-5. Compute 1D Laplacian along gradient direction n_hat: `d^2(n_sigma * I) / d(n_hat)^2`
+1. Smooth with Gaussian: $g_\sigma * I$
+2. Compute gradient: $\nabla(g_\sigma) * I$
+3. Find gradient magnitude: $\|\nabla(g_\sigma) * I\|$
+4. Find gradient direction: $\hat{n} = [\nabla(g_\sigma)*I] / \|\nabla(g_\sigma)*I\|$
+5. Compute 1D Laplacian along gradient direction $\hat{n}$: $\partial^2(g_\sigma * I) / \partial \hat{n}^2$
 6. Find zero-crossings in the 1D Laplacian to pinpoint edge location.
 
 This approach is equivalent to Canny's non-maximum suppression step (see below).
@@ -176,34 +172,36 @@ This approach is equivalent to Canny's non-maximum suppression step (see below).
 
 **Step 1: Noise reduction (Gaussian smoothing)**
 
-Convolve the image I with a 2D Gaussian filter with standard deviation sigma:
+Convolve the image $I$ with a 2D Gaussian filter with standard deviation $\sigma$:
 
-    I_smooth = G_sigma * I
+$$I_{\text{smooth}} = G_\sigma * I$$
 
-where G_sigma(x,y) = (1/(2*pi*sigma^2)) * exp(-(x^2+y^2)/(2*sigma^2))
+where
 
-Larger sigma → more smoothing → fewer fine edges detected, more robust to noise.
-Smaller sigma → less smoothing → more detail, more noise sensitivity.
+$$G_\sigma(x,y) = \frac{1}{2\pi\sigma^2} \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
 
-Example (Lena image): sigma=1 gives many fine edges, sigma=2 gives cleaner edges with some detail lost, sigma=4 gives only the strongest coarse edges.
+Larger $\sigma$ → more smoothing → fewer fine edges detected, more robust to noise.
+Smaller $\sigma$ → less smoothing → more detail, more noise sensitivity.
+
+Example (Lena image): $\sigma=1$ gives many fine edges, $\sigma=2$ gives cleaner edges with some detail lost, $\sigma=4$ gives only the strongest coarse edges.
 
 **Step 2: Gradient magnitude and direction**
 
 Apply Sobel (or equivalent) operator to the smoothed image:
 
-    Gx = Sobel_x * I_smooth
-    Gy = Sobel_y * I_smooth
+$$G_x = \text{Sobel}_x * I_{\text{smooth}}, \qquad G_y = \text{Sobel}_y * I_{\text{smooth}}$$
 
-    Magnitude: M(x,y) = sqrt(Gx^2 + Gy^2)
-    Direction: n_hat = [Gx, Gy] / M(x,y)   (unit vector pointing in gradient direction)
+$$M(x,y) = \sqrt{G_x^2 + G_y^2}$$
+
+$$\hat{n} = \frac{[G_x,\ G_y]}{M(x,y)} \quad \text{(unit vector in gradient direction)}$$
 
 **Step 3: Non-maximum suppression (edge thinning)**
 
 The gradient magnitude image has thick ridges (many pixels wide). This step thins them to single-pixel width by keeping only the local maxima along the gradient direction.
 
-For each pixel p:
-- Look at the two neighbours of p along the gradient direction n_hat (and its opposite -n_hat).
-- If M(p) is less than at least one of those two neighbours, suppress p: set M(p) = 0.
+For each pixel $p$:
+- Look at the two neighbours of $p$ along the gradient direction $\hat{n}$ (and its opposite $-\hat{n}$).
+- If $M(p)$ is less than at least one of those two neighbours, suppress $p$: set $M(p) = 0$.
 - Only pixels that are strict local maxima along the gradient direction are kept.
 
 This can equivalently be described as computing the 1D Laplacian along the gradient direction and finding zero-crossings.
@@ -212,32 +210,34 @@ Visual interpretation: on the gradient image of a curved edge (e.g., a quarter-c
 
 **Step 4: Hysteresis thresholding (double threshold)**
 
-A single threshold would either miss real edges (too high) or include noise (too low). Canny uses two thresholds T0 < T1:
+A single threshold would either miss real edges (too high) or include noise (too low). Canny uses two thresholds $T_0 < T_1$:
 
-    ||nabla I(x,y)|| < T0          -->  Definitely NOT an edge (suppress)
-    ||nabla I(x,y)|| >= T1         -->  Definitely AN EDGE (keep)
-    T0 <= ||nabla I(x,y)|| < T1   -->  Edge IF a neighbouring pixel is definitely an edge
+$$\|\nabla I(x,y)\| < T_0 \quad \Rightarrow \quad \text{Definitely NOT an edge (suppress)}$$
 
-The "weak" pixels in the middle band are kept only if they are connected (8-connectivity) to a "strong" pixel. This hysteresis mechanism links edge chains together and rejects isolated noise spikes that happen to fall between T0 and T1.
+$$\|\nabla I(x,y)\| \geq T_1 \quad \Rightarrow \quad \text{Definitely AN EDGE (keep)}$$
+
+$$T_0 \leq \|\nabla I(x,y)\| < T_1 \quad \Rightarrow \quad \text{Edge IF a neighbouring pixel is definitely an edge}$$
+
+The "weak" pixels in the middle band are kept only if they are connected (8-connectivity) to a "strong" pixel. This hysteresis mechanism links edge chains together and rejects isolated noise spikes that happen to fall between $T_0$ and $T_1$.
 
 **Summary table:**
 
 | Step | Operation | Purpose |
 |------|-----------|---------|
-| 1 | Gaussian smoothing (sigma) | Suppress noise |
+| 1 | Gaussian smoothing ($\sigma$) | Suppress noise |
 | 2 | Sobel gradient (magnitude + direction) | Detect intensity changes |
 | 3 | Non-maximum suppression | Thin edges to 1 pixel wide |
-| 4 | Hysteresis thresholding (T0, T1) | Link edges, reject false positives |
+| 4 | Hysteresis thresholding ($T_0$, $T_1$) | Link edges, reject false positives |
 
 **Parameters:**
-- sigma: controls smoothing scale. Larger sigma = fewer, coarser edges.
-- T0 (low threshold): minimum gradient to be considered a candidate edge.
-- T1 (high threshold): guaranteed edge threshold. Typically T1 ~ 2-3 x T0.
+- $\sigma$: controls smoothing scale. Larger $\sigma$ = fewer, coarser edges.
+- $T_0$ (low threshold): minimum gradient to be considered a candidate edge.
+- $T_1$ (high threshold): guaranteed edge threshold. Typically $T_1 \approx 2$–$3 \times T_0$.
 
 **Example (Canny parameter effects on a portrait photo):**
-- sigma=1, T_low=0.4, T_high=0.8: detailed edges including texture.
-- sigma=2, T_low=0.4, T_high=0.8: smoother edges, less texture detail.
-- sigma=1, T_low=0.3, T_high=0.7: more edges recovered (lower thresholds).
+- $\sigma=1$, $T_{\text{low}}=0.4$, $T_{\text{high}}=0.8$: detailed edges including texture.
+- $\sigma=2$, $T_{\text{low}}=0.4$, $T_{\text{high}}=0.8$: smoother edges, less texture detail.
+- $\sigma=1$, $T_{\text{low}}=0.3$, $T_{\text{high}}=0.7$: more edges recovered (lower thresholds).
 
 ---
 
@@ -271,15 +271,15 @@ Requires a **ground-truth edge map** (manually annotated by humans, multiple ann
 
 **Pratt's Figure of Merit:**
 
-    FOM = 1 / max(N_d, N_g) * sum_{i=1}^{N_d} [ 1 / (1 + alpha * d_i^2) ]
+$$\text{FOM} = \frac{1}{\max(N_d, N_g)} \sum_{i=1}^{N_d} \frac{1}{1 + \alpha\, d_i^2}$$
 
 Where:
-- N_d = number of detected edge pixels
-- N_g = number of ground-truth edge pixels
-- d_i = distance from detected edge pixel i to the nearest ground-truth pixel
-- alpha = constant, typically 1/9
+- $N_d$ = number of detected edge pixels
+- $N_g$ = number of ground-truth edge pixels
+- $d_i$ = distance from detected edge pixel $i$ to the nearest ground-truth pixel
+- $\alpha$ = constant, typically $1/9$
 
-FOM = 1 is perfect. FOM is penalized by both missing edges (N_d < N_g) and mislocalized edges (large d_i).
+FOM = 1 is perfect. FOM is penalized by both missing edges ($N_d < N_g$) and mislocalized edges (large $d_i$).
 
 **Ground-truth datasets:**
 - **BSDS500** — Natural images with human-labeled contours (standard benchmark).
@@ -314,78 +314,80 @@ Applications: image segmentation, industrial inspection, autonomous driving (lan
 
 #### 8.2 Fitting lines to edges — least-squares (vertical distance)
 
-Given edge points (x_i, y_i), fit the line y = mx + c by minimizing the average squared **vertical** distance:
+Given edge points $(x_i, y_i)$, fit the line $y = mx + c$ by minimizing the average squared **vertical** distance:
 
-    E = (1/N) * sum_i (y_i - m*x_i - c)^2
+$$E = \frac{1}{N} \sum_i (y_i - m x_i - c)^2$$
 
-Setting dE/dm = 0 and dE/dc = 0 (least-squares):
+Setting $\partial E/\partial m = 0$ and $\partial E/\partial c = 0$ (least-squares):
 
-    dE/dm = (-2/N) * sum_i x_i*(y_i - m*x_i - c) = 0
-    dE/dc = (-2/N) * sum_i (y_i - m*x_i - c) = 0
+$$\frac{\partial E}{\partial m} = \frac{-2}{N} \sum_i x_i(y_i - m x_i - c) = 0$$
+
+$$\frac{\partial E}{\partial c} = \frac{-2}{N} \sum_i (y_i - m x_i - c) = 0$$
 
 Closed-form solution:
 
-    x_bar = (1/N) * sum_i x_i       y_bar = (1/N) * sum_i y_i
+$$\bar{x} = \frac{1}{N}\sum_i x_i, \qquad \bar{y} = \frac{1}{N}\sum_i y_i$$
 
-    m = sum_i (x_i - x_bar)(y_i - y_bar) / sum_i (x_i - x_bar)^2
+$$m = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}$$
 
-    c = y_bar - m * x_bar
+$$c = \bar{y} - m\bar{x}$$
 
-**Problem with this approach:** Fails for **vertical lines** (m → infinity, denominator → 0).
+**Problem with this approach:** Fails for **vertical lines** ($m \to \infty$, denominator $\to 0$).
 
 #### 8.3 Fitting lines — perpendicular distance (PCA approach)
 
 Use the **polar (normal) form** of a line:
 
-    x*cos(theta) + y*sin(theta) = rho
+$$x\cos\theta + y\sin\theta = \rho$$
 
 Where:
-- theta = angle between x-axis and the line's normal vector
-- rho = perpendicular distance from the origin to the line
+- $\theta$ = angle between $x$-axis and the line's normal vector
+- $\rho$ = perpendicular distance from the origin to the line
 
-Signed distance from point (x_i, y_i) to the line:
+Signed distance from point $(x_i, y_i)$ to the line:
 
-    d_i = x_i*cos(theta) + y_i*sin(theta) - rho
+$$d_i = x_i\cos\theta + y_i\sin\theta - \rho$$
 
 Minimize the sum of squared perpendicular distances:
 
-    E(theta, rho) = sum_{i=1}^{n} (x_i*cos(theta) + y_i*sin(theta) - rho)^2
+$$E(\theta, \rho) = \sum_{i=1}^{n} (x_i\cos\theta + y_i\sin\theta - \rho)^2$$
 
 This works for lines of any orientation including vertical.
 
 **Solution via 2D PCA:**
-1. Compute the mean: (x_bar, y_bar).
-2. Center the data: x'_i = x_i - x_bar, y'_i = y_i - y_bar.
+1. Compute the mean: $(\bar{x}, \bar{y})$.
+2. Center the data: $x'_i = x_i - \bar{x}$, $y'_i = y_i - \bar{y}$.
 3. Form the 2x2 covariance matrix from centered data.
-4. Compute eigenvectors/eigenvalues — the **eigenvector of the smallest eigenvalue** gives the normal direction theta.
-5. Compute rho = x_bar*cos(theta) + y_bar*sin(theta).
+4. Compute eigenvectors/eigenvalues — the **eigenvector of the smallest eigenvalue** gives the normal direction $\theta$.
+5. Compute $\rho = \bar{x}\cos\theta + \bar{y}\sin\theta$.
 
-Equivalently: y = (-cos(theta)/sin(theta))*x + (rho/sin(theta)).
+Equivalently: $y = \left(-\frac{\cos\theta}{\sin\theta}\right)x + \frac{\rho}{\sin\theta}$.
 
 #### 8.4 Fitting curves (polynomials) to edges
 
-Given edge points (x_i, y_i), fit a polynomial:
+Given edge points $(x_i, y_i)$, fit a polynomial:
 
-    y = f(x) = a*x^3 + b*x^2 + c*x + d
+$$y = f(x) = ax^3 + bx^2 + cx + d$$
 
 Minimize:
 
-    E = (1/N) * sum_i (y_i - a*x_i^3 - b*x_i^2 - c*x_i - d)^2
+$$E = \frac{1}{N} \sum_i (y_i - ax_i^3 - bx_i^2 - cx_i - d)^2$$
 
-Set dE/da = dE/db = dE/dc = dE/dd = 0.
+Set $\partial E/\partial a = \partial E/\partial b = \partial E/\partial c = \partial E/\partial d = 0$.
 
-With n points and 4 unknowns (a, b, c, d), for n >> 4 this is an **over-determined linear system**:
+With $n$ points and 4 unknowns $(a, b, c, d)$, for $n \gg 4$ this is an **over-determined linear system**:
 
-    X * a = y
+$$X \mathbf{a} = \mathbf{y}$$
 
-Where X is n x 4 (the Vandermonde-like matrix), a = [a, b, c, d]^T is unknown, y = [y_0, ..., y_n]^T.
+Where $X$ is $n \times 4$ (the Vandermonde-like matrix), $\mathbf{a} = [a, b, c, d]^T$ is unknown, $\mathbf{y} = [y_0, \ldots, y_n]^T$.
 
-Since X is not square, it cannot be directly inverted. Use the **least-squares (pseudo-inverse) solution**:
+Since $X$ is not square, it cannot be directly inverted. Use the **least-squares (pseudo-inverse) solution**:
 
-    X^T X a = X^T y
-    a = (X^T X)^{-1} X^T y
+$$X^T X\, \mathbf{a} = X^T \mathbf{y}$$
 
-The matrix X^+ = (X^T X)^{-1} X^T is the **Moore-Penrose pseudo-inverse** of X.
+$$\mathbf{a} = (X^T X)^{-1} X^T \mathbf{y}$$
+
+The matrix $X^+ = (X^T X)^{-1} X^T$ is the **Moore-Penrose pseudo-inverse** of $X$.
 
 #### 8.5 The boundary detection problem and the Hough transform
 
@@ -398,7 +400,7 @@ One classical solution: **The Hough Transform** (Hough 1962, U.S. Patent 3,069,6
 ## Key terms (glossary)
 
 - **Edge** — Local spatial discontinuity in image intensity, corresponding to boundaries or surface changes.
-- **Gradient** — Vector [df/dx, df/dy]; magnitude = edge strength, direction = perpendicular to edge.
+- **Gradient** — Vector $[\partial f/\partial x,\ \partial f/\partial y]$; magnitude = edge strength, direction = perpendicular to edge.
 - **Roberts operator** — 2x2 diagonal difference kernel; minimal, very noise-sensitive.
 - **Prewitt operator** — 3x3 kernel; separable (smoothing + difference), handles noise better than Roberts.
 - **Sobel operator** — 3x3 kernel with central weight 2; most common discrete gradient operator.
@@ -407,15 +409,15 @@ One classical solution: **The Hough Transform** (Hough 1962, U.S. Patent 3,069,6
 - **Marr-Hildreth detector** — Edge detector based on LoG zero-crossings.
 - **Canny detector** — Optimal edge detector (1986) satisfying three criteria; four-stage pipeline.
 - **Non-maximum suppression (NMS)** — Thins edge ridges by keeping only local maxima along gradient direction.
-- **Hysteresis thresholding** — Two-threshold scheme (T0, T1) that links weak edges to strong ones.
+- **Hysteresis thresholding** — Two-threshold scheme ($T_0$, $T_1$) that links weak edges to strong ones.
 - **Step edge** — Idealized instantaneous intensity jump.
 - **Zero-crossing** — Point where the Laplacian (or its 1D projection) changes sign; indicates edge centre.
-- **Pratt's Figure of Merit (FOM)** — Quantitative metric penalizing both missed and mislocalized edges (range 0-1; 1 = perfect).
+- **Pratt's Figure of Merit (FOM)** — Quantitative metric penalizing both missed and mislocalized edges (range 0–1; 1 = perfect).
 - **BDE (Boundary Displacement Error)** — Average spatial distance between detected and ground-truth edges.
 - **BSDS500** — Standard benchmark dataset for edge detection evaluation.
 - **Fitting** — Process of recovering curve/line parameters from a set of edge points.
-- **Pseudo-inverse** — X^+ = (X^T X)^{-1} X^T; least-squares solution for over-determined linear systems.
-- **Polar/normal form of a line** — x*cos(theta) + y*sin(theta) = rho; avoids singularity for vertical lines.
+- **Pseudo-inverse** — $X^+ = (X^T X)^{-1} X^T$; least-squares solution for over-determined linear systems.
+- **Polar/normal form of a line** — $x\cos\theta + y\sin\theta = \rho$; avoids singularity for vertical lines.
 
 ---
 
@@ -425,21 +427,21 @@ One classical solution: **The Hough Transform** (Hough 1962, U.S. Patent 3,069,6
 
 2. **Describe the four Canny stages in order** (smooth → gradient → NMS → hysteresis), with what each stage does and why it is needed.
 
-3. **Explain non-maximum suppression precisely:** for pixel p, compare M(p) with its two neighbours along the gradient direction; suppress if not the local maximum. Know that this is equivalent to finding 1D Laplacian zero-crossings along n_hat.
+3. **Explain non-maximum suppression precisely:** for pixel $p$, compare $M(p)$ with its two neighbours along the gradient direction; suppress if not the local maximum. Know that this is equivalent to finding 1D Laplacian zero-crossings along $\hat{n}$.
 
-4. **Explain hysteresis thresholding:** three zones (T < T0: reject; T >= T1: keep; T0 <= T < T1: keep if connected to a strong edge pixel). Know why a single threshold is insufficient.
+4. **Explain hysteresis thresholding:** three zones ($T < T_0$: reject; $T \geq T_1$: keep; $T_0 \leq T < T_1$: keep if connected to a strong edge pixel). Know why a single threshold is insufficient.
 
-5. **Write the Sobel kernels (Gx and Gy) as 3x3 matrices** from memory. Be able to apply them to a small pixel patch and compute the magnitude and direction.
+5. **Write the Sobel kernels ($G_x$ and $G_y$) as 3x3 matrices** from memory. Be able to apply them to a small pixel patch and compute the magnitude and direction.
 
 6. **State the Laplacian discrete kernel** and explain why edges are zero-crossings (not maxima) of the Laplacian.
 
-7. **Explain LoG:** what it is, why Gaussian smoothing is applied first, and what the "Mexican hat" shape means. Know that nabla^2 [g_sigma * I] = [nabla^2 g_sigma] * I.
+7. **Explain LoG:** what it is, why Gaussian smoothing is applied first, and what the "Mexican hat" shape means. Know that $\nabla^2 [g_\sigma * I] = [\nabla^2 g_\sigma] * I$.
 
 8. **Give Pratt's FOM formula**, name all variables, and interpret: what does FOM = 1 mean? What drives FOM down?
 
 9. **Explain the difference between least-squares vertical-distance line fitting and perpendicular-distance fitting (PCA)**. State why vertical fitting fails for vertical lines and how polar form solves it.
 
-10. **Describe the effect of sigma on Canny output:** larger sigma → smoother → fewer/coarser edges. Understand the detection/localization trade-off with sigma.
+10. **Describe the effect of $\sigma$ on Canny output:** larger $\sigma$ → smoother → fewer/coarser edges. Understand the detection/localization trade-off with $\sigma$.
 
 ---
 
@@ -453,6 +455,6 @@ One classical solution: **The Hough Transform** (Hough 1962, U.S. Patent 3,069,6
 - **LoG and Canny are not the same.** LoG uses zero-crossings of the 2D Laplacian; Canny uses NMS (equivalent to 1D Laplacian zero-crossings along the gradient direction) plus hysteresis. Canny has the explicit optimality derivation.
 - **Sobel vs. Prewitt:** Sobel weights the centre pixel by 2 (gives more importance to the immediate neighbours); Prewitt weights uniformly. Sobel is generally preferred in practice.
 - **Roberts is 2x2**, not 3x3. It is rarely used in practice because it is extremely noise-sensitive and has no smoothing component.
-- **Least-squares vertical fitting fails for vertical lines** (denominator sum_i (x_i - x_bar)^2 → 0). Use perpendicular-distance/PCA formulation instead.
-- **Pseudo-inverse**: a = (X^T X)^{-1} X^T y, NOT a = X^{-1} y (X is not square for n >> m).
-- **Sigma trade-off in Canny:** increasing sigma improves detection (less noise) but hurts localization (edges are blurred and shifted). This is the inherent detection-localization trade-off captured formally in Canny's Sigma(F)-Lambda(F) product.
+- **Least-squares vertical fitting fails for vertical lines** (denominator $\sum_i (x_i - \bar{x})^2 \to 0$). Use perpendicular-distance/PCA formulation instead.
+- **Pseudo-inverse**: $\mathbf{a} = (X^T X)^{-1} X^T \mathbf{y}$, NOT $\mathbf{a} = X^{-1} \mathbf{y}$ ($X$ is not square for $n \gg m$).
+- **Sigma trade-off in Canny:** increasing $\sigma$ improves detection (less noise) but hurts localization (edges are blurred and shifted). This is the inherent detection-localization trade-off captured formally in Canny's $\Sigma(F)$-$\Lambda(F)$ product.

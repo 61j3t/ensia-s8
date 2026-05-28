@@ -19,12 +19,14 @@
 
 ### 1.1. Why Pig — limitations of raw MapReduce
 
-| MR limitation | What Pig fixes |
-|---|---|
-| Restricted programming model | High-level data flow expressions |
-| Only two phases (map/reduce) | Chains multiple operations naturally |
-| Job chain for long data flow | Pig generates and chains MR jobs automatically |
+
+| MR limitation                           | What Pig fixes                                                   |
+| --------------------------------------- | ---------------------------------------------------------------- |
+| Restricted programming model            | High-level data flow expressions                                 |
+| Only two phases (map/reduce)            | Chains multiple operations naturally                             |
+| Job chain for long data flow            | Pig generates and chains MR jobs automatically                   |
 | Too many lines of code for simple logic | Concise scripts; e.g., load + filter + group + project = 4 lines |
+
 
 The same task in raw Java vs Pig Latin: dozens of lines vs a handful.
 
@@ -38,18 +40,21 @@ The same task in raw Java vs Pig Latin: dozens of lines vs a handful.
 - Also used by Twitter, LinkedIn, eBay, AOL.
 
 Designed for **three categories of big data jobs**:
+
 - **ETL** data pipelines
 - **Research on raw data**
 - **Iterative data processing**
 
 ### 1.3. Pig execution modes
 
-| Mode | When to use | Command |
-|---|---|---|
-| **Local Mode** | Running on a single local machine; HADOOP + JAVA installed locally; uses local FS. Local testing. | `pig -x local script.pig` |
-| **MapReduce Mode** | Needs access to Hadoop cluster and HDFS — production runs. | `pig -x mapreduce script.pig` |
-| **Spark Mode** | Needs access to Hadoop + Yarn + Spark + HDFS. | `pig -x spark script.pig` |
-| **Tez Mode** | Like MR mode but uses Tez execution engine. | `pig -x tez script.pig` |
+
+| Mode               | When to use                                                                                       | Command                       |
+| ------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Local Mode**     | Running on a single local machine; HADOOP + JAVA installed locally; uses local FS. Local testing. | `pig -x local script.pig`     |
+| **MapReduce Mode** | Needs access to Hadoop cluster and HDFS — production runs.                                        | `pig -x mapreduce script.pig` |
+| **Spark Mode**     | Needs access to Hadoop + Yarn + Spark + HDFS.                                                     | `pig -x spark script.pig`     |
+| **Tez Mode**       | Like MR mode but uses Tez execution engine.                                                       | `pig -x tez script.pig`       |
+
 
 ### 1.4. Architecture of Pig
 
@@ -75,16 +80,19 @@ Pig has a **Grunt shell** + **Pig Server** for interactive vs server-mode execut
 
 Pig's data model is **fully nested** and supports complex non-atomic types.
 
-| Type | Definition | Example |
-|---|---|---|
-| **Atom** | Single value of any simple type (string or number) | `22`, `"Math"` |
-| **Field** | A piece of data — a simple atom | A column value |
-| **Tuple** | Ordered set of fields. Fields can be of any type. Similar to an RDBMS row. | `(Ahmad, 22)` |
-| **Bag** | Unordered set of tuples; tuples don't need to be unique. Similar to an RDBMS table. | `{(Math, 18), (Physics, 17)}` |
-| **Map** | Set of key-value pairs. Keys must be `chararray`, unique. Values can be of any type. | `[name#Anis, age#17]` |
-| **Relation** | A bag of tuples. The relations are unordered (no guarantee on processing order). | The full dataset |
+
+| Type         | Definition                                                                           | Example                       |
+| ------------ | ------------------------------------------------------------------------------------ | ----------------------------- |
+| **Atom**     | Single value of any simple type (string or number)                                   | `22`, `"Math"`                |
+| **Field**    | A piece of data — a simple atom                                                      | A column value                |
+| **Tuple**    | Ordered set of fields. Fields can be of any type. Similar to an RDBMS row.           | `(Ahmad, 22)`                 |
+| **Bag**      | Unordered set of tuples; tuples don't need to be unique. Similar to an RDBMS table.  | `{(Math, 18), (Physics, 17)}` |
+| **Map**      | Set of key-value pairs. Keys must be `chararray`, unique. Values can be of any type. | `[name#Anis, age#17]`         |
+| **Relation** | A bag of tuples. The relations are unordered (no guarantee on processing order).     | The full dataset              |
+
 
 Example record:
+
 ```
 {
   (Ahmad, 22, { (Math, 18), (Physics, 17), (History, 12) }),
@@ -96,21 +104,25 @@ Example record:
 
 Grunt is the interactive shell.
 
-| Shell Commands (run external) | Description | Example |
-|---|---|---|
-| `FS` | Run HDFS commands without leaving Grunt | `FS -ls /user/hadoop/` |
-| `SH` | Run local shell command | `SH ls -l /home/user/` |
 
-| Utility Commands | Description | Example |
-|---|---|---|
-| `CLEAR` | Clear screen | `CLEAR` |
-| `EXEC` | Run a pig script right now (no Grunt interaction) | `EXEC /home/user/scripts/myscript.pig` |
-| `HELP` | Show help info | `HELP` |
-| `HISTORY` | Show command history | `HISTORY` |
-| `KILL` | Terminate a running MR job started by Pig | `KILL job_20250430...` |
-| `QUIT` | Exit the Pig shell | `QUIT` |
-| `RUN` | Run a Pig script (Grunt session stays active) | `RUN /home/user/scripts/myscript.pig` |
-| `SET` | Change a Pig or Hadoop property for the session | `SET default_parallel 5` |
+| Shell Commands (run external) | Description                             | Example                |
+| ----------------------------- | --------------------------------------- | ---------------------- |
+| `FS`                          | Run HDFS commands without leaving Grunt | `FS -ls /user/hadoop/` |
+| `SH`                          | Run local shell command                 | `SH ls -l /home/user/` |
+
+
+
+| Utility Commands | Description                                       | Example                                |
+| ---------------- | ------------------------------------------------- | -------------------------------------- |
+| `CLEAR`          | Clear screen                                      | `CLEAR`                                |
+| `EXEC`           | Run a pig script right now (no Grunt interaction) | `EXEC /home/user/scripts/myscript.pig` |
+| `HELP`           | Show help info                                    | `HELP`                                 |
+| `HISTORY`        | Show command history                              | `HISTORY`                              |
+| `KILL`           | Terminate a running MR job started by Pig         | `KILL job_20250430...`                 |
+| `QUIT`           | Exit the Pig shell                                | `QUIT`                                 |
+| `RUN`            | Run a Pig script (Grunt session stays active)     | `RUN /home/user/scripts/myscript.pig`  |
+| `SET`            | Change a Pig or Hadoop property for the session   | `SET default_parallel 5`               |
+
 
 ---
 
@@ -126,18 +138,20 @@ Grunt is the interactive shell.
 
 ### 2.2. Pig Latin data types
 
-| Simple type | Description |
-|---|---|
-| `int` | 32-bit signed integer |
-| `long` | 64-bit signed integer |
-| `float` | 32-bit float |
-| `double` | 64-bit float |
-| `chararray` | UTF-8 string |
-| `bytearray` | Blob |
-| `boolean` | True/false |
-| `datetime` | Date-time |
-| `biginteger` | Java BigInteger |
-| `bigdecimal` | Java BigDecimal |
+
+| Simple type  | Description           |
+| ------------ | --------------------- |
+| `int`        | 32-bit signed integer |
+| `long`       | 64-bit signed integer |
+| `float`      | 32-bit float          |
+| `double`     | 64-bit float          |
+| `chararray`  | UTF-8 string          |
+| `bytearray`  | Blob                  |
+| `boolean`    | True/false            |
+| `datetime`   | Date-time             |
+| `biginteger` | Java BigInteger       |
+| `bigdecimal` | Java BigDecimal       |
+
 
 Complex types: `Tuple`, `Bag`, `Map` (as defined in the data model).
 
@@ -158,26 +172,28 @@ Comparison: `==`, `!=`, `>`, `<`, `>=`, `<=`, `matches` (pattern matching).
 
 Grouped by purpose:
 
-| Category | Operator | Purpose |
-|---|---|---|
-| **Loading/Storing** | `LOAD` | Load data from file into a relation |
-| | `STORE` | Save a relation to file system (local/HDFS) |
-| **Filtering** | `FILTER` | Remove unwanted rows |
-| | `DISTINCT` | Remove duplicates |
-| | `FOREACH ... GENERATE` | Transform columns per row (like SELECT) |
-| | `STREAM` | Transform via external program |
-| **Grouping/Joining** | `JOIN` | Join two or more relations |
-| | `COGROUP` | Group two+ relations together |
-| | `GROUP` | Group a single relation by key |
-| | `CROSS` | Cartesian product of two+ relations |
-| **Sorting** | `ORDER` | Sort by one or more fields |
-| | `LIMIT` | Take first N tuples |
-| **Combining/Splitting** | `UNION` | Merge contents of two relations (same schema) |
-| | `SPLIT` | Split one relation into two+ by conditions |
-| **Diagnostic** | `DUMP` | Print relation to console |
-| | `DESCRIBE` | Show schema of a relation |
-| | `EXPLAIN` | Show logical, physical, MR execution plans |
-| | `ILLUSTRATE` | Show step-by-step example execution |
+
+| Category                | Operator               | Purpose                                       |
+| ----------------------- | ---------------------- | --------------------------------------------- |
+| **Loading/Storing**     | `LOAD`                 | Load data from file into a relation           |
+|                         | `STORE`                | Save a relation to file system (local/HDFS)   |
+| **Filtering**           | `FILTER`               | Remove unwanted rows                          |
+|                         | `DISTINCT`             | Remove duplicates                             |
+|                         | `FOREACH ... GENERATE` | Transform columns per row (like SELECT)       |
+|                         | `STREAM`               | Transform via external program                |
+| **Grouping/Joining**    | `JOIN`                 | Join two or more relations                    |
+|                         | `COGROUP`              | Group two+ relations together                 |
+|                         | `GROUP`                | Group a single relation by key                |
+|                         | `CROSS`                | Cartesian product of two+ relations           |
+| **Sorting**             | `ORDER`                | Sort by one or more fields                    |
+|                         | `LIMIT`                | Take first N tuples                           |
+| **Combining/Splitting** | `UNION`                | Merge contents of two relations (same schema) |
+|                         | `SPLIT`                | Split one relation into two+ by conditions    |
+| **Diagnostic**          | `DUMP`                 | Print relation to console                     |
+|                         | `DESCRIBE`             | Show schema of a relation                     |
+|                         | `EXPLAIN`              | Show logical, physical, MR execution plans    |
+|                         | `ILLUSTRATE`           | Show step-by-step example execution           |
+
 
 ### 2.5. LOAD operator (the most important one)
 
@@ -187,10 +203,11 @@ Relation_name = LOAD 'input_file_path' USING function AS schema;
 
 - `relation_name` — the relation you're loading data into.
 - `input_file_path` — HDFS path (or local in local mode).
-- `function` — one of `BinStorage`, `JsonLoader`, **`PigStorage`** (most common — for delimited text), `TextLoader`.
+- `function` — one of `BinStorage`, `JsonLoader`, `**PigStorage**` (most common — for delimited text), `TextLoader`.
 - `schema` — `(field:type, field:type, ...)`.
 
 Example:
+
 ```pig
 Contributions_Raw = LOAD '/shared/employee_contributions.csv'
     USING PigStorage(',')
@@ -202,10 +219,11 @@ Contributions_Raw = LOAD '/shared/employee_contributions.csv'
 ### 2.6. STORE operator
 
 ```pig
-STORE Relation_name INTO 'required_directory_path' [USING function];
+STORE Relation_name INTO 'required_directory_path' USING function;
 ```
 
 Example:
+
 ```pig
 STORE FEmployees INTO '/output/female_employees' USING PigStorage(',');
 ```
@@ -226,6 +244,7 @@ Group_data = GROUP Relation_name BY field;
 ```
 
 Example:
+
 ```pig
 -- Relation A (employees: name, department)
 B = GROUP A BY department;
@@ -247,6 +266,7 @@ cogroup_data = COGROUP students BY age, employees BY age;
 ```
 
 Example:
+
 ```pig
 -- Relation A (employees: emp_id, name), Relation B (salaries: emp_id, salary)
 C = COGROUP A BY emp_id, B BY emp_id;
@@ -266,6 +286,7 @@ Relation3 = JOIN Relation1 BY key [LEFT|RIGHT|FULL OUTER], Relation2 BY key;
 Types: self-join, inner-join, outer-join (left, right, full).
 
 Example:
+
 ```pig
 C = JOIN A BY emp_id, B BY emp_id;
 -- inner join: rows in both
@@ -416,44 +437,50 @@ Pig provides eval, load, store, math, string, bag, tuple, and datetime functions
 
 ### 4.1. Eval functions (most-used)
 
-| Function | Purpose |
-|---|---|
-| `AVG()` | Average of numeric values in a bag |
-| `BagToString()` | Concatenate elements of a bag into a string |
-| `CONCAT()` | Concatenate two+ expressions |
-| `COUNT()` | Number of elements in a bag (skips nulls) |
-| `COUNT_STAR()` | Count including nulls |
-| `DIFF()` | Compare two bags in a tuple |
-| `IsEmpty()` | Check if a bag/map is empty |
-| `MAX()`, `MIN()` | Highest/lowest value in a single-column bag |
-| `PluckTuple()` | Pick columns matching a prefix from a relation |
-| `SIZE()` | Number of elements in any Pig data type |
-| `SUBTRACT()` | Tuples in bag1 not in bag2 |
-| `SUM()` | Sum of numeric values in a single-column bag |
-| `TOKENIZE()` | Split a string into a bag of words |
+
+| Function         | Purpose                                        |
+| ---------------- | ---------------------------------------------- |
+| `AVG()`          | Average of numeric values in a bag             |
+| `BagToString()`  | Concatenate elements of a bag into a string    |
+| `CONCAT()`       | Concatenate two+ expressions                   |
+| `COUNT()`        | Number of elements in a bag (skips nulls)      |
+| `COUNT_STAR()`   | Count including nulls                          |
+| `DIFF()`         | Compare two bags in a tuple                    |
+| `IsEmpty()`      | Check if a bag/map is empty                    |
+| `MAX()`, `MIN()` | Highest/lowest value in a single-column bag    |
+| `PluckTuple()`   | Pick columns matching a prefix from a relation |
+| `SIZE()`         | Number of elements in any Pig data type        |
+| `SUBTRACT()`     | Tuples in bag1 not in bag2                     |
+| `SUM()`          | Sum of numeric values in a single-column bag   |
+| `TOKENIZE()`     | Split a string into a bag of words             |
+
 
 ### 4.2. Bag & Tuple functions
 
-| Function | Purpose |
-|---|---|
-| `TOBAG()` | Convert expressions to a bag |
-| `TOP()` | Top N tuples of a relation |
+
+| Function    | Purpose                        |
+| ----------- | ------------------------------ |
+| `TOBAG()`   | Convert expressions to a bag   |
+| `TOP()`     | Top N tuples of a relation     |
 | `TOTUPLE()` | Convert expressions to a tuple |
-| `TOMAP()` | Convert KV pairs to a map |
+| `TOMAP()`   | Convert KV pairs to a map      |
+
 
 ### 4.3. String functions
 
-| Function | Purpose |
-|---|---|
-| `ENDSWITH(s, test)`, `STARTSWITH(s, sub)` | Suffix/prefix checks |
-| `SUBSTRING(s, start, stop)` | Substring |
-| `EqualsIgnoreCase(s1, s2)` | Case-insensitive compare |
-| `INDEXOF`, `LAST_INDEX_OF` | Find positions of chars |
-| `LCFIRST`, `UCFIRST` | First-char case manipulation |
-| `LOWER`, `UPPER` | Case conversion |
-| `REPLACE(s, old, new)` | Replace chars |
-| `STRSPLIT`, `STRSPLITTOBAG` | Split by regex |
-| `TRIM`, `LTRIM`, `RTRIM` | Whitespace trimming |
+
+| Function                                  | Purpose                      |
+| ----------------------------------------- | ---------------------------- |
+| `ENDSWITH(s, test)`, `STARTSWITH(s, sub)` | Suffix/prefix checks         |
+| `SUBSTRING(s, start, stop)`               | Substring                    |
+| `EqualsIgnoreCase(s1, s2)`                | Case-insensitive compare     |
+| `INDEXOF`, `LAST_INDEX_OF`                | Find positions of chars      |
+| `LCFIRST`, `UCFIRST`                      | First-char case manipulation |
+| `LOWER`, `UPPER`                          | Case conversion              |
+| `REPLACE(s, old, new)`                    | Replace chars                |
+| `STRSPLIT`, `STRSPLITTOBAG`               | Split by regex               |
+| `TRIM`, `LTRIM`, `RTRIM`                  | Whitespace trimming          |
+
 
 ### 4.4. DateTime functions
 
@@ -478,11 +505,13 @@ A **UDF** is a custom function written in **Java** to extend Pig Latin.
 
 ### 5.2. Three UDF types
 
-| UDF type | Where it lives | Returns |
-|---|---|---|
-| **Filter Functions** | Used in `FILTER` statements | Boolean |
-| **Eval Functions** | Used in `FOREACH ... GENERATE` | Any Pig value |
+
+| UDF type                | Where it lives                        | Returns                   |
+| ----------------------- | ------------------------------------- | ------------------------- |
+| **Filter Functions**    | Used in `FILTER` statements           | Boolean                   |
+| **Eval Functions**      | Used in `FOREACH ... GENERATE`        | Any Pig value             |
 | **Algebraic Functions** | Act on inner bags in FOREACH GENERATE | Full MR ops on inner bags |
+
 
 ### 5.3. Defining a UDF (Java)
 
@@ -541,6 +570,7 @@ Steps: `REGISTER` the JAR → `DEFINE` an alias → use it like any built-in.
 7. **Compare Pig vs Hive** — when to use which (Pig is procedural, dataflow; Hive is declarative, SQL-like).
 
 ### Pitfalls
+
 - **Every statement ends with a semicolon.**
 - Pig is **lazy** — nothing actually runs until `DUMP` or `STORE`. Use `EXPLAIN`/`ILLUSTRATE` for inspection.
 - `LOAD` doesn't actually validate file existence at parse time — only at execution.
@@ -548,3 +578,4 @@ Steps: `REGISTER` the JAR → `DEFINE` an alias → use it like any built-in.
 - `FOREACH ... GENERATE` is the equivalent of SQL's `SELECT`.
 - Relations are **unordered** by default — use `ORDER BY` for ordered output.
 - UDFs require **registering the JAR first** + `DEFINE` if you want a short alias.
+

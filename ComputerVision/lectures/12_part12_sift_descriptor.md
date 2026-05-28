@@ -48,7 +48,7 @@ The goal now is to compute a **signature/descriptor/feature vector** for each ke
 #### 2.3 The 8-bin orientation histogram per cell
 
 For each of the 16 cells:
-1. **Compute gradient** at every pixel inside the cell: magnitude m(x,y) and orientation theta(x,y).
+1. **Compute gradient** at every pixel inside the cell: magnitude $m(x,y)$ and orientation $\theta(x,y)$.
 2. **Optionally apply Gaussian weighting** centred at the keypoint, so pixels near the keypoint contribute more than those at the periphery.
 3. Each pixel **votes for a bin**:
    - The 360° range is split into **8 bins at 45° intervals**: 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°.
@@ -73,11 +73,11 @@ For each of the 16 cells:
 
 After concatenation, the raw 128-D vector is normalized to unit length:
 
-```
-descriptor  <--  descriptor / ||descriptor||_2
-```
+$$
+\mathbf{d} \leftarrow \frac{\mathbf{d}}{\|\mathbf{d}\|_2}
+$$
 
-where ||·||_2 is the Euclidean (L2) norm: sqrt(sum of squares of all 128 components).
+where $\|\cdot\|_2$ is the Euclidean (L2) norm: $\sqrt{\sum_{k=1}^{128} d_k^2}$.
 
 **Why this achieves illumination invariance:**
 - A global brightness change (e.g., multiply all pixel values by a constant c) scales all gradient magnitudes by c.
@@ -114,17 +114,17 @@ Let H1 and H2 be two 128-D SIFT descriptors.
 
 **Euclidean distance** (most common for SIFT):
 
-```
-d(H1, H2) = sqrt( sum_k (H1(k) - H2(k))^2 )
-```
+$$
+d(H_1, H_2) = \sqrt{\sum_{k} \bigl(H_1(k) - H_2(k)\bigr)^2}
+$$
 
 Smaller distance = more similar descriptors = better match.
 
 **Histogram intersection** (alternative):
 
-```
-d(H1, H2) = sum_k min(H1(k), H2(k))
-```
+$$
+d(H_1, H_2) = \sum_{k} \min\bigl(H_1(k),\, H_2(k)\bigr)
+$$
 
 Larger intersection = better match (this is a similarity measure, not a distance).
 
@@ -138,11 +138,11 @@ Given a query keypoint descriptor Q from image A, find the descriptor D* in imag
 
 Lowe's key insight: a match is reliable if the nearest neighbor is **much closer** than the second-nearest neighbor. Formally:
 
-```
-d(Q, D_1st) / d(Q, D_2nd) < threshold
-```
+$$
+\frac{d(Q,\, D_{1\text{st}})}{d(Q,\, D_{2\text{nd}})} < \text{threshold}
+$$
 
-where D_1st is the nearest neighbor and D_2nd is the second-nearest neighbor.
+where $D_{1\text{st}}$ is the nearest neighbor and $D_{2\text{nd}}$ is the second-nearest neighbor.
 
 **Lowe's recommended threshold: 0.8**
 
@@ -235,10 +235,10 @@ The slides briefly introduce **Local Binary Pattern (LBP)** as an alternative to
 - **Scale invariance** — achieved by scaling the 16×16 window proportionally to the keypoint's sigma.
 - **L2 normalization** — dividing the descriptor vector by its Euclidean norm to achieve unit length; cancels linear brightness changes.
 - **Clipping (clamping)** — setting any descriptor component > 0.2 to 0.2 before re-normalizing; prevents dominant gradients from overwhelming the descriptor.
-- **Euclidean distance** — d(H1,H2) = sqrt(sum_k (H1(k)-H2(k))^2); standard metric for comparing 128-D SIFT vectors.
-- **Histogram intersection** — d(H1,H2) = sum_k min(H1(k),H2(k)); similarity measure (larger = better match).
+- **Euclidean distance** — $d(H_1,H_2) = \sqrt{\sum_{k}(H_1(k)-H_2(k))^2}$; standard metric for comparing 128-D SIFT vectors.
+- **Histogram intersection** — $d(H_1,H_2) = \sum_{k}\min(H_1(k),H_2(k))$; similarity measure (larger = better match).
 - **Nearest-neighbor (NN) matching** — finding the descriptor in a database that minimizes Euclidean distance to a query descriptor.
-- **Lowe's ratio test** — accept a match only if d_1st / d_2nd < 0.8; filters ambiguous matches where two database descriptors are similarly close.
+- **Lowe's ratio test** — accept a match only if $d_{1\text{st}} / d_{2\text{nd}} < 0.8$; filters ambiguous matches where two database descriptors are similarly close.
 - **Bag-of-Words (BoW)** — aggregation technique that quantizes local descriptors into a visual vocabulary and represents images as frequency histograms over visual words.
 - **VLAD** — Vector of Locally Aggregated Descriptors; aggregates residuals of descriptors relative to cluster centroids into a compact image representation.
 - **LBP (Local Binary Pattern)** — texture descriptor encoding local intensity structure as an 8-bit binary number per pixel, faster but less distinctive than SIFT.
