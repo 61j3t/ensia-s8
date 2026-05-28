@@ -16,12 +16,19 @@ Course revision materials for ENSIA (École Nationale Supérieure d'Intelligence
 │       ├── 00_SYLLABUS_MAP.md
 │       ├── 0X_chapterX_topic.md
 │       └── 0X_chapterX_topic.pdf
-└── ComputerVision/                     # Computer Vision (Dr S.-A. Berrani)
+├── ComputerVision/                     # Computer Vision (Dr S.-A. Berrani)
+│   └── lectures/
+│       ├── 00_SYLLABUS_MAP.md
+│       ├── 0X_partX_topic.md
+│       └── 0X_partX_topic.pdf
+└── EntrepriseComputing/                # Enterprise Computing (Dr K. Heragmi)
     └── lectures/
         ├── 00_SYLLABUS_MAP.md
-        ├── 0X_partX_topic.md
-        └── 0X_partX_topic.pdf
+        ├── 0X_weekX_topic.md
+        └── 0X_weekX_topic.pdf
 ```
+
+> Lecture PDFs are kept locally but excluded from git (`*.pdf` in `.gitignore`) to keep the repo lean.
 
 ## Courses
 
@@ -30,6 +37,7 @@ Course revision materials for ENSIA (École Nationale Supérieure d'Intelligence
 | **BigDataAnalytics&Visualisation** | Big Data Analytics & Visualization | Dr F. Dahak | Notes complete (Ch 1-8) |
 | **SpeechProcessing** | Speech Processing / Digital Signal Processing | Dr N. Nacereddine | Notes complete (Ch 1-10) |
 | **ComputerVision** | Computer Vision | Dr S.-A. Berrani | Notes complete (Part 1-14) |
+| **EntrepriseComputing** | Enterprise Computing | Dr K. Heragmi | Notes complete (Week 1-9) |
 
 ## Per-chapter notes layout
 
