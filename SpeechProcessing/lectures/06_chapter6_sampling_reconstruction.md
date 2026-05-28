@@ -18,8 +18,9 @@
 **Definition.** Sampling is the process of converting a continuous-time signal $x(t)$ into a discrete-time sequence $x[n]$ by extracting values at equally spaced time instants $t = nT$:
 
 $$
-x[n] = x(t)\big|_{t=nT} = x(nT), \qquad n = \ldots, -1, 0, 1, 2, \ldots \tag{6.1}
+x[n] = x(t)\big|_{t=nT} = x(nT), \qquad n = \ldots, -1, 0, 1, 2, \ldots
 $$
+*(Eq. 6.1)*
 
 - $T$ is the **sampling period** (seconds); its reciprocal $F_s = 1/T$ is the **sampling frequency** (Hz).
 - The angular sampling frequency is $\Omega_s = 2\pi/T$ (rad/s).
@@ -52,14 +53,16 @@ Conceptually the CD converter works in two stages (Fig. 6.2):
 The impulse train (Dirac comb):
 
 $$
-i(t) = \sum_{k=-\infty}^{\infty} \delta(t - kT) \tag{6.2a}
+i(t) = \sum_{k=-\infty}^{\infty} \delta(t - kT)
 $$
+*(Eq. 6.2a)*
 
 Multiplying $x(t)$ by $i(t)$ and using the sifting property of $\delta(t)$:
 
 $$
-x_s(t) = x(t) \cdot i(t) = x(t) \cdot \sum_{k} \delta(t - kT) = \sum_{k} x[k]\,\delta(t - kT) \tag{6.2}
+x_s(t) = x(t) \cdot i(t) = x(t) \cdot \sum_{k} \delta(t - kT) = \sum_{k} x[k]\,\delta(t - kT)
 $$
+*(Eq. 6.2)*
 
 **Fig. 6.2** (block diagram): $x(t)$ → multiplier ($\times i(t)$) → $x_s(t)$ → "impulse train to sequence" block → $x[n]$. Time-domain plots show $x(t)$ as a smooth curve, $x_s(t)$ as a train of weighted impulses at multiples of $T$, and $x[n]$ as a stem plot indexed by $n$.
 
@@ -68,8 +71,9 @@ $$
 The Fourier transform of $i(t)$ is itself an impulse train in frequency:
 
 $$
-I(j\Omega) = \Omega_s \sum_{k=-\infty}^{\infty} \delta(\Omega - k\Omega_s), \qquad \Omega_s = \frac{2\pi}{T} \tag{6.3}
+I(j\Omega) = \Omega_s \sum_{k=-\infty}^{\infty} \delta(\Omega - k\Omega_s), \qquad \Omega_s = \frac{2\pi}{T}
 $$
+*(Eq. 6.3)*
 
 (This is a standard result from Chapter 2 of the course.)
 
@@ -78,14 +82,16 @@ $$
 Using the multiplication property of the Fourier transform (multiplication in time $\leftrightarrow$ convolution in frequency, scaled by $1/(2\pi)$):
 
 $$
-x_1(t)\cdot x_2(t) \;\leftrightarrow\; \frac{1}{2\pi}\,X_1(j\Omega) * X_2(j\Omega) \tag{6.4}
+x_1(t)\cdot x_2(t) \;\leftrightarrow\; \frac{1}{2\pi}\,X_1(j\Omega) * X_2(j\Omega)
 $$
+*(Eq. 6.4)*
 
 Applying (6.2)–(6.4) and the sifting property:
 
 $$
-X_s(j\Omega) = \frac{1}{T}\sum_{k=-\infty}^{\infty} X\!\left(j(\Omega - k\Omega_s)\right) \tag{6.5}
+X_s(j\Omega) = \frac{1}{T}\sum_{k=-\infty}^{\infty} X\!\left(j(\Omega - k\Omega_s)\right)
 $$
+*(Eq. 6.5)*
 
 **Interpretation:** $X_s(j\Omega)$ is an **infinite sum of shifted copies** of $X(j\Omega)$, each scaled by $1/T$, centred at every integer multiple of $\Omega_s$.
 
@@ -108,14 +114,16 @@ For $x[n]$ to uniquely represent $x(t)$ we need two things:
 Let $x(t)$ be bandlimited with
 
 $$
-X(j\Omega) = 0, \qquad |\Omega| \geq \Omega_b \tag{6.6}
+X(j\Omega) = 0, \qquad |\Omega| \geq \Omega_b
 $$
+*(Eq. 6.6)*
 
 Then $x(t)$ is **uniquely determined** by its samples $x[n] = x(nT)$ if and only if:
 
 $$
-\Omega_s = \frac{2\pi}{T} > 2\Omega_b \tag{6.7}
+\Omega_s = \frac{2\pi}{T} > 2\Omega_b
 $$
+*(Eq. 6.7)*
 
 Terminology:
 - **Nyquist frequency**: $\Omega_b$ (the highest frequency in the signal)
@@ -161,14 +169,16 @@ So $f_s$ must exceed 4000 Hz to sample this signal without aliasing.
 To recover $x(t)$ from $x_s(t)$, we apply a lowpass filter $H(j\Omega)$ in the frequency domain (Fig. 6.6):
 
 $$
-H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\ 0, & \text{otherwise} \end{cases} \tag{6.8}
+H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\ 0, & \text{otherwise} \end{cases}
 $$
+*(Eq. 6.8)*
 
 where the cutoff $\Omega_c$ satisfies $\Omega_b < \Omega_c < \Omega_s - \Omega_b$ (any value in this gap works). For simplicity, set $\Omega_c$ at the midpoint:
 
 $$
-\Omega_c = \frac{\Omega_s}{2} = \frac{\pi}{T} \tag{6.9}
+\Omega_c = \frac{\Omega_s}{2} = \frac{\pi}{T}
 $$
+*(Eq. 6.9)*
 
 The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copies scaled by $1/T$). In the time domain: $x_r(t) = x_s(t) * h(t)$.
 
@@ -179,8 +189,9 @@ The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copie
 Taking the inverse Fourier transform of $H(j\Omega)$:
 
 $$
-h(t) = \frac{1}{2\pi}\int_{-\pi/T}^{\pi/T} T\,e^{j\Omega t}\,d\Omega = \frac{T\sin(\pi t/T)}{\pi t} = \mathrm{sinc}(t/T) \tag{6.10}
+h(t) = \frac{1}{2\pi}\int_{-\pi/T}^{\pi/T} T\,e^{j\Omega t}\,d\Omega = \frac{T\sin(\pi t/T)}{\pi t} = \mathrm{sinc}(t/T)
 $$
+*(Eq. 6.10)*
 
 where the sinc function is defined as:
 
@@ -200,8 +211,9 @@ $$
 x_r(t) = x_s(t) * h(t)
         = \left(\sum_{k=-\infty}^{\infty} x[k]\,\delta(t - kT)\right) * h(t)
         = \sum_{k=-\infty}^{\infty} x[k]\,h(t - kT)
-        = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right) \tag{6.11}
+        = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right)
 $$
+*(Eq. 6.11)*
 
 This is the **sinc interpolation formula** — it reconstructs $x(t)$ at any real $t$ from the discrete samples $x[k]$.
 
@@ -210,14 +222,16 @@ This is the **sinc interpolation formula** — it reconstructs $x(t)$ at any rea
 At $t = nT$:
 
 $$
-x_r(nT) = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}(n - k) \tag{6.12}
+x_r(nT) = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}(n - k)
 $$
+*(Eq. 6.12)*
 
 Since $\mathrm{sinc}(n-k) = 0$ when $n \neq k$ (integer argument, nonzero) and $\mathrm{sinc}(0) = 1$:
 
 $$
-x_r(nT) = x[n] = x(nT) \tag{6.15}
+x_r(nT) = x[n] = x(nT)
 $$
+*(Eq. 6.15)*
 
 confirming that $x_r(t) = x(t)$ — perfect reconstruction at every sample point, and in fact everywhere for bandlimited signals.
 
@@ -236,8 +250,9 @@ $$
 With change of variable $l = n - k$:
 
 $$
-y[n] = \sum_{l=-\infty}^{\infty} x[n-l]\,\mathrm{sinc}\!\left(\frac{lT - \Delta}{T}\right) \tag{6.11'}
+y[n] = \sum_{l=-\infty}^{\infty} x[n-l]\,\mathrm{sinc}\!\left(\frac{lT - \Delta}{T}\right)
 $$
+*(Eq. 6.11')*
 
 **Special case:** When $\Delta = mT$ (integer multiple of $T$), this reduces to a simple shift: $y[n] = x[n-m]$. For non-integer delays, the full infinite sinc sum is required — not practical in real-time systems.
 
@@ -258,8 +273,9 @@ x(t) → [CD converter] → x[n] → [Digital Signal Processor] → y[n] → [DC
 - DC converter: reconstructs $y(t)$ from $y[n]$ via (6.16):
 
 $$
-y(t) = \sum_{k=-\infty}^{\infty} y[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right) \tag{6.16}
+y(t) = \sum_{k=-\infty}^{\infty} y[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right)
 $$
+*(Eq. 6.16)*
 
 #### 6.2 Practical System (Real-World)
 

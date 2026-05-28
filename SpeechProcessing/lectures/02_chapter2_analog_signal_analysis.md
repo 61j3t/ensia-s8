@@ -21,14 +21,16 @@
 A continuous-time function $x(t)$ is **periodic** if there exists $T_p > 0$ such that:
 
 $$
-x(t) = x(t + T_p), \quad \text{for all } t \in (-\infty, \infty) \tag{2.2}
+x(t) = x(t + T_p), \quad \text{for all } t \in (-\infty, \infty)
 $$
+*(Eq. 2.2)*
 
 The smallest such $T_p$ is called the **fundamental period**. The **fundamental (angular) frequency** is:
 
 $$
-\Omega_0 = \frac{2\pi}{T_p} \quad (\text{rad/s}) \tag{2.3}
+\Omega_0 = \frac{2\pi}{T_p} \quad (\text{rad/s})
 $$
+*(Eq. 2.3)*
 
 In the frequency domain, $\Omega$ only takes discrete values: ..., $-\Omega_0$, 0, $\Omega_0$, $2\Omega_0$, ...
 
@@ -37,14 +39,16 @@ In the frequency domain, $\Omega$ only takes discrete values: ..., $-\Omega_0$, 
 Every periodic function can be expanded (synthesized) as:
 
 $$
-x(t) = \sum_{k=-\infty}^{\infty} a_k \cdot e^{jk\Omega_0 t}, \quad t \in (-\infty, \infty) \tag{2.4}
+x(t) = \sum_{k=-\infty}^{\infty} a_k \cdot e^{jk\Omega_0 t}, \quad t \in (-\infty, \infty)
 $$
+*(Eq. 2.4)*
 
 The **Fourier series coefficients** (analysis formula):
 
 $$
-a_k = \frac{1}{T_p} \int_{-T_p/2}^{T_p/2} x(t) \cdot e^{-jk\Omega_0 t} \, dt, \quad k = \ldots,-1,0,1,2,\ldots \tag{2.5}
+a_k = \frac{1}{T_p} \int_{-T_p/2}^{T_p/2} x(t) \cdot e^{-jk\Omega_0 t} \, dt, \quad k = \ldots,-1,0,1,2,\ldots
 $$
+*(Eq. 2.5)*
 
 The set $\{a_k\}$ characterizes $X(j\Omega)$ — it is the frequency representation of $x(t)$.
 
@@ -53,12 +57,14 @@ The set $\{a_k\}$ characterizes $X(j\Omega)$ — it is the frequency representat
 Since $a_k$ is generally complex:
 
 $$
-|a_k| = \sqrt{(\text{Re}\{a_k\})^2 + (\text{Im}\{a_k\})^2} \tag{2.6}
+|a_k| = \sqrt{(\text{Re}\{a_k\})^2 + (\text{Im}\{a_k\})^2}
 $$
+*(Eq. 2.6)*
 
 $$
-\angle(a_k) = \arctan\!\left(\frac{\text{Im}\{a_k\}}{\text{Re}\{a_k\}}\right) \tag{2.7}
+\angle(a_k) = \arctan\!\left(\frac{\text{Im}\{a_k\}}{\text{Re}\{a_k\}}\right)
 $$
+*(Eq. 2.7)*
 
 Fig. 2.1 (described): The left panel shows a continuous, periodic time-domain signal with period $T_p$. The right panel shows its frequency-domain representation as a discrete set of vertical lines (impulses) at multiples of $\Omega_0$, with heights $\{a_k\}$. Summary: continuous + periodic in time $\leftrightarrow$ discrete + aperiodic in frequency.
 
@@ -176,16 +182,18 @@ which matches $a_0$ — confirming consistency.
 The **Fourier transform** of a continuous-time, *aperiodic* signal $x(t)$:
 
 $$
-X(j\Omega) = \int_{-\infty}^{\infty} x(t) \cdot e^{-j\Omega t} \, dt \tag{2.8}
+X(j\Omega) = \int_{-\infty}^{\infty} x(t) \cdot e^{-j\Omega t} \, dt
 $$
+*(Eq. 2.8)*
 
 $X(j\Omega)$ is also called the **spectrum** of $x(t)$. Unlike the FS, $\Omega$ here is continuous.
 
 The **inverse Fourier transform**:
 
 $$
-x(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(j\Omega) \cdot e^{j\Omega t} \, d\Omega \tag{2.9}
+x(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(j\Omega) \cdot e^{j\Omega t} \, d\Omega
 $$
+*(Eq. 2.9)*
 
 Notation: $x(t) \leftrightarrow X(j\Omega)$
 
@@ -196,18 +204,21 @@ Fig. 2.2 (described): Left panel — a smooth, non-periodic (finite-energy) time
 The delta function $\delta(t)$ is defined by:
 
 $$
-\delta(t) = 0, \quad t \neq 0 \tag{2.10}
+\delta(t) = 0, \quad t \neq 0
 $$
+*(Eq. 2.10)*
 
 $$
-\int_{-\infty}^{\infty} \delta(t) \, dt = 1 \tag{2.11}
+\int_{-\infty}^{\infty} \delta(t) \, dt = 1
 $$
+*(Eq. 2.11)*
 
 Key property — **sifting property**:
 
 $$
-\int_{-\infty}^{\infty} f(t) \cdot \delta(t - t_0) \, dt = f(t_0) \tag{2.12}
+\int_{-\infty}^{\infty} f(t) \cdot \delta(t - t_0) \, dt = f(t_0)
 $$
+*(Eq. 2.12)*
 
 where $f(t)$ is any continuous-time signal.
 
@@ -216,8 +227,9 @@ Interpretation: $\delta(t)$ is zero everywhere except at $t = 0$, where it is no
 #### 2.3 The unit step function
 
 $$
-u(t) = \begin{cases} 1, & t > 0 \\ 0, & t < 0 \end{cases} \tag{2.13}
+u(t) = \begin{cases} 1, & t > 0 \\ 0, & t < 0 \end{cases}
 $$
+*(Eq. 2.13)*
 
 $u(0)$ is not well defined (discontinuity at $t = 0$).
 
@@ -284,8 +296,9 @@ Therefore: $\delta(t) \leftrightarrow 1$ (flat spectrum at all frequencies).
 **Pair 5 — Complex exponential** (derived from Pair 4 via inverse FT):
 
 $$
-e^{j\Omega_0 t} \leftrightarrow 2\pi\,\delta(\Omega - \Omega_0) \tag{2.16}
+e^{j\Omega_0 t} \leftrightarrow 2\pi\,\delta(\Omega - \Omega_0)
 $$
+*(Eq. 2.16)*
 
 Derivation: If $X(j\Omega) = 2\pi\delta(\Omega - \Omega_0)$, then by the inverse FT:
 
@@ -298,8 +311,9 @@ $$
 Combining (2.4) and (2.16): the FT of a periodic signal expressed via its FS is:
 
 $$
-\sum_{k=-\infty}^{\infty} a_k e^{jk\Omega_0 t} \;\leftrightarrow\; \sum_{k=-\infty}^{\infty} 2\pi a_k\,\delta(\Omega - k\Omega_0) \tag{2.17}
+\sum_{k=-\infty}^{\infty} a_k e^{jk\Omega_0 t} \;\leftrightarrow\; \sum_{k=-\infty}^{\infty} 2\pi a_k\,\delta(\Omega - k\Omega_0)
 $$
+*(Eq. 2.17)*
 
 The spectrum of a periodic signal is a train of impulses at the harmonic frequencies $k\Omega_0$, each weighted by $2\pi a_k$.
 
@@ -332,20 +346,23 @@ The FT can be obtained from the FS by a limiting argument. Construct $\tilde{x}(
 The FS coefficients of $\tilde{x}(t)$ are:
 
 $$
-a_k = \frac{1}{T} X(jk\Omega_0) \tag{2.20}
+a_k = \frac{1}{T} X(jk\Omega_0)
 $$
+*(Eq. 2.20)*
 
 so the FS expansion of $\tilde{x}(t)$ is:
 
 $$
-\tilde{x}(t) = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} \Omega_0\, X(jk\Omega_0)\, e^{jk\Omega_0 t} \tag{2.21}
+\tilde{x}(t) = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} \Omega_0\, X(jk\Omega_0)\, e^{jk\Omega_0 t}
 $$
+*(Eq. 2.21)*
 
 As $\Omega_0 \to 0$, the sum becomes a Riemann integral:
 
 $$
-x(t) = \lim_{\Omega_0 \to 0} \tilde{x}(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(j\Omega)\, e^{j\Omega t} \, d\Omega \tag{2.22}
+x(t) = \lim_{\Omega_0 \to 0} \tilde{x}(t) = \frac{1}{2\pi} \int_{-\infty}^{\infty} X(j\Omega)\, e^{j\Omega t} \, d\Omega
 $$
+*(Eq. 2.22)*
 
 This is exactly the inverse FT formula — confirming internal consistency.
 
@@ -374,8 +391,9 @@ $$
 The output of an LTI system is given by the **convolution integral**:
 
 $$
-y(t) = x(t) \otimes h(t) = \int_{-\infty}^{\infty} x(\tau)\, h(t - \tau) \, d\tau \tag{2.23}
+y(t) = x(t) \otimes h(t) = \int_{-\infty}^{\infty} x(\tau)\, h(t - \tau) \, d\tau
 $$
+*(Eq. 2.23)*
 
 where:
 - $x(t)$ = input signal
@@ -389,8 +407,9 @@ The impulse response $h(t)$ **completely characterizes** the LTI system.
 **Convolution in the time domain corresponds to multiplication in the frequency domain:**
 
 $$
-x(t) \otimes h(t) \;\leftrightarrow\; X(j\Omega) \cdot H(j\Omega) \tag{2.24}
+x(t) \otimes h(t) \;\leftrightarrow\; X(j\Omega) \cdot H(j\Omega)
 $$
+*(Eq. 2.24)*
 
 where $H(j\Omega)$ is the **transfer function** (= FT of the impulse response $h(t)$).
 

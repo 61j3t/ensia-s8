@@ -24,28 +24,32 @@ DTFT is a frequency analysis tool for **aperiodic discrete-time signals**.
 **Analysis equation (DTFT):**
 
 $$
-X(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\omega n} \tag{4.1}
+X(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\omega n}
 $$
+*(Eq. 4.1)*
 
 **Derivation sketch:** Construct the continuous-time sampled signal with sampling interval $T$:
 
 $$
-x_s(t) = \sum_{n=-\infty}^{\infty} x[n]\, \delta(t - nT) \tag{4.2}
+x_s(t) = \sum_{n=-\infty}^{\infty} x[n]\, \delta(t - nT)
 $$
+*(Eq. 4.2)*
 
 Taking the Fourier transform and using the sifting property of $\delta(t)$:
 
 $$
-X_s(j\Omega) = \int_{-\infty}^{\infty} x_s(t)\, e^{-j\Omega t}\, dt = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\Omega nT} \tag{4.3}
+X_s(j\Omega) = \int_{-\infty}^{\infty} x_s(t)\, e^{-j\Omega t}\, dt = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\Omega nT}
 $$
+*(Eq. 4.3)*
 
 Define **$\omega = \Omega T$** as the discrete-time frequency parameter. Writing $X_s(j\Omega)$ as $X(e^{j\omega})$ recovers eq. (4.1).
 
 **Synthesis equation (Inverse DTFT):**
 
 $$
-x[n] = \frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\omega})\, e^{j\omega n}\, d\omega \tag{4.4}
+x[n] = \frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\omega})\, e^{j\omega n}\, d\omega
 $$
+*(Eq. 4.4)*
 
 **Proof of inverse:** Substituting (4.1) into (4.4):
 
@@ -53,8 +57,9 @@ $$
 \frac{1}{2\pi} \int_{-\pi}^{\pi} \left[\sum_m x[m]\, e^{-j\omega m}\right] e^{j\omega n}\, d\omega
 = \frac{1}{2\pi} \sum_m x[m] \int_{-\pi}^{\pi} e^{j\omega(n-m)}\, d\omega
 = \frac{1}{2\pi} \sum_m x[m] \cdot \frac{2\sin((n-m)\pi)}{n-m}
-= x[n] \tag{4.5}
+= x[n]
 $$
+*(Eq. 4.5)*
 
 (The integral evaluates to $2\pi$ when $n = m$ and $0$ otherwise — the discrete orthogonality condition.)
 
@@ -64,12 +69,14 @@ $$
 - $X(e^{j\omega})$ is generally **complex-valued**. Represent using:
 
 $$
-|X(e^{j\omega})| = \sqrt{\left[\operatorname{Re}\{X(e^{j\omega})\}\right]^2 + \left[\operatorname{Im}\{X(e^{j\omega})\}\right]^2} \tag{4.6}
+|X(e^{j\omega})| = \sqrt{\left[\operatorname{Re}\{X(e^{j\omega})\}\right]^2 + \left[\operatorname{Im}\{X(e^{j\omega})\}\right]^2}
 $$
+*(Eq. 4.6)*
 
 $$
-\angle X(e^{j\omega}) = \arctan\!\left(\frac{\operatorname{Im}\{X(e^{j\omega})\}}{\operatorname{Re}\{X(e^{j\omega})\}}\right) \tag{4.7}
+\angle X(e^{j\omega}) = \arctan\!\left(\frac{\operatorname{Im}\{X(e^{j\omega})\}}{\operatorname{Re}\{X(e^{j\omega})\}}\right)
 $$
+*(Eq. 4.7)*
 
 Both the magnitude spectrum and phase spectrum are continuous and $2\pi$-periodic.
 
@@ -80,8 +87,9 @@ Both the magnitude spectrum and phase spectrum are continuous and $2\pi$-periodi
 The DTFT converges if:
 
 $$
-|X(e^{j\omega})| \leq \sum_{n=-\infty}^{\infty} |x[n]| \cdot |e^{-j\omega n}| = \sum_{n=-\infty}^{\infty} |x[n]| < \infty \tag{4.8}
+|X(e^{j\omega})| \leq \sum_{n=-\infty}^{\infty} |x[n]| \cdot |e^{-j\omega n}| = \sum_{n=-\infty}^{\infty} |x[n]| < \infty
 $$
+*(Eq. 4.8)*
 
 This is the **absolute summability** condition.
 
@@ -222,8 +230,9 @@ Equivalently, using the chain rule: $-e^{j\omega} dX/d(e^{j\omega}) = j\, dX/d\o
 **Convolution (property 7) — LTI application:**
 
 $$
-y[n] = x[n] * h[n] \quad\longleftrightarrow\quad Y(e^{j\omega}) = X(e^{j\omega})\, H(e^{j\omega}) \tag{4.16}
+y[n] = x[n] * h[n] \quad\longleftrightarrow\quad Y(e^{j\omega}) = X(e^{j\omega})\, H(e^{j\omega})
 $$
+*(Eq. 4.16)*
 
 Convolution in time = multiplication in frequency. This is the fundamental theorem underlying all LTI filter design.
 
@@ -235,8 +244,9 @@ $$
 \sum_{n=-\infty}^{\infty} |x[n]|^2 = \sum x[n]\, x^*[n]
 = \sum x[n] \left[\frac{1}{2\pi} \int X(e^{j\omega})\, e^{j\omega n}\, d\omega\right]^*
 = \frac{1}{2\pi} \int X^*(e^{j\omega}) \left[\sum x[n]\, e^{-j\omega n}\right] d\omega
-= \frac{1}{2\pi} \int_{-\pi}^{\pi} |X(e^{j\omega})|^2\, d\omega \tag{4.19}
+= \frac{1}{2\pi} \int_{-\pi}^{\pi} |X(e^{j\omega})|^2\, d\omega
 $$
+*(Eq. 4.19)*
 
 Parseval's relation states that total signal energy = total spectral energy (up to the $1/2\pi$ factor).
 
@@ -253,16 +263,18 @@ Let $x[n]$, $n = 0, 1, \ldots, N-1$, be an **N-point finite sequence**. The DFT 
 **DFT (Analysis):**
 
 $$
-X[k] = \sum_{n=0}^{N-1} x[n]\, e^{-j2\pi kn/N}, \qquad 0 \leq k \leq N-1 \tag{4.20}
+X[k] = \sum_{n=0}^{N-1} x[n]\, e^{-j2\pi kn/N}, \qquad 0 \leq k \leq N-1
 $$
+*(Eq. 4.20)*
 
 (0 otherwise)
 
 **Inverse DFT (iDFT / Synthesis):**
 
 $$
-x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k]\, e^{j2\pi kn/N}, \qquad 0 \leq n \leq N-1 \tag{4.21}
+x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k]\, e^{j2\pi kn/N}, \qquad 0 \leq n \leq N-1
 $$
+*(Eq. 4.21)*
 
 (0 otherwise)
 
