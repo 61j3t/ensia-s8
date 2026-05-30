@@ -39,6 +39,10 @@ The course prioritizes a **practical approach** while introducing fundamental pr
 - Computer vision: 2D raster image → 3D understanding (the inverse problem; requires models — e.g., recognizing a house, polygons, lines, edges from a flat image).
 - These are inverse processes of each other.
 
+![The inverse problem: a 3D object projected onto three 2D planes (front, side, top views), illustrating how CV must reverse an information-lossy projection](figures/01_part1/page-28.png)
+
+![CV vs. Computer Graphics: CG goes 3D→2D (information loss, forward direction); CV goes 2D→3D (needs models, reverse direction)](figures/01_part1/page-29.png)
+
 ---
 
 ### 2. Three levels of computer vision
@@ -53,6 +57,8 @@ The pipeline from raw pixel data to semantic understanding is organized into thr
 
 **The "semantic gap" problem:** From a signal point of view, an image is just variations in color and brightness (a grid of numbers). A machine sees an iris flower as a matrix of pixel intensity values (e.g., 0, 3, 2, 5, 4, 7, ...). A human immediately and effortlessly distinguishes flower from background, foreground object from leaves. Bridging this gap — from pixels to meaning — is the core challenge of computer vision.
 
+![Three levels of computer vision: Low (image→image), Medium (image→features), High (image→concepts)](figures/01_part1/page-09.png)
+
 ---
 
 ### 3. Why vision is so difficult for machines
@@ -64,6 +70,8 @@ The pipeline from raw pixel data to semantic understanding is organized into thr
 **The machine side:**
 - What we see as a purple iris flower is, for a machine, a 9×10 grid of numbers (example from slides). Tasks that feel trivial to a human — like distinguishing the flower from the green-leaf background — are computationally very hard.
 - The gap between the rich semantic interpretation we perform and the raw numeric signal is enormous.
+
+![Semantic gap: "What we see" (iris flower) vs. "What a computer sees" (grid of pixel intensity numbers)](figures/01_part1/page-13.png)
 
 ---
 
@@ -83,15 +91,21 @@ Perceptual psychologists use optical illusions as probes to understand how the b
 - Explanation: The brain applies **size constancy**. It interprets the "angles-in" configuration as being farther away (like an inside corner of a room) and the "angles-out" as closer (like an outside corner). Given identical retinal image sizes, it concludes the "far" object must be shorter.
 - Diagram description: Two horizontal lines of equal length; top one ends with inward-pointing arrowheads (< — >), bottom one with outward-pointing arrowheads (> — <). Blue dashed vertical lines confirm equal actual lengths. A room-corner illustration shows the real-world analogy.
 
+![Müller-Lyer illusion: two lines of equal length (confirmed by blue dashed verticals) appear different due to arrow-head direction](figures/01_part1/page-17.png)
+
 **Example 3 — Adelson's Checker-Shadow Illusion:**
 - On a checkerboard with a cylinder casting a shadow, square A (in the shadow region, a nominally "white" square) and square B (in full light, a nominally "dark" square) appear different in shade — A looks lighter than B. In physical reality they are the **same shade of gray**.
 - Explanation: The visual system cannot simply measure luminance; a shadow dims surfaces so a white square in shadow may reflect less light than a black square in full light. The brain uses contextual cues to determine where shadows fall and **compensates for them** — inferring true surface color from context. This is **color constancy** in action.
 - Diagram description: A checkerboard in perspective with a green cylinder. Square A and B are labeled and appear strikingly different. When context is removed (circles placed around them), both circles appear identical in gray level.
 
+![Adelson's Checker-Shadow illusion: squares A and B appear different in brightness but are physically identical shades of gray](figures/01_part1/page-19.png)
+
 **Example 4 — The Pop-Out Effect:**
 - When one element in a grid differs from all others (e.g., one "U" rotated differently), it immediately and automatically grabs attention — no effortful search needed.
 - The effect becomes harder as the distractor similarity to the target increases (shown by four grids of bracket-shapes with varying target-distractor similarity).
 - Explanation: The brain is equipped with **specialized neurons, parallel processing**, and attentional mechanisms that prioritize unique or salient visual features. The visual cortex detects these differences pre-attentively.
+
+![Pop-out effect: four grids of bracket shapes with a single oddly-oriented target — ease of detection decreases as distractor similarity increases](figures/01_part1/page-22.png)
 
 #### 4.2 What optical illusions teach about vision
 
@@ -129,7 +143,7 @@ CV is deployed across a wide range of real-world domains:
 
 | Application | Description |
 |---|---|
-| **OCR** | Reading printed/handwritten text; license plate recognition (slide 31 shows plate "LP53569" detected, segmented character by character, and recognized) |
+| **OCR** | Reading printed/handwritten text; license plate recognition (slide 31 shows plate "LP53569" detected, segmented character by character, and recognized) — see figure below |
 | **Video OCR** | Detecting and recognizing text overlaid on video frames (e.g., Arabic text in TV broadcasts — ALIF dataset, research by Prof. Berrani) |
 | **Machine inspection** | Automated quality control on production lines (e.g., camera above conveyor belt sorting objects; camera inspecting bottle caps) |
 | **Surveillance and tracking** | Detecting and tracking people/vehicles in video (slide 34: colored bounding boxes around each detected person in a station; red/yellow/green boxes around vehicles in traffic video) |
@@ -144,6 +158,16 @@ CV is deployed across a wide range of real-world domains:
 | **Consumer applications** | Image stitching (panoramas), image enhancement (deblurring), morphing, face-based authentication |
 
 **Image stitching example (slide 47):** Three overlapping photos of the same brick building are aligned using matched feature points (red and blue dots), then blended into a single wide panoramic image. This requires detecting and matching corresponding points across images.
+
+![OCR and license plate recognition pipeline: characters detected, segmented, and recognized from plate "LP53569"](figures/01_part1/page-31.png)
+
+![Surveillance and tracking: bounding boxes around pedestrians in a station and vehicles in traffic video](figures/01_part1/page-34.png)
+
+![Medical image analysis: 3D vascular reconstruction of skull from CT/MRI data](figures/01_part1/page-38.png)
+
+![Video macro-segmentation pipeline: a TV broadcast flux structured into repetitions, classification, segmentation, and program extraction (Journal 20h vs. James Bond film)](figures/01_part1/page-45.png)
+
+![Image stitching: three overlapping photos aligned via matched feature points and merged into a single panoramic image](figures/01_part1/page-47.png)
 
 ---
 
@@ -160,6 +184,8 @@ The field has evolved through identifiable phases, tracked on a timeline from 19
 | **2012–present** | **Deep learning** dominates — convolutional neural networks achieve superhuman performance on many benchmarks; learning-based approaches replace most hand-crafted pipelines |
 
 The timeline diagram in slides 48–52 shows all these topics along a horizontal axis from 1970 to 2000+, with each era's highlights annotated. The key inflection point is 2012 (AlexNet / ImageNet), when deep learning transformed the field.
+
+![History of computer vision: annotated timeline from 1970 (line extraction, stereo) through 1980s–2000s milestones up to deep learning dominance from 2012](figures/01_part1/page-52.png)
 
 ---
 
