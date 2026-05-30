@@ -294,7 +294,7 @@ Setting the derivative to zero gives the refined offset $\hat{\mathbf{x}}$. If $
 2. **Edge response:** Blobs on edges (elongated structures) are unstable — small position errors along the edge lead to large descriptor changes. SIFT checks the **ratio of principal curvatures** using the Hessian matrix $H$ of the DoG image:
 
 $$
-H = \begin{pmatrix} D_{xx} & D_{xy} \\ D_{xy} & D_{yy} \end{pmatrix}
+H = \begin{pmatrix} D_{xx} & D_{xy} \\\\ D_{xy} & D_{yy} \end{pmatrix}
 $$
 
 The ratio of eigenvalues $\lambda_1/\lambda_2$ can be computed from the trace and determinant. The keypoint is rejected if:

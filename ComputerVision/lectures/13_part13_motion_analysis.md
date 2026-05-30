@@ -94,9 +94,9 @@ This gives a system of $n$ equations (one OFCE per pixel in the window):
 
 $$
 \begin{aligned}
-I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\
-I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\
-&\vdots \\
+I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\\\
+I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\\\
+&\vdots \\\\
 I_x(q_n) V_x + I_y(q_n) V_y &= -I_t(q_n)
 \end{aligned}
 $$
@@ -104,9 +104,9 @@ $$
 In matrix form: $\mathbf{A} \mathbf{v} = \mathbf{b}$, where:
 
 $$
-\mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\ I_x(q_2) & I_y(q_2) \\ \vdots & \vdots \\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
-\mathbf{v} = \begin{bmatrix} V_x \\ V_y \end{bmatrix}, \quad
-\mathbf{b} = \begin{bmatrix} -I_t(q_1) \\ -I_t(q_2) \\ \vdots \\ -I_t(q_n) \end{bmatrix}
+\mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\\\ I_x(q_2) & I_y(q_2) \\\\ \vdots & \vdots \\\\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
+\mathbf{v} = \begin{bmatrix} V_x \\\\ V_y \end{bmatrix}, \quad
+\mathbf{b} = \begin{bmatrix} -I_t(q_1) \\\\ -I_t(q_2) \\\\ \vdots \\\\ -I_t(q_n) \end{bmatrix}
 $$
 
 #### 3.2 Least-squares solution
@@ -114,7 +114,7 @@ $$
 The system is overdetermined ($n \gg 2$), so solve via least squares $\mathbf{A}^\top \mathbf{A} \mathbf{v} = \mathbf{A}^\top \mathbf{b}$:
 
 $$
-\begin{bmatrix} V_x \\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\ -\sum I_y I_t \end{bmatrix}
+\begin{bmatrix} V_x \\\\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\\\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\\\ -\sum I_y I_t \end{bmatrix}
 $$
 
 where all sums are over pixels $q_i$ in the local window.

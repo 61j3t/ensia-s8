@@ -238,7 +238,7 @@ $B_l$ are found by long division of numerator by denominator (stop when remainde
 **Case 3: $M < N$, one multiple-order pole at $c_i$ of order $s \geq 2$**
 
 $$
-X(z) = \sum_{\substack{k=1\\k\neq i}}^{N} \frac{A_k}{1-c_k z^{-1}} + \sum_{m=1}^{s} \frac{C_m}{(1-c_i z^{-1})^m} \quad (5.27)
+X(z) = \sum_{\substack{k=1\\\\k\neq i}}^{N} \frac{A_k}{1-c_k z^{-1}} + \sum_{m=1}^{s} \frac{C_m}{(1-c_i z^{-1})^m} \quad (5.27)
 $$
 
 Coefficient formula:

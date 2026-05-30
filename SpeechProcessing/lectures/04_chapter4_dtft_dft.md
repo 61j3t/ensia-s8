@@ -326,7 +326,7 @@ Using $W_N = e^{-j2\pi/N}$:
 $$
 X[k] = \sum_{n=0}^{2} x[n]\, W_3^{kn} = W_3^0 + W_3^k + W_3^{2k}
 = e^{-j2\pi k/3}\left[1 + 2\cos(2\pi k/3)\right]
-= \begin{cases} 3 & k=0 \\ 0 & k=1,2 \end{cases}
+= \begin{cases} 3 & k=0 \\\\ 0 & k=1,2 \end{cases}
 $$
 
 With $N=5$ (zero-padding with $x[3]=x[4]=0$):

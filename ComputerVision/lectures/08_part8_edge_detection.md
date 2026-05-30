@@ -61,7 +61,7 @@ For discrete images, derivatives are approximated by finite differences.
 
 Detects diagonal edges. Very sensitive to noise because the kernel is tiny.
 
-$$G_x = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} \qquad G_y = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$$
+$$G_x = \begin{bmatrix} 1 & 0 \\\\ 0 & -1 \end{bmatrix} \qquad G_y = \begin{bmatrix} 0 & 1 \\\\ -1 & 0 \end{bmatrix}$$
 
 Apply each kernel by convolution; compute magnitude.
 
@@ -69,13 +69,13 @@ Apply each kernel by convolution; compute magnitude.
 
 Averages over 3 rows/columns before differencing — slightly more noise-robust than Roberts.
 
-$$G_x = \begin{bmatrix} -1 & 0 & 1 \\ -1 & 0 & 1 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -1 & -1 \\ 0 & 0 & 0 \\ 1 & 1 & 1 \end{bmatrix}$$
+$$G_x = \begin{bmatrix} -1 & 0 & 1 \\\\ -1 & 0 & 1 \\\\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -1 & -1 \\\\ 0 & 0 & 0 \\\\ 1 & 1 & 1 \end{bmatrix}$$
 
 #### 3.3 Sobel operator (3x3) — most commonly used
 
 Weights the central row/column by 2 for better noise suppression.
 
-$$G_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}$$
+$$G_x = \begin{bmatrix} -1 & 0 & 1 \\\\ -2 & 0 & 2 \\\\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -2 & -1 \\\\ 0 & 0 & 0 \\\\ 1 & 2 & 1 \end{bmatrix}$$
 
 Gradient magnitude: $M(x,y) = \sqrt{G_x^2 + G_y^2}$
 
@@ -98,7 +98,7 @@ $$\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial 
 
 Discrete 3x3 approximation:
 
-$$\begin{bmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{bmatrix}$$
+$$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
 
 (or with diagonals: replace $-4$ with $-8$ and add $1$s at corners)
 

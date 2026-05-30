@@ -145,7 +145,7 @@ $$
 $x(t)$ is a periodic pulse train with fundamental period $T$ and pulse width $2T_0$ (where $T > 2T_0$). Over one period:
 
 $$
-x(t) = \begin{cases} 1, & -T_0 < t < T_0 \\ 0, & \text{otherwise} \end{cases}
+x(t) = \begin{cases} 1, & -T_0 < t < T_0 \\\\ 0, & \text{otherwise} \end{cases}
 $$
 
 Fundamental frequency: $\Omega_0 = 2\pi/T$.
@@ -227,7 +227,7 @@ Interpretation: $\delta(t)$ is zero everywhere except at $t = 0$, where it is no
 #### 2.3 The unit step function
 
 $$
-u(t) = \begin{cases} 1, & t > 0 \\ 0, & t < 0 \end{cases}
+u(t) = \begin{cases} 1, & t > 0 \\\\ 0, & t < 0 \end{cases}
 $$
 *(Eq. 2.13)*
 
@@ -238,7 +238,7 @@ $u(0)$ is not well defined (discontinuity at $t = 0$).
 **Pair 1 — Rectangular pulse $\to$ Sinc** (Example 2.4):
 
 $$
-x(t) = \begin{cases} 1, & -T_0 < t < T_0 \\ 0, & \text{otherwise} \end{cases}
+x(t) = \begin{cases} 1, & -T_0 < t < T_0 \\\\ 0, & \text{otherwise} \end{cases}
 $$
 
 $$
@@ -252,7 +252,7 @@ Fig. 2.4 (described): Left — rectangular pulse of height 1, width $2T_0$. Righ
 **Pair 2 — Rectangular spectrum $\to$ Sinc in time** (Example 2.5, inverse FT):
 
 $$
-X(j\Omega) = \begin{cases} 1, & -W_0 < \Omega < W_0 \\ 0, & \text{otherwise} \end{cases}
+X(j\Omega) = \begin{cases} 1, & -W_0 < \Omega < W_0 \\\\ 0, & \text{otherwise} \end{cases}
 $$
 
 $$

@@ -146,7 +146,7 @@ Once in the cepstral domain, apply a lifter (a window in quefrency):
 Ideal low-pass lifter formula:
 
 $$
-l_{lp}[n] = \begin{cases} 1 & \text{if } |n| \leq N_c \\ 0 & \text{otherwise} \end{cases}
+l_{lp}[n] = \begin{cases} 1 & \text{if } |n| \leq N_c \\\\ 0 & \text{otherwise} \end{cases}
 $$
 
 Filtered cepstrum:
@@ -340,9 +340,9 @@ Formal definition of filter $m$ ($m = 1, 2, \ldots, M$):
 
 $$
 H_{t,m}[k] = \begin{cases}
-0 & k < f[m-1] \\[4pt]
-\dfrac{k - f[m-1]}{f[m] - f[m-1]} & f[m-1] \leq k \leq f[m] \\[6pt]
-\dfrac{f[m+1] - k}{f[m+1] - f[m]} & f[m] \leq k \leq f[m+1] \\[4pt]
+0 & k < f[m-1] \\\\[4pt]
+\dfrac{k - f[m-1]}{f[m] - f[m-1]} & f[m-1] \leq k \leq f[m] \\\\[6pt]
+\dfrac{f[m+1] - k}{f[m+1] - f[m]} & f[m] \leq k \leq f[m+1] \\\\[4pt]
 0 & k > f[m+1]
 \end{cases}
 $$

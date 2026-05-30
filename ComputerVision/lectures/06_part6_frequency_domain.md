@@ -239,7 +239,7 @@ All filter transfer functions H(u,v) depend on D(u,v) and a cutoff frequency $D_
 
 #### 9.1 Ideal Low-Pass Filter (ILPF)
 
-$$H(u,v) = \begin{cases} 1 & \text{if } D(u,v) \leq D_0 \\ 0 & \text{if } D(u,v) > D_0 \end{cases}$$
+$$H(u,v) = \begin{cases} 1 & \text{if } D(u,v) \leq D_0 \\\\ 0 & \text{if } D(u,v) > D_0 \end{cases}$$
 
 Shape: a flat disk of radius $D_0$ centered at the origin in the frequency domain. Everything inside the disk passes; everything outside is blocked.
 
@@ -294,7 +294,7 @@ High-pass = complement of low-pass: passes high frequencies, blocks low frequenc
 
 #### 10.1 Ideal High-Pass Filter (IHPF)
 
-$$H(u,v) = \begin{cases} 0 & \text{if } D(u,v) \leq D_0 \\ 1 & \text{if } D(u,v) > D_0 \end{cases}$$
+$$H(u,v) = \begin{cases} 0 & \text{if } D(u,v) \leq D_0 \\\\ 1 & \text{if } D(u,v) > D_0 \end{cases}$$
 
 The exact complement of the ILPF: a black disk on a white background in the frequency domain.
 

@@ -156,7 +156,7 @@ The shape resembles an S-curve (sigmoid). By setting $r_1 < r_2$ and $s_1 < s_2$
 
 An **extreme case** of contrast stretching where the transform collapses to a binary step function:
 
-$$s = \begin{cases} 0 & \text{if } r \leq t \\ 1 & \text{if } r > t \end{cases}$$
+$$s = \begin{cases} 0 & \text{if } r \leq t \\\\ 1 & \text{if } r > t \end{cases}$$
 
 - Produces a binary (black-and-white) image.
 - t is the threshold; if t is constant across the whole image it is **global thresholding**.

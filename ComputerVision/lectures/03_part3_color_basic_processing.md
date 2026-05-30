@@ -230,7 +230,7 @@ These primaries are **mathematical constructs** — they do not correspond to re
 
 **RGB → XYZ conversion matrix**:
 
-$$\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\ 0.17697 & 0.81240 & 0.01063 \\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\ G \\ B \end{bmatrix}$$
+$$\begin{bmatrix} X \\\\ Y \\\\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\\\ 0.17697 & 0.81240 & 0.01063 \\\\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\\\ G \\\\ B \end{bmatrix}$$
 
 Or compactly: $[X, Y, Z]^T = M \cdot [R, G, B]^T$
 
@@ -359,7 +359,7 @@ $$V = \max(r, g, b)$$
 - If $\Delta = 0$: $H = 0$ (achromatic).
 - Otherwise:
 
-$$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}$$
+$$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\\\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\\\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}$$
 
 - If $H$ is negative, add 360° to bring into $[0°, 360°]$.
 

@@ -169,7 +169,7 @@ So $f_s$ must exceed 4000 Hz to sample this signal without aliasing.
 To recover $x(t)$ from $x_s(t)$, we apply a lowpass filter $H(j\Omega)$ in the frequency domain (Fig. 6.6):
 
 $$
-H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\ 0, & \text{otherwise} \end{cases}
+H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\\\ 0, & \text{otherwise} \end{cases}
 $$
 *(Eq. 6.8)*
 

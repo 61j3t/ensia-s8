@@ -54,7 +54,7 @@ The problem of finding the dominant directions of the gradient distribution is e
 Rather than running PCA directly, the Harris detector encodes the gradient distribution in the **structure tensor M**, a 2×2 symmetric matrix computed for each pixel using a weighted sum over a local window:
 
 $$
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2(x,y) & I_x(x,y)\,I_y(x,y) \\ I_x(x,y)\,I_y(x,y) & I_y^2(x,y) \end{bmatrix}
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2(x,y) & I_x(x,y)\,I_y(x,y) \\\\ I_x(x,y)\,I_y(x,y) & I_y^2(x,y) \end{bmatrix}
 $$
 
 Where:
@@ -133,7 +133,7 @@ The k term penalises large traces (i.e., edge-like responses where one eigenvalu
 2. **Compute the structure tensor M at every pixel:**
 
 $$
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix}
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
 $$
 
    The Gaussian window size ($\sigma$) determines the **scale** of the detected corners.
@@ -242,7 +242,7 @@ All three detectors below share the same structure tensor M and its eigenvalues.
 3. **Write and explain the structure tensor M:**
 
 $$
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix}
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
 $$
 
    State what $w(x,y)$ is, why a Gaussian is used, and how M relates to the covariance of gradient vectors.

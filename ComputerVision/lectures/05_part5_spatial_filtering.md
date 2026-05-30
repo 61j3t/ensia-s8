@@ -65,7 +65,7 @@ $$R_{ij} = \frac{1}{(2k+1)^2} \sum_{u=i-k}^{i+k} \sum_{v=j-k}^{j+k} f_{uv}$$
 
 The kernel is all-ones scaled by $1/n^2$. For $k=1$ (3×3):
 
-$$\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix}$$
+$$\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\\\ 1 & 1 & 1 \\\\ 1 & 1 & 1 \end{bmatrix}$$
 
 **Visual effect (from slides):**
 - 3×3: mild smoothing, barely visible blur.
@@ -161,11 +161,11 @@ Since the Laplacian is a linear operator, it can be implemented as a convolution
 
 **4-neighbor Laplacian kernel (isotropic for 90° increments):**
 
-$$\begin{bmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{bmatrix}$$
+$$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
 
 **8-neighbor Laplacian kernel (isotropic for 45° increments — includes diagonals):**
 
-$$\begin{bmatrix} 1 & 1 & 1 \\ 1 & -8 & 1 \\ 1 & 1 & 1 \end{bmatrix}$$
+$$\begin{bmatrix} 1 & 1 & 1 \\\\ 1 & -8 & 1 \\\\ 1 & 1 & 1 \end{bmatrix}$$
 
 The 8-neighbor version adds two diagonal difference terms to capture edges at 45°.
 
@@ -183,7 +183,7 @@ where $c = +1$ if the Laplacian kernel has a negative center (as above), or $c =
 
 For the 4-neighbor version, the combined kernel is:
 
-$$\begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix}$$
+$$\begin{bmatrix} 0 & -1 & 0 \\\\ -1 & 5 & -1 \\\\ 0 & -1 & 0 \end{bmatrix}$$
 
 (center becomes $1 + 4 = 5$ because $g = f - \nabla^2 f$, adjusting sign convention)
 

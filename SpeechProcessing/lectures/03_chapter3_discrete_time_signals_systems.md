@@ -33,7 +33,7 @@ Fig. 3.1 (conceptual): the smooth analog curve $x(t)$ is represented by vertical
 **Unit Sample (Unit Impulse)**
 
 $$
-\delta[n] = \begin{cases} 1, & n = 0 \\ 0, & n \neq 0 \end{cases}
+\delta[n] = \begin{cases} 1, & n = 0 \\\\ 0, & n \neq 0 \end{cases}
 $$
 *(Eq. 3.2)*
 
@@ -51,7 +51,7 @@ This identity is central: it says $x[n] = \ldots + x[-1]\delta[n+1] + x[0]\delta
 **Unit Step**
 
 $$
-u[n] = \begin{cases} 1, & n \geq 0 \\ 0, & n < 0 \end{cases}
+u[n] = \begin{cases} 1, & n \geq 0 \\\\ 0, & n < 0 \end{cases}
 $$
 *(Eq. 3.3)*
 
@@ -304,7 +304,7 @@ $$
 Combined result:
 
 $$
-y[n] = \begin{cases} 0, & n < 0 \\ \dfrac{1 - a^{n+1}}{1-a}, & 0 \leq n < 10 \\ a^{n-9}\,\dfrac{1 - a^{10}}{1-a}, & n \geq 10 \end{cases}
+y[n] = \begin{cases} 0, & n < 0 \\\\ \dfrac{1 - a^{n+1}}{1-a}, & 0 \leq n < 10 \\\\ a^{n-9}\,\dfrac{1 - a^{10}}{1-a}, & n \geq 10 \end{cases}
 $$
 
 $\sum |h[n]| = 10 < \infty$ => **stable**; $h[n] = 0$ for $n < 0$ => **causal**

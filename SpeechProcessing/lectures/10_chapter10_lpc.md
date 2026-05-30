@@ -243,11 +243,11 @@ These $p$ equations relate the LPC coefficients to the autocorrelation values of
 **Matrix formulation.** $Ra = r$
 
 $$
-R = \begin{bmatrix} R(0) & R(1) & \cdots & R(p-1) \\ R(1) & R(0) & \cdots & R(p-2) \\ \vdots & \vdots & \ddots & \vdots \\ R(p-1) & R(p-2) & \cdots & R(0) \end{bmatrix}
+R = \begin{bmatrix} R(0) & R(1) & \cdots & R(p-1) \\\\ R(1) & R(0) & \cdots & R(p-2) \\\\ \vdots & \vdots & \ddots & \vdots \\\\ R(p-1) & R(p-2) & \cdots & R(0) \end{bmatrix}
 $$
 
 $$
-a = \begin{bmatrix} a_1 \\ a_2 \\ \vdots \\ a_p \end{bmatrix}, \qquad r = \begin{bmatrix} R(1) \\ R(2) \\ \vdots \\ R(p) \end{bmatrix}
+a = \begin{bmatrix} a_1 \\\\ a_2 \\\\ \vdots \\\\ a_p \end{bmatrix}, \qquad r = \begin{bmatrix} R(1) \\\\ R(2) \\\\ \vdots \\\\ R(p) \end{bmatrix}
 $$
 
 - $\mathbf{R}$: $p \times p$ autocorrelation matrix (symmetric, positive definite)
