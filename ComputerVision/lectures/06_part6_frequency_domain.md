@@ -392,7 +392,7 @@ Image $f(m,n)$ convolved with Gaussian kernel $h_\sigma(m,n)$ gives smoothed out
 
 1. **Write the 2-D DFT forward and inverse formulas** and identify every symbol (f[m,n], F[p,q], M, N, p, q, the exponentials). State why the IDFT divides by MN.
 
-2. **State and prove (or sketch the proof of) the Convolution Theorem.** Show the derivation $G(u) = F(u) H(u)$ starting from the definition of $g(x) = f(x)*h(x)$ and taking its FT.
+2. **State and prove (or sketch the proof of) the Convolution Theorem.** Show the derivation $G(u) = F(u) H(u)$ starting from the definition of $g(x) = f(x)\asth(x)$ and taking its FT.
 
 3. **Draw and describe the 5-step frequency-domain filtering pipeline**: DFT -> design H(u,v) -> pointwise multiply -> IDFT -> take real part.
 

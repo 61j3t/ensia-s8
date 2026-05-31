@@ -36,7 +36,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 - **Fourier Transform** (continuous-time *aperiodic*): $X(j\Omega)=\int x(t)e^{-j\Omega t}dt$, inverse $x(t)=\frac{1}{2\pi}\int X(j\Omega)e^{j\Omega t}d\Omega$. Derived as FS limit $T\to\infty$.
 - **Key pairs**: rect ↔ sinc; $e^{-at}u(t) \leftrightarrow \frac{1}{a+j\Omega}$; $\delta(t) \leftrightarrow 1$; $e^{j\Omega_0 t} \leftrightarrow 2\pi\delta(\Omega-\Omega_0)$; impulse train ↔ impulse train.
 - **Dirac delta** + sifting property $\int f(t)\delta(t-t_0)dt = f(t_0)$.
-- **Analog LTI**: convolution $y(t)=x(t)*h(t)$ ↔ multiplication $Y=X\cdot H$.
+- **Analog LTI**: convolution $y(t)=x(t)\asth(t)$ ↔ multiplication $Y=X\cdot H$.
 
 ## Ch 3 — Discrete-Time Signals and Systems (45 pp)
 - **DT signals**: $x[n]=x(nT)$, unit impulse $\delta[n]$, unit step $u[n]$, sifting/decomposition.
@@ -50,7 +50,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 - **DTFT**: $X(e^{j\omega})=\sum x[n]e^{-j\omega n}$ (discrete/aperiodic signal → continuous, $2\pi$-periodic spectrum). Converges iff absolutely summable (= BIBO).
 - **9 DTFT properties**: linearity, time/freq shift, differentiation, conjugation, reversal, convolution↔multiplication, Parseval.
 - **DFT**: $X[k]=X(e^{j\omega})|_{\omega=2\pi k/N}$, N-point pair, twiddle $W_N=e^{-j2\pi/N}$; **circular** convolution (vs linear for DTFT).
-- **Frequency estimation**: peak at $k^{*}$ → $\hat{\omega}_0=2\pi k^{*}/N$; **zero-padding** densifies the grid (no new info).
+- **Frequency estimation**: peak at $k^{\ast}$ → $\hat{\omega}_0=2\pi k^{\ast}/N$; **zero-padding** densifies the grid (no new info).
 - **FFT**: Cooley-Tukey reduces $N^2$ → $(N/2)\log_2 N$; a fast DFT, not a new transform.
 
 ## Ch 5 — z-Transform (63 pp)
@@ -86,7 +86,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 
 ## Ch 9 — Cepstral Analysis & MFCC (28 pp)
 - **Cepstrum**: $c[n]=\mathcal{F}^{-1}\{\log|\mathcal{F}\{x[n]\}|\}$ — "spectrum of a spectrum," lives in **quefrency** (seconds).
-- **Homomorphic deconvolution**: $s[n]=e[n]*h[n]$ → $c_s[n]=c_e[n]+c_h[n]$ → **liftering** separates excitation (high quefrency) from vocal tract (low quefrency). Pitch: $F_0 = F_s/q_0$.
+- **Homomorphic deconvolution**: $s[n]=e[n]\asth[n]$ → $c_s[n]=c_e[n]+c_h[n]$ → **liftering** separates excitation (high quefrency) from vocal tract (low quefrency). Pitch: $F_0 = F_s/q_0$.
 - **Mel scale**: $\text{Mel}(f)=2595\cdot\log_{10}(1+f/700)$ — linear <1 kHz, log above.
 - **MFCC pipeline**: pre-emphasis ($1-0.97z^{-1}$) → frame (25 ms/10 ms) → Hamming → FFT → power → **Mel filterbank** → log → **DCT** → 12 coeffs.
 - **Feature vector**: 39-dim = 12 static + energy + delta (×13) + delta-delta (×13).

@@ -162,7 +162,7 @@ One way to use both the gradient (for direction and magnitude) and the Laplacian
 1. Smooth with Gaussian: $g_\sigma \ast I$
 2. Compute gradient: $\nabla(g_\sigma) \ast I$
 3. Find gradient magnitude: $\|\nabla(g_\sigma) \ast I\|$
-4. Find gradient direction: $\hat{n} = [\nabla(g_\sigma)*I] / \|\nabla(g_\sigma)*I\|$
+4. Find gradient direction: $\hat{n} = [\nabla(g_\sigma)\astI] / \|\nabla(g_\sigma)\astI\|$
 5. Compute 1D Laplacian along gradient direction $\hat{n}$: $\partial^2(g_\sigma \ast I) / \partial \hat{n}^2$
 6. Find zero-crossings in the 1D Laplacian to pinpoint edge location.
 

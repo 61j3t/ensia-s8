@@ -373,7 +373,7 @@ Example 5.18: $n\, a^n u[n] \leftrightarrow -z \cdot \frac{d}{dz}\left[\frac{1}{
 #### Property 5: Conjugation (5.35)
 
 $$
-x^{*}[n] \;\longleftrightarrow\; X^{*}(z^{*})
+x^{\ast}[n] \;\longleftrightarrow\; X^{\ast}(z^{\ast})
 $$
 
 ROC identical to that of $X(z)$.

@@ -131,7 +131,7 @@ s[n] \xrightarrow{\mathcal{F}} \log|\cdot| \xrightarrow{\mathcal{F}^{-1}} c[n]
 $$
 
 Step by step:
-1. **Linear transform (DFT)**: convolution $s[n] = e[n]*h[n]$ becomes multiplication $S(k) = E(k)\cdot H(k)$.
+1. **Linear transform (DFT)**: convolution $s[n] = e[n]\asth[n]$ becomes multiplication $S(k) = E(k)\cdot H(k)$.
 2. **Logarithm**: multiplication becomes addition: $\log S(k) = \log E(k) + \log H(k)$.
 3. **Inverse linear transform (IDFT)**: returns to a time-like (quefrency) domain where the two components are additive: $c_s[n] = c_e[n] + c_h[n]$.
 
@@ -502,7 +502,7 @@ Both aim to capture the **spectral envelope** without the harmonic structure:
 
 1. **Define the cepstrum** mathematically and explain the meaning of "quefrency." Write: $c[n] = \mathcal{F}^{-1}\{\log|\mathcal{F}\{x[n]\}|\}$.
 
-2. **Derive the source-filter separation** in the cepstral domain: starting from $s[n] = e[n]*h[n]$, show step by step how $c_s[n] = c_e[n] + c_h[n]$ follows by taking log of the DFT.
+2. **Derive the source-filter separation** in the cepstral domain: starting from $s[n] = e[n]\asth[n]$, show step by step how $c_s[n] = c_e[n] + c_h[n]$ follows by taking log of the DFT.
 
 3. **Distinguish real cepstrum from complex cepstrum**: give both formulas, state which discards phase and why the real cepstrum is preferred in speech recognition.
 
