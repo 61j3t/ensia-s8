@@ -41,7 +41,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 ## Ch 3 — Discrete-Time Signals and Systems (45 pp)
 - **DT signals**: $x[n]=x(nT)$, unit impulse $\delta[n]$, unit step $u[n]$, sifting/decomposition.
 - **System properties**: memoryless, linear (superposition), time-invariant (shift), causal, BIBO-stable — with counterexamples.
-- **LTI ⇔ impulse response $h[n]$**: causal iff $h[n]=0,\; n<0$; stable iff $\sum|h[n]| < \infty$.
+- **LTI ⇔ impulse response $h[n]$**: causal iff $h[n]=0, n<0$; stable iff $\sum|h[n]| < \infty$.
 - **Convolution sum**: $y[n]=\sum_m x[m]h[n-m]$; commutative/associative/distributive; finite-length output = M+N−1.
 - **LCCDE** (difference equations): N-th order recursive form; MATLAB `filter(b,a,x)`.
 - **Energy vs power** signals: $E=\sum|x[n]|^2$, $P=\lim \frac{1}{2N+1}\sum|x[n]|^2$.
@@ -66,7 +66,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 - **Sampled spectrum**: $X_s(j\Omega)=\frac{1}{T}\sum_k X(j(\Omega-k\Omega_s))$ — spectrum replicates every $\Omega_s$, scaled $1/T$.
 - **Nyquist–Shannon**: bandlimited ($X=0$ for $|\Omega|\geq\Omega_b$) recoverable iff $\Omega_s > 2\Omega_b$. Nyquist rate = $2\Omega_b$.
 - **Aliasing**: spectral copies overlap when $\Omega_s<2\Omega_b$; irreversible without prior bandlimiting.
-- **Ideal reconstruction**: lowpass (gain $T$, cutoff $\pi/T$) → **sinc interpolation** $x_r(t)=\sum_k x[k]\,\mathrm{sinc}((t-kT)/T)$.
+- **Ideal reconstruction**: lowpass (gain $T$, cutoff $\pi/T$) → **sinc interpolation** $x_r(t)=\sum_k x[k]\mathrm{sinc}((t-kT)/T)$.
 - **Practical chain**: anti-aliasing LPF → ADC (quantization) → DSP → DAC. Ideal converters unrealizable (infinite/non-causal sinc).
 
 ## Ch 7 — STFT & Spectrogram (62 pp)

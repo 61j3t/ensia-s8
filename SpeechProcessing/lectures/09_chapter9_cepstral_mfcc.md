@@ -107,7 +107,7 @@ c[n] = \mathcal{F}^{-1}\left\{ \log |X(k)| \right\}
 ```math
 \hat{c}[n] = \mathcal{F}^{-1}\left\{ \log X(k) \right\}
 ```
-where $\log X(k) = \log|X(k)| + j\,\arg X(k)$.
+where $\log X(k) = \log|X(k)| + j\arg X(k)$.
 
 - Retains phase information via the unwrapped phase $\arg X(k)$.
 - Required for exact signal reconstruction (minimum phase analysis, deconvolution, image synthesis).
@@ -171,7 +171,7 @@ These $K$ coefficients:
 A cepstrum plot of a voiced vowel (x-axis: quefrency in ms, y-axis: cepstral magnitude) shows:
 
 - A **smooth, decaying region from 0 to ~2 ms**: this is $c_h[n]$, the vocal tract contribution. It represents the slowly-varying spectral envelope.
-- A **sharp, prominent peak at $q_0$** (e.g., $q_0 = 8\,\text{ms} \Rightarrow F_0 = 1/0.008 = 125\,\text{Hz}$): this is the pitch period. For a female voice, $q_0 \approx 4\,\text{ms} \Rightarrow F_0 \approx 250\,\text{Hz}$.
+- A **sharp, prominent peak at $q_0$** (e.g., $q_0 = 8\text{ms} \Rightarrow F_0 = 1/0.008 = 125\text{Hz}$): this is the pitch period. For a female voice, $q_0 \approx 4\text{ms} \Rightarrow F_0 \approx 250\text{Hz}$.
 - **No peak** in the high quefrency region for unvoiced speech (the source is noise, not periodic).
 
 The cutoff quefrency $N_c$ is placed between 2 ms and $q_0$ so that:
@@ -191,7 +191,7 @@ Procedure (example: word "Matlab" spoken by a woman):
 4. The quefrency of the peak = pitch period $q_0$.
 5. Convert to fundamental frequency: $F_0 = F_s / q_0$.
 
-Example result: $q_0 = 4.18\,\text{ms} \Rightarrow F_0 = 239.29\,\text{Hz}$.
+Example result: $q_0 = 4.18\text{ms} \Rightarrow F_0 = 239.29\text{Hz}$.
 
 #### 6.2 Short-time homomorphic analysis
 
@@ -442,9 +442,9 @@ Both aim to capture the **spectral envelope** without the harmonic structure:
 2. **Window**: multiply 400-sample frame by Hamming window.
 3. **FFT**: compute $X[k]$ for $k = 0\ldots399$.
 4. **Power spectrum**: $P[k] = |X[k]|^2$.
-5. **Mel filterbank**: compute $f[0]\ldots f[7]$ (center frequencies for $M=6$ filters need $M+2=8$ values) using the Mel formula with $f_l=0$, $f_h=8000\,\text{Hz}$.
-6. **Filter energies**: $MF[m] = \log_{10}\!\left(\sum_k H_m[k]\cdot P[k]\right)$ for $m=1\ldots6$.
-7. **DCT**: $\text{MFCC}[d] = \sum_{m=1}^{6} MF[m] \cdot \cos\!\left(\pi\cdot d\cdot(m-0.5)/6\right)$ for $d=1\ldots12$ (but only $d \leq M$ here, so $d=1\ldots6$ meaningful).
+5. **Mel filterbank**: compute $f[0]\ldots f[7]$ (center frequencies for $M=6$ filters need $M+2=8$ values) using the Mel formula with $f_l=0$, $f_h=8000\text{Hz}$.
+6. **Filter energies**: $MF[m] = \log_{10}\left(\sum_k H_m[k]\cdot P[k]\right)$ for $m=1\ldots6$.
+7. **DCT**: $\text{MFCC}[d] = \sum_{m=1}^{6} MF[m] \cdot \cos\left(\pi\cdot d\cdot(m-0.5)/6\right)$ for $d=1\ldots12$ (but only $d \leq M$ here, so $d=1\ldots6$ meaningful).
 8. **Result**: a 6-dimensional static MFCC vector for this frame.
 
 ---
@@ -458,7 +458,7 @@ Both aim to capture the **spectral envelope** without the harmonic structure:
 - **High-pass lifter** — keeps high quefrency components; extracts the excitation (pitch/harmonics).
 - **Rahmonic** — a multiple of the fundamental quefrency (analogous to harmonic in frequency domain).
 - **Real cepstrum** — cepstrum computed using only $\log|X(k)|$; discards phase.
-- **Complex cepstrum** — cepstrum computed using $\log X(k) = \log|X(k)| + j\,\arg X(k)$; retains phase.
+- **Complex cepstrum** — cepstrum computed using $\log X(k) = \log|X(k)| + j\arg X(k)$; retains phase.
 - **Homomorphic deconvolution** — the transform pipeline (DFT → log → IDFT) that converts convolution into addition.
 - **Source-filter model** — speech = excitation * vocal-tract filter; $s[n] = e[n] \ast h[n]$.
 - **Cutoff quefrency ($N_c$)** — the lifter threshold separating low-quefrency (vocal tract) from high-quefrency (excitation) cepstral regions.

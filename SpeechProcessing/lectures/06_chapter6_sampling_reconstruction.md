@@ -6,7 +6,7 @@
 - The **CD converter** model multiplies $x(t)$ by an impulse train $i(t)$, producing a sampled signal $x_s(t)$; in the frequency domain, $X_s(j\Omega)$ is an infinite sum of shifted copies of $X(j\Omega)$ scaled by $1/T$.
 - The **Nyquist–Shannon Sampling Theorem** (1928): a bandlimited signal with bandwidth $\Omega_b$ can be perfectly recovered from its samples if and only if the sampling frequency satisfies $\Omega_s > 2\Omega_b$. The minimum rate $2\Omega_b$ is the **Nyquist rate**; $\Omega_b$ itself is the **Nyquist frequency**.
 - **Aliasing** occurs when $\Omega_s < 2\Omega_b$ — the spectral copies overlap and $X(j\Omega)$ cannot be recovered from $X_s(j\Omega)$. Multiple different analog signals map to the same discrete-time sequence.
-- **Ideal reconstruction** (DC converter) applies a lowpass filter $H(j\Omega)$ with gain $T$ to $x_s(t)$; in the time domain this is sinc interpolation: $x_r(t) = \sum_{k} x[k]\,\mathrm{sinc}((t - kT)/T)$.
+- **Ideal reconstruction** (DC converter) applies a lowpass filter $H(j\Omega)$ with gain $T$ to $x_s(t)$; in the time domain this is sinc interpolation: $x_r(t) = \sum_{k} x[k]\mathrm{sinc}((t - kT)/T)$.
 - **Practical DSP chain**: anti-aliasing lowpass filter → ADC (approximates CD converter, adds quantization error) → digital processor → DAC (approximates DC converter, cannot implement infinite sinc sum).
 
 ---
@@ -357,7 +357,7 @@ The sequence has 4001 samples covering 0.5 s. Other notes: B (493.88 Hz), C# (55
 - **Aliasing** — spectral overlap of shifted copies of $X(j\Omega)/T$ when $\Omega_s < 2\Omega_b$; causes irreversible distortion and ambiguity between different analog signals.
 - **CD converter** — continuous-to-discrete converter; conceptual model = impulse-train multiplier + sequence extractor.
 - **DC converter** — discrete-to-continuous converter; conceptual model = impulse-train former + ideal lowpass filter $H(j\Omega)$.
-- **Sinc interpolation** — ideal reconstruction formula $x_r(t) = \sum_k x[k]\,\mathrm{sinc}((t - kT)/T)$.
+- **Sinc interpolation** — ideal reconstruction formula $x_r(t) = \sum_k x[k]\mathrm{sinc}((t - kT)/T)$.
 - **sinc(u)** — defined as $\sin(\pi u)/(\pi u)$; $\mathrm{sinc}(0) = 1$; $\mathrm{sinc}(\text{integer} \neq 0) = 0$.
 - **Anti-aliasing filter** — lowpass filter applied before ADC to enforce bandlimitedness and prevent aliasing.
 - **ADC (Analog-to-Digital Converter)** — practical approximation to the ideal CD converter; introduces quantization error.

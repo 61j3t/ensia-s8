@@ -291,7 +291,7 @@ Definitions:
 - **Normalized histogram** $p_r(r_k) = n_k / MN$ — estimates the probability of intensity $r_k$.
 - **Histogram equalization** — transform $s = T(r) = (L-1) \cdot \text{CDF}(r)$ that produces a quasi-uniform output histogram.
 - **CDF (Cumulative Distribution Function)** — $T(r_k) = \sum_{j=0}^{k} p_r(r_j)$; the fraction of pixels with intensity $\leq r_k$.
-- **Density conservation law** — $p_r(r)\,dr = p_s(s)\,ds$; the number of pixels is conserved under any transformation.
+- **Density conservation law** — $p_r(r)dr = p_s(s)ds$; the number of pixels is conserved under any transformation.
 - **Bimodal histogram** — histogram with two distinct peaks; indicates the image can be well separated by thresholding.
 - **Otsu thresholding** — automatic threshold selection by minimizing weighted within-class variance $P_1 \sigma_{C_1}^2 + P_2 \sigma_{C_2}^2$.
 - **Within-class variance** — variance of pixel intensities within a single class ($C_1$ or $C_2$).
@@ -317,7 +317,7 @@ Definitions:
 5. **Derive or describe histogram equalization:**
    - The 4-step algorithm (histogram, normalize, CDF, scale by L-1).
    - The final formula: $s_k = \frac{L-1}{MN} \sum_{j=0}^{k} n_j$
-   - Why CDF produces a uniform output (density conservation law argument: $p_r(r)\,dr = p_s(s)\,ds$, set $p_s = 1/L$, integrate to get $s = \text{CDF}(r)$).
+   - Why CDF produces a uniform output (density conservation law argument: $p_r(r)dr = p_s(s)ds$, set $p_s = 1/L$, integrate to get $s = \text{CDF}(r)$).
    - Why the discrete result is quasi-flat (not perfectly flat).
 
 6. **Explain Otsu thresholding:** criterion $\arg\min_T (P_1 \sigma_{C_1}^2 + P_2 \sigma_{C_2}^2)$; what $P_1$, $P_2$, $\sigma_{C_1}$, $\sigma_{C_2}$ mean; why minimizing within-class variance gives the best separation.

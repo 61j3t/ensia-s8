@@ -5,7 +5,7 @@
 - A **discrete-time signal** $x[n]$ is a sequence of numbers indexed by integer $n$, obtained either by sampling a continuous-time signal at period $T$ (so $x[n] = x(nT)$) or generated synthetically.
 - Two fundamental building-block sequences underpin everything: the **unit impulse** $\delta[n]$ (= 1 at $n = 0$, else 0) and the **unit step** $u[n]$ (= 1 for $n \geq 0$, else 0). Every signal can be written as a weighted sum of shifted impulses (sifting property).
 - A **discrete-time system** is an operator $T$ that maps input $x[n]$ to output $y[n]$. Five key properties: memorylessness, linearity, time-invariance, causality, stability. A system that is both **linear and time-invariant (LTI)** is fully characterised by its **impulse response** $h[n]$.
-- The input-output relationship of any LTI system is the **convolution sum**: $y[n] = x[n] \otimes h[n] = \sum_{m=-\infty}^{\infty} x[m]\, h[n-m]$. Convolution is commutative, associative, and linear (distributive over addition).
+- The input-output relationship of any LTI system is the **convolution sum**: $y[n] = x[n] \otimes h[n] = \sum_{m=-\infty}^{\infty} x[m] h[n-m]$. Convolution is commutative, associative, and linear (distributive over addition).
 - An LTI system can equivalently be described by an **N-th order linear constant-coefficient difference equation (LCCDE)**, which also allows recursive computation of output samples.
 - Signals are classified as **energy signals** (finite total energy, zero average power) or **power signals** (finite average power, infinite energy). A signal cannot belong to both classes simultaneously.
 
@@ -134,24 +134,24 @@ T\{a\,x_1[n] + b\,x_2[n]\} = a\,T\{x_1[n]\} + b\,T\{x_2[n]\} = a\,y_1[n] + b\,y_
 *(Eq. 3.9)*
 
 **Standard test procedure** (to check linearity):
-1. Define $x_3[n] = a\,x_1[n] + b\,x_2[n]$.
+1. Define $x_3[n] = ax_1[n] + bx_2[n]$.
 2. Compute $y_3[n] = T\{x_3[n]\}$ directly from the system equation.
-3. Also compute $a\,y_1[n] + b\,y_2[n]$.
+3. Also compute $ay_1[n] + by_2[n]$.
 4. If equal, the system is linear; otherwise nonlinear.
 
 **Example 3.2** — $y[n] = \sum_{k=-\infty}^{n} x[k]$ (running accumulator):
 
-- $y_3[n] = \sum_{k=-\infty}^{n} x_3[k] = \sum_{k=-\infty}^{n} (a\,x_1[k] + b\,x_2[k])$
+- $y_3[n] = \sum_{k=-\infty}^{n} x_3[k] = \sum_{k=-\infty}^{n} (ax_1[k] + bx_2[k])$
   $= a\sum_{k=-\infty}^{n} x_1[k] + b\sum_{k=-\infty}^{n} x_2[k]$
-  $= a\,y_1[n] + b\,y_2[n]$ => **linear**
+  $= ay_1[n] + by_2[n]$ => **linear**
 
 **Example 3.3** — $y[n] = 3x^2[n] + 2x[n-3]$ (contains $x^2$ term):
 
-- $y_3[n] = 3(a\,x_1[n] + b\,x_2[n])^2 + 2(a\,x_1[n-3] + b\,x_2[n-3])$
-  $= 3(a^2 x_1^2 + b^2 x_2^2 + 2ab\,x_1 x_2) + \ldots$
+- $y_3[n] = 3(ax_1[n] + bx_2[n])^2 + 2(ax_1[n-3] + bx_2[n-3])$
+  $= 3(a^2 x_1^2 + b^2 x_2^2 + 2abx_1 x_2) + \ldots$
   $\neq a(3x_1^2 + 2x_1[n-3]) + b(3x_2^2 + 2x_2[n-3])$ => **nonlinear**
 
-The cross-term $2ab\,x_1[n]\,x_2[n]$ is the giveaway.
+The cross-term $2abx_1[n]x_2[n]$ is the giveaway.
 
 #### 2.4 Time-Invariance
 
@@ -270,7 +270,7 @@ If $x[n]$ has length $M$ and $h[n]$ has length $N$, then the length of $y[n] = x
 
 #### 3.4 Worked examples
 
-**Example 3.6** — $x[n] = u[n]$, $h[n] = \delta[n] + 0.5\,\delta[n-1]$:
+**Example 3.6** — $x[n] = u[n]$, $h[n] = \delta[n] + 0.5\delta[n-1]$:
 
 Method 1 (substitute $x$ into convolution formula):
 
@@ -313,7 +313,7 @@ Result: $y[0]=1$, $y[1]=4$, $y[2]=12$, $y[3]=30$, $y[4]=43$, $y[5]=50$, $y[6]=40
 
 Length $= 4 + 4 - 1 = 7$ samples ($n = 0, \ldots, 6$).
 
-MATLAB: `y = conv(x, h)` gives the correct values. To find the correct starting time index, compute $y[0] = x[0]\,h[0] = 1 \cdot 1 = 1$ and locate this in the output vector.
+MATLAB: `y = conv(x, h)` gives the correct values. To find the correct starting time index, compute $y[0] = x[0]h[0] = 1 \cdot 1 = 1$ and locate this in the output vector.
 
 ---
 
@@ -350,8 +350,8 @@ x[n] = \frac{1}{b_0}\!\left(\sum_{k=0}^{N} a_k\,y[n-k] - \sum_{k=1}^{M} b_k\,x[n
 
 **Example 3.9** — Which of the following correspond to LTI systems?
 
-(a) $y[n] = 0.1\,y[n-1] + x[n] + x[n-1]$  
-Rearranged: $y[n] - 0.1\,y[n-1] = x[n] + x[n-1]$  
+(a) $y[n] = 0.1y[n-1] + x[n] + x[n-1]$  
+Rearranged: $y[n] - 0.1y[n-1] = x[n] + x[n-1]$  
 This fits (3.17) with $N = M = 1$, $a_0 = 1$, $a_1 = -0.1$, $b_0 = b_1 = 1$. => **LTI**
 
 (b) $y[n] = x[n+1] + x[n]$  
@@ -368,7 +368,7 @@ If a system cannot be expressed in form (3.17), it can be: linear and time-varia
 
 **Example 3.10** — $y[n] = x[n] - x[n-1]$:
 
-Expand the convolution $y[n] = \sum_m h[m]\,x[n-m] = \ldots + h[-1]\,x[n+1] + h[0]\,x[n] + h[1]\,x[n-1] + \ldots$
+Expand the convolution $y[n] = \sum_m h[m]x[n-m] = \ldots + h[-1]x[n+1] + h[0]x[n] + h[1]x[n-1] + \ldots$
 
 Matching coefficients: $h[0] = 1$ (coefficient of $x[n]$), $h[1] = -1$ (coefficient of $x[n-1]$), all other $h[m] = 0$.
 
@@ -377,10 +377,10 @@ h[n] = \delta[n] - \delta[n-1]
 ```
 #### 4.4 Computing output from LCCDE recursively
 
-**Example 3.11** — $y[n] = 0.5\,y[n-1] + x[n] + x[n-1]$, $x[n] = u[n]$, $y[-1] = 0$:
+**Example 3.11** — $y[n] = 0.5y[n-1] + x[n] + x[n-1]$, $x[n] = u[n]$, $y[-1] = 0$:
 
 For $n = 0$: $y[0] = 0.5 \cdot 0 + 1 + 0 = 1$  
-For $n \geq 1$: $x[n] = x[n-1] = 1$, so $y[n] = 0.5\,y[n-1] + 2$
+For $n \geq 1$: $x[n] = x[n-1] = 1$, so $y[n] = 0.5y[n-1] + 2$
 
 The output converges quickly toward 4 (visible in Fig. 3.6: stem plot shows $y$ rising from 1 at $n=0$ to approximately 4, settling at 4 for $n \geq$ ~10).
 
@@ -396,7 +396,7 @@ stem(n, y)
 ```
 
 **MATLAB implementation — filter command:**
-Rewrite as $y[n] - 0.5\,y[n-1] = x[n] + x[n-1]$:
+Rewrite as $y[n] - 0.5y[n-1] = x[n] + x[n-1]$:
 ```matlab
 x = ones(1, 51);       % x[n] = u[n] for n = 0..50
 a = [1, -0.5];         % a_k coefficients: a_0=1, a_1=-0.5
@@ -493,16 +493,16 @@ E_z = \int_{-\infty}^{+\infty} |z(t)|^2\, dt = \infty
 - **Sampling period $T$** — time interval between consecutive samples; $x[n] = x(nT)$.
 - **$\delta[n]$ (unit impulse / unit sample)** — equals 1 at $n = 0$, zero elsewhere. Building block for all DT signals via the sifting property.
 - **$u[n]$ (unit step)** — equals 1 for $n \geq 0$, zero for $n < 0$.
-- **Sifting property** — $x[n] = \sum_k x[k]\,\delta[n-k]$; every signal is a weighted superposition of shifted impulses.
+- **Sifting property** — $x[n] = \sum_k x[k]\delta[n-k]$; every signal is a weighted superposition of shifted impulses.
 - **System operator $T$** — mapping from input sequence $x[n]$ to output $y[n]$.
 - **Memoryless system** — $y[n]$ depends only on $x[n]$ at the same instant $n$.
-- **Linear system** — obeys superposition: $T\{a\,x_1 + b\,x_2\} = a\,T\{x_1\} + b\,T\{x_2\}$.
+- **Linear system** — obeys superposition: $T\{ax_1 + bx_2\} = aT\{x_1\} + bT\{x_2\}$.
 - **Time-invariant system** — shifting input by $n_0$ produces a shift of $n_0$ in output.
 - **LTI system** — linear AND time-invariant; completely characterised by its impulse response $h[n]$.
 - **Causal system** — $y[n]$ depends only on $x[k]$ for $k \leq n$; for LTI: $h[n] = 0$ for $n < 0$.
 - **BIBO stable system** — bounded input $\Rightarrow$ bounded output; for LTI: $\sum|h[n]| < \infty$.
 - **Impulse response $h[n]$** — output of an LTI system when input $= \delta[n]$.
-- **Convolution sum** — $y[n] = x[n] \otimes h[n] = \sum_m x[m]\,h[n-m]$; the universal LTI input-output formula.
+- **Convolution sum** — $y[n] = x[n] \otimes h[n] = \sum_m x[m]h[n-m]$; the universal LTI input-output formula.
 - **LCCDE (Linear Constant-Coefficient Difference Equation)** — recursive equation relating $y[n-k]$ and $x[n-k]$; the standard model for implementable LTI systems.
 - **Energy signal** — $0 < E = \sum|x[n]|^2 < \infty$; average power $= 0$.
 - **Power signal** — $0 < P = \lim \frac{1}{2N+1}\sum|x[n]|^2 < \infty$; energy $= \infty$.
@@ -513,7 +513,7 @@ E_z = \int_{-\infty}^{+\infty} |z(t)|^2\, dt = \infty
 
 1. **Write the sifting property** (3.4) and use it to decompose a given signal into impulses. Also express $u[n]$ in terms of $\delta[n]$ via (3.5) and derive (3.6).
 
-2. **Test linearity** of a given system using the standard three-input approach ($x_3 = a\,x_1 + b\,x_2$, check if $T\{x_3\} = a\,T\{x_1\} + b\,T\{x_2\}$). Know that any system with $x^2$, $|x|$, or $x \cdot y$-type terms is nonlinear.
+2. **Test linearity** of a given system using the standard three-input approach ($x_3 = ax_1 + bx_2$, check if $T\{x_3\} = aT\{x_1\} + bT\{x_2\}$). Know that any system with $x^2$, $|x|$, or $x \cdot y$-type terms is nonlinear.
 
 3. **Test time-invariance**: substitute $x_1[n] = x[n - n_0]$, compute $y_1[n] = T\{x_1[n]\}$, compare with $y[n - n_0]$. Systems that compress/expand the time axis ($y[n] = x[cn]$, $c \neq 1$) are always time-variant.
 
@@ -535,7 +535,7 @@ E_z = \int_{-\infty}^{+\infty} |z(t)|^2\, dt = \infty
 
 - **$\delta[n]$ vs $\delta(t)$**: $\delta[n]$ equals exactly 1 at $n = 0$. The continuous Dirac delta is undefined at 0. Do not confuse them — and do not write $\delta[n] = \infty$ at $n = 0$.
 
-- **Sifting direction**: $x[n] = \sum_k x[k]\,\delta[n - k]$. The argument of $\delta$ is $(n - k)$, not $(k - n)$. Swapping signs shifts to the wrong time.
+- **Sifting direction**: $x[n] = \sum_k x[k]\delta[n - k]$. The argument of $\delta$ is $(n - k)$, not $(k - n)$. Swapping signs shifts to the wrong time.
 
 - **Time-invariance trap with time-compression**: $y[n] = x[3n]$ looks simple but is time-variant because the input is compressed, not merely shifted. Always run the formal test.
 

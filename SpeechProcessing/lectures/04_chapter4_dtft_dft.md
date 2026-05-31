@@ -197,23 +197,23 @@ DTFT properties follow from the z-transform (evaluated on the unit circle). ROC 
 | 1 | Linearity | $ax_1[n] + bx_2[n]$ | $aX_1(e^{j\omega}) + bX_2(e^{j\omega})$ | (4.8) |
 | 2 | Time Shifting | $x[n - n_0]$ | $e^{-j\omega n_0} X(e^{j\omega})$ | (4.9) |
 | 3 | Freq. Shifting (Modulation) | $e^{j\omega_0 n} x[n]$ | $X(e^{j(\omega-\omega_0)})$ | (4.10) |
-| 4 | Differentiation | $nx[n]$ | $j\, dX(e^{j\omega})/d\omega$ | (4.11) |
+| 4 | Differentiation | $nx[n]$ | $j dX(e^{j\omega})/d\omega$ | (4.11) |
 | 5 | Conjugation | $x^{\ast}[n]$ | $X^{\ast}(e^{-j\omega})$ | (4.13) |
 | 6 | Time Reversal | $x[-n]$ | $X(e^{-j\omega})$ | (4.14) |
 | 7 | Convolution | $x_1[n] \ast x_2[n]$ | $X_1(e^{j\omega}) X_2(e^{j\omega})$ | (4.15) |
-| 8 | Multiplication | $x_1[n] \cdot x_2[n]$ | $\frac{1}{2\pi} \int X_1(e^{j\tau}) X_2(e^{j(\omega-\tau)})\, d\tau$ | (4.17) |
-| 9 | Parseval's Relation | $\sum\|x[n]\|^2$ | $\frac{1}{2\pi} \int_{-\pi}^{\pi} \|X(e^{j\omega})\|^2\, d\omega$ | (4.18) |
+| 8 | Multiplication | $x_1[n] \cdot x_2[n]$ | $\frac{1}{2\pi} \int X_1(e^{j\tau}) X_2(e^{j(\omega-\tau)}) d\tau$ | (4.17) |
+| 9 | Parseval's Relation | $\sum\|x[n]\|^2$ | $\frac{1}{2\pi} \int_{-\pi}^{\pi} \|X(e^{j\omega})\|^2 d\omega$ | (4.18) |
 
 **Notes on selected properties:**
 
 **Differentiation proof (property 4):**
 
-Differentiating $X(e^{j\omega}) = \sum x[n]\, e^{-j\omega n}$ with respect to $\omega$:
+Differentiating $X(e^{j\omega}) = \sum x[n] e^{-j\omega n}$ with respect to $\omega$:
 
 ```math
 \frac{dX(e^{j\omega})}{d\omega} = \sum x[n]\, (-jn)\, e^{-j\omega n} \quad \Rightarrow \quad nx[n] \longleftrightarrow j\,\frac{dX(e^{j\omega})}{d\omega}
 ```
-Equivalently, using the chain rule: $-e^{j\omega} dX/d(e^{j\omega}) = j\, dX/d\omega$ (4.12).
+Equivalently, using the chain rule: $-e^{j\omega} dX/d(e^{j\omega}) = j dX/d\omega$ (4.12).
 
 **Convolution (property 7) — LTI application:**
 
@@ -269,7 +269,7 @@ x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k]\, e^{j2\pi kn/N}, \qquad 0 \leq n \leq 
 **Key structural observations:**
 - $X[k]$ is a **periodic sequence with period $N$** (since it samples the periodic DTFT).
 - Both DFT and iDFT sums run from $0$ to $N-1$ → finite computation.
-- The **twiddle factor** $W_N = e^{-j2\pi/N}$, so $X[k] = \sum x[n]\, W_N^{kn}$.
+- The **twiddle factor** $W_N = e^{-j2\pi/N}$, so $X[k] = \sum x[n] W_N^{kn}$.
 - DFT relates $N$ time-domain samples to $N$ frequency-domain samples.
 
 #### 3.2 DTFT–DFT Relationship
@@ -290,7 +290,7 @@ That is, the DFT is a sampled (discrete) version of the continuous DTFT. As we a
 | 3 | Freq-shifting (modulation) | $e^{-j2\pi k_0 n/N} x[n]$ | $X[k - k_0]$ |
 | 4 | Time reversal | $x[-n]$ | $X[-k]$ |
 | 5 | Conjugation | $x^{\ast}[n]$ | $X^{\ast}[-k]$ |
-| 6 | Time-convolution | $x_1[n] \circledast x_2[n]$ (circular) | $X_1[k]\, X_2[k]$ |
+| 6 | Time-convolution | $x_1[n] \circledast x_2[n]$ (circular) | $X_1[k] X_2[k]$ |
 | 7 | Freq-convolution | $x_1[n] \cdot x_2[n]$ | $\frac{1}{N} X_1[k] \circledast X_2[k]$ (circular) |
 | 8 | Parseval's relation | $E_x = \sum_{n=0}^{N-1} \|x[n]\|^2$ | $E_x = \frac{1}{N} \sum_{k=0}^{N-1} \|X[k]\|^2$ |
 
@@ -410,14 +410,14 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 
 ## Key terms (glossary)
 
-- **DTFT** — Discrete-Time Fourier Transform: maps a discrete aperiodic signal to a continuous periodic spectrum via $X(e^{j\omega}) = \sum x[n]\, e^{-j\omega n}$.
-- **iDTFT** — Inverse DTFT: recovers $x[n]$ from $X(e^{j\omega})$ by $x[n] = \frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\omega})\, e^{j\omega n}\, d\omega$.
-- **DFT** — Discrete Fourier Transform: maps a length-$N$ sequence to $N$ frequency samples $X[k] = \sum x[n]\, e^{-j2\pi kn/N}$.
-- **iDFT** — Inverse DFT: $x[n] = \frac{1}{N} \sum X[k]\, e^{j2\pi kn/N}$.
+- **DTFT** — Discrete-Time Fourier Transform: maps a discrete aperiodic signal to a continuous periodic spectrum via $X(e^{j\omega}) = \sum x[n] e^{-j\omega n}$.
+- **iDTFT** — Inverse DTFT: recovers $x[n]$ from $X(e^{j\omega})$ by $x[n] = \frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\omega}) e^{j\omega n} d\omega$.
+- **DFT** — Discrete Fourier Transform: maps a length-$N$ sequence to $N$ frequency samples $X[k] = \sum x[n] e^{-j2\pi kn/N}$.
+- **iDFT** — Inverse DFT: $x[n] = \frac{1}{N} \sum X[k] e^{j2\pi kn/N}$.
 - **$\omega$** — Discrete-time frequency parameter (dimensionless, radians/sample); periodic with period $2\pi$.
 - **Twiddle factor** $W_N$ — $e^{-j2\pi/N}$; DFT kernel written as $W_N^{kn}$.
 - **Frequency response** $H(e^{j\omega})$ — DTFT of impulse response $h[n]$; completely characterizes an LTI system.
-- **Eigenfunction property** — complex exponential $e^{j\omega_0 n}$ passes through LTI system unchanged in frequency; output $= H(e^{j\omega_0})\, e^{j\omega_0 n}$.
+- **Eigenfunction property** — complex exponential $e^{j\omega_0 n}$ passes through LTI system unchanged in frequency; output $= H(e^{j\omega_0}) e^{j\omega_0 n}$.
 - **Absolute summability** — $\sum |x[n]| < \infty$; sufficient condition for DTFT to converge (equivalent to BIBO stability for impulse response).
 - **Circular convolution** — convolution modulo $N$, the natural operation in the DFT domain; differs from linear convolution unless zero-padded.
 - **Zero-padding** — appending zeros to an $N$-point sequence before DFT to increase frequency resolution (sample the DTFT on a finer grid).
@@ -466,4 +466,4 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 - **DFT index $k$ maps to frequency $\omega = 2\pi k/N$**, not $\omega = k$. The DFT domain is indexed by integer $k$, the corresponding frequency is $\omega_k = 2\pi k/N$.
 - **Time-shift in DFT**: $x[n-m]$ corresponds to $e^{-j2\pi km/N} X[k]$, not $e^{-j\omega m} X(e^{j\omega})$ — the exponent uses discrete index $m$ and fixed $N$.
 - **iDFT has $+j$ in the exponent and a $1/N$ normalization**; iDTFT has $+j$ in the exponent and $1/(2\pi)$ normalization. Do not confuse the two.
-- **The Parseval DFT form** uses $1/N$, while the DTFT form uses $1/(2\pi)$: $E_x = \frac{1}{N}\sum|X[k]|^2$ (DFT) vs $E_x = \frac{1}{2\pi}\int|X(e^{j\omega})|^2\, d\omega$ (DTFT).
+- **The Parseval DFT form** uses $1/N$, while the DTFT form uses $1/(2\pi)$: $E_x = \frac{1}{N}\sum|X[k]|^2$ (DFT) vs $E_x = \frac{1}{2\pi}\int|X(e^{j\omega})|^2 d\omega$ (DTFT).

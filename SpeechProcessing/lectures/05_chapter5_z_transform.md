@@ -28,7 +28,7 @@ where $z$ is a continuous complex variable. $X(z)$ is in general complex-valued.
 ```math
 X(z)\big|_{z = r e^{j\omega}} = X(r e^{j\omega}) = \sum_{n=-\infty}^{\infty} \bigl(x[n]\, r^{-n}\bigr) e^{-j\omega n} \quad (5.7)
 ```
-This is the DTFT of the exponentially weighted sequence $x[n]\, r^{-n}$.
+This is the DTFT of the exponentially weighted sequence $x[n] r^{-n}$.
 
 **Link to DTFT (5.8).** When $r = 1$, i.e. $z = e^{j\omega}$ (the unit circle):
 
@@ -120,10 +120,10 @@ ROC = entire z-plane except $z = 0$.
 | $\delta[n - m]$ | $z^{-m}$ | $|z| > 0$ ($m > 0$); $|z| < \infty$ ($m < 0$) |
 | $a^n u[n]$ | $\dfrac{1}{1 - a z^{-1}}$ | $|z| > |a|$ |
 | $-a^n u[-n-1]$ | $\dfrac{1}{1 - a z^{-1}}$ | $|z| < |a|$ |
-| $n\, a^n u[n]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| > |a|$ |
-| $-n\, a^n u[-n-1]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| < |a|$ |
-| $a^n \cos(bn)\, u[n]$ | $\dfrac{1 - a\cos(b)\, z^{-1}}{1 - 2a\cos(b)\, z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
-| $a^n \sin(bn)\, u[n]$ | $\dfrac{a\sin(b)\, z^{-1}}{1 - 2a\cos(b)\, z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
+| $n a^n u[n]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| > |a|$ |
+| $-n a^n u[-n-1]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| < |a|$ |
+| $a^n \cos(bn) u[n]$ | $\dfrac{1 - a\cos(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
+| $a^n \sin(bn) u[n]$ | $\dfrac{a\sin(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
 
 **Critical observation:** $a^n u[n]$ and $-a^n u[-n-1]$ give the SAME algebraic $X(z) = 1/(1-az^{-1})$ but with DIFFERENT ROCs ($|z|>|a|$ vs $|z|<|a|$). The ROC distinguishes which signal is meant.
 
@@ -241,9 +241,9 @@ $A_1 = (1-0.8z^{-1}) H(z)|_{z=0.8} = 2$; $A_2 = -3$.
 ```math
 H(z) = \frac{2}{1-0.8z^{-1}} - \frac{3}{1-1.25z^{-1}}
 ```
-- $|z| > 1.25$: $h[n] = (2(0.8)^n - 3(1.25)^n)\, u[n]$ — causal, unstable (P5)
+- $|z| > 1.25$: $h[n] = (2(0.8)^n - 3(1.25)^n) u[n]$ — causal, unstable (P5)
 - $0.8 < |z| < 1.25$: $h[n] = 2(0.8)^n u[n] + 3(1.25)^n u[-n-1]$ — noncausal, stable (P7)
-- $|z| < 0.8$: $h[n] = (-2(0.8)^n + 3(1.25)^n)\, u[-n-1]$ — noncausal, unstable (P6)
+- $|z| < 0.8$: $h[n] = (-2(0.8)^n + 3(1.25)^n) u[-n-1]$ — noncausal, unstable (P6)
 
 The stable case is the annular ROC that includes the unit circle.
 
@@ -323,7 +323,7 @@ z_0^n\, x[n] \;\longleftrightarrow\; X(z/z_0)
 ```
 If ROC of $x[n]$ is $R_+ < |z| < R_-$, then ROC of $z_0^n x[n]$ is $|z_0|R_+ < |z| < |z_0|R_-$.
 
-Application (Example 5.17): Derive $a^n \cos(bn)\, u[n]$ from $u[n] \leftrightarrow 1/(1-z^{-1})$.
+Application (Example 5.17): Derive $a^n \cos(bn) u[n]$ from $u[n] \leftrightarrow 1/(1-z^{-1})$.
 Write $\cos(bn) = (e^{jbn}+e^{-jbn})/2$, apply modulation with $z_0 = ae^{jb}$ and $z_0 = ae^{-jb}$, then add via linearity to obtain:
 
 ```math
@@ -338,7 +338,7 @@ n\, x[n] \;\longleftrightarrow\; -z\,\frac{dX(z)}{dz}
 ```
 ROC same as $X(z)$, except possibly $z = 0$ or $z = \infty$.
 
-Example 5.18: $n\, a^n u[n] \leftrightarrow -z \cdot \frac{d}{dz}\left[\frac{1}{1-az^{-1}}\right] = \frac{az^{-1}}{(1-az^{-1})^2}$, $|z| > |a|$. (Agrees with Table 5.1.)
+Example 5.18: $n a^n u[n] \leftrightarrow -z \cdot \frac{d}{dz}\left[\frac{1}{1-az^{-1}}\right] = \frac{az^{-1}}{(1-az^{-1})^2}$, $|z| > |a|$. (Agrees with Table 5.1.)
 
 #### Property 5: Conjugation (5.35)
 
@@ -354,7 +354,7 @@ x[-n] \;\longleftrightarrow\; X(z^{-1})
 ```
 If ROC of $x[n]$ is $R_+ < |z| < R_-$, then ROC of $x[-n]$ is $1/R_- < |z| < 1/R_+$.
 
-Example 5.19: $x[n] = -n\,a^{-n} u[-n]$. Using $n\,a^n u[n] \leftrightarrow az^{-1}/(1-az^{-1})^2$ and time reversal:
+Example 5.19: $x[n] = -na^{-n} u[-n]$. Using $na^n u[n] \leftrightarrow az^{-1}/(1-az^{-1})^2$ and time reversal:
 
 ```math
 X(z) = \frac{az}{(1-az)^2} = \frac{a^{-1}z^{-1}}{(1-a^{-1}z^{-1})^2}, \quad |z| < |a^{-1}|
@@ -366,7 +366,7 @@ x_1[n] \ast x_2[n] \;\longleftrightarrow\; X_1(z)\, X_2(z)
 ```
 ROC includes $R_{x_1} \cap R_{x_2}$.
 
-**Proof sketch**: $Y(z) = \sum_n \left[\sum_k x_1[k]\, x_2[n-k]\right] z^{-n} = \sum_k x_1[k] \left[\sum_n x_2[n-k]\, z^{-n}\right] = \sum_k x_1[k]\, X_2(z)\, z^{-k} = X_1(z)\, X_2(z)$. (5.39)
+**Proof sketch**: $Y(z) = \sum_n \left[\sum_k x_1[k] x_2[n-k]\right] z^{-n} = \sum_k x_1[k] \left[\sum_n x_2[n-k] z^{-n}\right] = \sum_k x_1[k] X_2(z) z^{-k} = X_1(z) X_2(z)$. (5.39)
 
 ---
 
@@ -391,7 +391,7 @@ H(z) = \frac{Y(z)}{X(z)} = \frac{\sum_{k=0}^{M} b_k z^{-k}}{\sum_{k=0}^{N} a_k z
 ```
 The impulse response $h[n]$ is the inverse z-transform of $H(z)$ with an appropriate ROC.
 
-**Workflow**: $y[n] = x[n] \ast h[n]$ in time domain $\Leftrightarrow$ $Y(z) = X(z)\, H(z)$ in z-domain.
+**Workflow**: $y[n] = x[n] \ast h[n]$ in time domain $\Leftrightarrow$ $Y(z) = X(z) H(z)$ in z-domain.
 
 #### 7.2 Causality and stability from poles and ROC
 
@@ -399,9 +399,9 @@ From Example 5.8 analysis (poles at $0.8$ and $1.25$):
 
 | ROC | $h[n]$ | Causal? | Stable? |
 |---|---|---|---|
-| $|z| > 1.25$ | $(2(0.8)^n - 3(1.25)^n)\, u[n]$ | Yes | No (pole outside unit circle) |
+| $|z| > 1.25$ | $(2(0.8)^n - 3(1.25)^n) u[n]$ | Yes | No (pole outside unit circle) |
 | $0.8 < |z| < 1.25$ | $2(0.8)^n u[n] + 3(1.25)^n u[-n-1]$ | No | Yes (unit circle in ROC) |
-| $|z| < 0.8$ | $(-2(0.8)^n + 3(1.25)^n)\, u[-n-1]$ | No | No |
+| $|z| < 0.8$ | $(-2(0.8)^n + 3(1.25)^n) u[-n-1]$ | No | No |
 
 **Rules**:
 - **Causal** system: $h[n] = 0$ for $n < 0$ $\Leftrightarrow$ ROC is exterior of circle beyond the outermost pole (right-sided, P5).
@@ -421,7 +421,7 @@ one pole at $z = 0.1$, one zero at $z = -1$.
 Two ROC possibilities: $|z| > 0.1$ (causal) or $|z| < 0.1$ (anti-causal).
 
 **Example 5.21**: Given $H(z) = (1+z^{-1})(1-2z^{-1}) / [(1-0.5z^{-1})(1+2z^{-1})]$, find difference equation.
-Cross-multiply: $(1+1.5z^{-1}-z^{-2})\, Y(z) = (1-z^{-1}-2z^{-2})\, X(z)$
+Cross-multiply: $(1+1.5z^{-1}-z^{-2}) Y(z) = (1-z^{-1}-2z^{-2}) X(z)$
 
 ```math
 y[n] + 1.5\,y[n-1] - y[n-2] = x[n] - x[n-1] - 2x[n-2]
@@ -437,14 +437,14 @@ H(z) = 1 - z^{-1}, \quad |z| > 0
 ```
 $h[n] = \delta[n] - \delta[n-1]$ (finite-duration causal).
 
-**Example 5.23**: $x[n] = u[n]$, $h[n] = \delta[n] + 0.5\,\delta[n-1]$.
+**Example 5.23**: $x[n] = u[n]$, $h[n] = \delta[n] + 0.5\delta[n-1]$.
 
 $X(z) = 1/(1-z^{-1})$, $H(z) = 1 + 0.5z^{-1}$.
 
 ```math
 Y(z) = H(z)X(z) = \frac{1}{1-z^{-1}} + \frac{0.5\,z^{-1}}{1-z^{-1}}, \quad |z| > 1
 ```
-$y[n] = u[n] + 0.5\, u[n-1]$.
+$y[n] = u[n] + 0.5 u[n-1]$.
 
 ---
 

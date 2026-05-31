@@ -425,7 +425,7 @@ Output: Set of keypoints, each described by (x*, y*, σ*, θ*)
 
 9. **Describe keypoint refinement**: the Taylor expansion approach, and the two rejection tests (low contrast threshold and Hessian-based edge test). Write the curvature ratio formula.
 
-10. **Explain orientation assignment step-by-step:** gradient computation, 36-bin histogram with Gaussian weighting, peak selection, and the 80% rule for secondary orientations. Write the gradient direction formula $\theta = \tan^{-1}(\partial I/\partial y \;/\; \partial I/\partial x)$.
+10. **Explain orientation assignment step-by-step:** gradient computation, 36-bin histogram with Gaussian weighting, peak selection, and the 80% rule for secondary orientations. Write the gradient direction formula $\theta = \tan^{-1}(\partial I/\partial y / \partial I/\partial x)$.
 
 11. **Reproduce the complete detector pipeline** as a numbered sequence of steps (pyramid construction → DoG → extrema → refinement → orientation).
 

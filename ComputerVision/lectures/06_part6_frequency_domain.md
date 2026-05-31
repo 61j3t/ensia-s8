@@ -67,7 +67,7 @@ $$F(u) = \int_{-\infty}^{+\infty} f(x)\, e^{-i2\pi u x}\, dx$$
 **Inverse transform (continuous):**
 $$f(x) = \int_{-\infty}^{+\infty} F(u)\, e^{+i2\pi u x}\, du$$
 **Key properties of F(u):**
-- F(u) is complex-valued: $F(u) = \text{Re}\{F(u)\} + i\,\text{Im}\{F(u)\}$
+- F(u) is complex-valued: $F(u) = \text{Re}\{F(u)\} + i\text{Im}\{F(u)\}$
 - Each F(u) encodes the amplitude and phase of the sinusoid of frequency u.
 
 **Extracting amplitude and phase:**
@@ -82,7 +82,7 @@ Note: atan2 (not atan) is used because it preserves the correct quadrant. atan(y
 |---|---|
 | $\cos(2\pi k x)$ | $(1/2)[\delta(u+k) + \delta(u-k)]$ — two spikes at +/-k in Re part |
 | $\sin(2\pi k x)$ | $(1/2i)[\delta(u+k) - \delta(u-k)]$ — two spikes in Im part, opposite signs |
-| Gaussian $e^{-ax^2}$ | Gaussian $\sqrt{\pi/a}\, e^{-\pi^2 u^2 / a}$ — Gaussian maps to Gaussian |
+| Gaussian $e^{-ax^2}$ | Gaussian $\sqrt{\pi/a} e^{-\pi^2 u^2 / a}$ — Gaussian maps to Gaussian |
 | Sum of two cosines at k1, k2 | Four spikes at +/-k1, +/-k2 |
 
 The Gaussian self-similarity under FT is a crucial property: it means Gaussian filtering in space corresponds to Gaussian attenuation in the frequency domain, with no ringing.

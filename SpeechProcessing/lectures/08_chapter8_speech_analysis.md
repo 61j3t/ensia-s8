@@ -525,9 +525,9 @@ A frame of speech has ZCR = 60 crossings per 15 ms window and STE very low. This
 #### Example 3: Source–filter model computation
 
 Given a voiced speech frame at $F_s = 10$ kHz, pitch period $T = 50$ samples, and a 10th-order vocal tract with poles at:
-- $z_1 = 0.9\, e^{j 2\pi \times 800/10000}$ → F1 ≈ 800 Hz
-- $z_2 = 0.85\, e^{j 2\pi \times 1800/10000}$ → F2 ≈ 1800 Hz
-- $z_3 = 0.80\, e^{j 2\pi \times 2600/10000}$ → F3 ≈ 2600 Hz
+- $z_1 = 0.9 e^{j 2\pi \times 800/10000}$ → F1 ≈ 800 Hz
+- $z_2 = 0.85 e^{j 2\pi \times 1800/10000}$ → F2 ≈ 1800 Hz
+- $z_3 = 0.80 e^{j 2\pi \times 2600/10000}$ → F3 ≈ 2600 Hz
 - remaining poles at higher frequencies
 
 The complete spectrum $|P_L(e^{j\omega})|$ shows harmonic lines spaced at $F_0 = 200$ Hz, shaped by the three dominant formant peaks.
@@ -573,12 +573,12 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 | **Pitch period ($T_p$)** | Duration of one glottal cycle; $T_p = 1/F_0$ |
 | **Glottal pulse model G(z)** | Filter that shapes impulse train into realistic airflow waveform; introduces -12 dB/octave spectral tilt |
 | **Vocal tract model V(z)** | All-pole filter $1/(1 + \sum a_k z^{-k})$; resonances correspond to formants |
-| **Radiation model R(z)** | First-order high-pass filter $R(z) = 1 - 0.99\,z^{-1}$; models lip radiation (+6 dB/octave boost) |
+| **Radiation model R(z)** | First-order high-pass filter $R(z) = 1 - 0.99z^{-1}$; models lip radiation (+6 dB/octave boost) |
 | **LPC (Linear Predictive Coding)** | Method to estimate all-pole vocal tract coefficients $a_k$; used in speech coding and recognition |
 | **Phoneme** | Minimal unit of sound that distinguishes meaning; English has ~48 (ARPAbet) |
 | **ARPAbet** | Machine-readable phonetic alphabet for American English (48 symbols) |
-| **Short-Time Energy (STE)** | $E_{\hat{n}} = \sum x^2[m]\, h[\hat{n}-m]$; measures local signal power; used for voicing detection |
-| **Short-Time Magnitude (STM)** | $M_{\hat{n}} = \sum |x[m]|\, \tilde{w}[\hat{n}-m]$; less sensitive to outliers than STE |
+| **Short-Time Energy (STE)** | $E_{\hat{n}} = \sum x^2[m] h[\hat{n}-m]$; measures local signal power; used for voicing detection |
+| **Short-Time Magnitude (STM)** | $M_{\hat{n}} = \sum |x[m]| \tilde{w}[\hat{n}-m]$; less sensitive to outliers than STE |
 | **Zero-Crossing Rate (ZCR)** | Rate at which the speech waveform crosses zero; high for unvoiced, low for voiced |
 | **Autocorrelation (STACF)** | $r_k = \sum s_i \cdot s_{i+k}$; emphasises periodicity; peak at lag $k = T_p$ used for pitch detection |
 | **AMDF** | Average Magnitude Difference Function; minimum at lag = pitch period; computationally lighter than ACF |
@@ -598,10 +598,10 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
    - Impulse train: $s[n] = \sum_k \delta[n - kT]$
    - Glottal: $U_G(z) = G(z) \cdot S(z)$
    - Vocal tract: $V(z) = 1 / (1 + \sum_{k=1}^{p} a_k z^{-k})$
-   - Radiation: $R(z) = 1 - 0.99\,z^{-1}$
+   - Radiation: $R(z) = 1 - 0.99z^{-1}$
    - Overall: $P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)$
 
-3. **Explain formants as poles** of $V(z)$: $z_k = r_k\, e^{j\omega_k}$; what do $r_k$ and $\omega_k$ control; why poles near the unit circle give sharp peaks.
+3. **Explain formants as poles** of $V(z)$: $z_k = r_k e^{j\omega_k}$; what do $r_k$ and $\omega_k$ control; why poles near the unit circle give sharp peaks.
 
 4. **Derive the Short-Time Energy formula** from the generic short-time processing equation. Explain why it is sensitive to large amplitudes and what the window $h[n] = \tilde{w}^2[n]$ does.
 
@@ -623,7 +623,7 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 
 ## Pitfalls
 
-- **The radiation model $R(z) = 1 - 0.99\,z^{-1}$ is a high-pass (differentiator), not a low-pass.** It boosts high frequencies. Confusing its effect with the glottal model (which rolls off) is a common error.
+- **The radiation model $R(z) = 1 - 0.99z^{-1}$ is a high-pass (differentiator), not a low-pass.** It boosts high frequencies. Confusing its effect with the glottal model (which rolls off) is a common error.
 
 - **F0 is the fundamental frequency of the excitation, not of the vocal tract.** Formants F1, F2, F3 are resonances of the vocal tract. Do not confuse $f_0$ (pitch) with F1 (first formant).
 

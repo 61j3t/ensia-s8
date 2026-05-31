@@ -401,7 +401,7 @@ Y(j\Omega) = \mathcal{F}\{x(t) \otimes h(t)\}
 ```math
 = X(j\Omega) \cdot H(j\Omega)
 ```
-Therefore $y(t) = \mathcal{F}^{-1}\{ X(j\Omega)\, H(j\Omega) \}$.
+Therefore $y(t) = \mathcal{F}^{-1}\{ X(j\Omega) H(j\Omega) \}$.
 
 ---
 
@@ -416,14 +416,14 @@ Therefore $y(t) = \mathcal{F}^{-1}\{ X(j\Omega)\, H(j\Omega) \}$.
 | **Fourier transform $X(j\Omega)$** | Continuous-frequency representation (spectrum) of an aperiodic signal. |
 | **Spectrum** | Another name for $X(j\Omega)$; fully describes the signal in the frequency domain. |
 | **Dirac delta $\delta(t)$** | Generalized function: zero for $t\neq 0$, integrates to 1; defined via the sifting property. |
-| **Sifting property** | $\int f(t)\,\delta(t-t_0)\,dt = f(t_0)$; extracts the value of $f$ at $t_0$. |
+| **Sifting property** | $\int f(t)\delta(t-t_0)dt = f(t_0)$; extracts the value of $f$ at $t_0$. |
 | **Unit step $u(t)$** | 1 for $t>0$, 0 for $t<0$; undefined at $t=0$. |
 | **sinc function** | $\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)$; appears as the FT of a rectangular pulse. |
 | **Duality property** | If $x(t) \leftrightarrow X(j\Omega)$, then $X(jt) \leftrightarrow 2\pi x(-\Omega)$; rect in time $\leftrightarrow$ sinc in freq and vice versa. |
 | **Impulse train** | $\sum_{k} \delta(t-kT)$; periodic signal whose FT is also an impulse train. |
 | **Impulse response $h(t)$** | Output of an LTI system when the input is $\delta(t)$; fully characterizes the system. |
 | **Transfer function $H(j\Omega)$** | FT of the impulse response $h(t)$; used for frequency-domain analysis of LTI systems. |
-| **Convolution** | $y(t) = \int x(\tau)\,h(t-\tau)\,d\tau$; the time-domain operation for LTI output. |
+| **Convolution** | $y(t) = \int x(\tau)h(t-\tau)d\tau$; the time-domain operation for LTI output. |
 | **Linearity** | Superposition holds: weighted sums of inputs map to weighted sums of outputs. |
 | **Time-invariance** | System behaviour does not depend on when the input is applied. |
 

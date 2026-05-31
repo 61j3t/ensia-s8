@@ -202,7 +202,7 @@ The real-world analog signal is first converted to digital (ADC = Analog-to-Digi
 
 - **Discrete-time ≠ digital in general.** Discrete-time means only time is discretized; digital means both time AND amplitude are discretized. The course treats them as equivalent (infinite-resolution assumption) — state this assumption explicitly in an exam answer.
 - **$x(nT)$ vs $x[n]$:** The lecture uses $x(nT)$ with explicit sampling period $T$. Later chapters may drop $T$ and write $x[n]$. These are the same signal under the convention that $n$ indexes samples.
-- **Quantization range with b bits (two's complement):** Range is $[-2^{b-1},\, 2^{b-1} - 1]$. For b=4: $[-8, 7]$. Do not confuse with unsigned range $[0, 2^b - 1]$.
+- **Quantization range with b bits (two's complement):** Range is $[-2^{b-1}, 2^{b-1} - 1]$. For b=4: $[-8, 7]$. Do not confuse with unsigned range $[0, 2^b - 1]$.
 - **The ADC chain order matters:** Sampling comes before quantization. A sampled-but-not-quantized signal $x(nT)$ is NOT yet digital.
 - **LPC is for speech compression, MP3 is for audio compression.** These are distinct standards and distinct application areas — do not conflate them.
 - **A digital system is also called a digital filter** even if it performs recognition or feature extraction — the term "filter" is used generically for any digital processor.

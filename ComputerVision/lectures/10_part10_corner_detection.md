@@ -45,7 +45,7 @@ The **distribution of gradient vectors in the window characterises the region ty
 ### 3. From gradient distribution to the structure tensor
 
 **Step 1 — PCA interpretation.**
-The problem of finding the dominant directions of the gradient distribution is equivalent to a **Principal Component Analysis (PCA)** on the gradient vectors $(I_x(x,y),\, I_y(x,y))$ computed at all pixels inside the window. PCA yields two eigenvalues:
+The problem of finding the dominant directions of the gradient distribution is equivalent to a **Principal Component Analysis (PCA)** on the gradient vectors $(I_x(x,y), I_y(x,y))$ computed at all pixels inside the window. PCA yields two eigenvalues:
 
 - **$\lambda_1$**: variance (inertia) in the direction of maximum spread — the principal axis.
 - **$\lambda_2$**: variance in the direction of minimum spread (perpendicular to the first).

@@ -244,7 +244,7 @@ $$\nabla^2(n_\sigma \ast f) = (\nabla^2 n_\sigma) \ast f$$
 The **Laplacian of Gaussian** kernel is:
 $$\nabla^2 G(x,y) = \frac{x^2 + y^2 - 2\sigma^2}{\sigma^4} \cdot \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
 
-Its 1-D cross-section has a distinctive **inverted Mexican hat (sombrero)** shape with two zero-crossings at $\pm\sqrt{2}\,\sigma$ from the centre. In 2D it looks like an inverted sombrero.
+Its 1-D cross-section has a distinctive **inverted Mexican hat (sombrero)** shape with two zero-crossings at $\pm\sqrt{2}\sigma$ from the centre. In 2D it looks like an inverted sombrero.
 
 A practical 5×5 discrete approximation of LoG:
 
@@ -318,7 +318,7 @@ A practical 5×5 discrete approximation of LoG:
 
 10. **Derive the Derivative of Gaussian trick**: $\nabla(n_\sigma \ast f) = (\nabla n_\sigma) \ast f$ — why this works (linearity of both operations) and why it is efficient (one precomputed kernel).
 
-11. **State the LoG formula** and describe its shape (inverted sombrero / Mexican hat). Give the zero-crossing positions ($\pm\sqrt{2}\,\sigma$ from centre in 1-D).
+11. **State the LoG formula** and describe its shape (inverted sombrero / Mexican hat). Give the zero-crossing positions ($\pm\sqrt{2}\sigma$ from centre in 1-D).
 
 12. **Compare gradient vs. Laplacian** in a table: output information, detection criterion, linearity, number of convolutions required.
 
