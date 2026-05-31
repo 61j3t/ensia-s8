@@ -17,10 +17,9 @@
 
 **Definition.** Sampling is the process of converting a continuous-time signal $x(t)$ into a discrete-time sequence $x[n]$ by extracting values at equally spaced time instants $t = nT$:
 
-$$
+```math
 x[n] = x(t)\big|_{t=nT} = x(nT), \qquad n = \ldots, -1, 0, 1, 2, \ldots
-$$
-
+```
 *(Eq. 6.1)*
 
 - $T$ is the **sampling period** (seconds); its reciprocal $F_s = 1/T$ is the **sampling frequency** (Hz).
@@ -30,11 +29,9 @@ $$
 
 **Example 6.1.** Given $x(t) = \cos(200\pi t)$ and $T = 1/300$ s:
 
-$$
-
+```math
 x[n] = x(nT) = \cos\!\left(200\pi \cdot \frac{n}{300}\right) = \cos\!\left(\frac{2\pi n}{3}\right)
-$$
-
+```
 The analog frequency is $200\pi$ rad/s; the discrete-time frequency is $2\pi/3$ rad/sample. Note the unit change: analog frequency has units rad/s, discrete-time frequency is dimensionless (rad/sample).
 
 **Key question:** Can $x[n]$ uniquely represent $x(t)$, i.e., can we reconstruct $x(t)$ from $x[n]$?
@@ -54,20 +51,16 @@ Conceptually the CD converter works in two stages (Fig. 6.2):
 
 The impulse train (Dirac comb):
 
-$$
-
+```math
 i(t) = \sum_{k=-\infty}^{\infty} \delta(t - kT)
-$$
-
+```
 *(Eq. 6.2a)*
 
 Multiplying $x(t)$ by $i(t)$ and using the sifting property of $\delta(t)$:
 
-$$
-
+```math
 x_s(t) = x(t) \cdot i(t) = x(t) \cdot \sum_{k} \delta(t - kT) = \sum_{k} x[k]\,\delta(t - kT)
-$$
-
+```
 *(Eq. 6.2)*
 
 **Fig. 6.2** (block diagram): $x(t)$ → multiplier ($\times i(t)$) → $x_s(t)$ → "impulse train to sequence" block → $x[n]$. Time-domain plots show $x(t)$ as a smooth curve, $x_s(t)$ as a train of weighted impulses at multiples of $T$, and $x[n]$ as a stem plot indexed by $n$.
@@ -76,11 +69,9 @@ $$
 
 The Fourier transform of $i(t)$ is itself an impulse train in frequency:
 
-$$
-
+```math
 I(j\Omega) = \Omega_s \sum_{k=-\infty}^{\infty} \delta(\Omega - k\Omega_s), \qquad \Omega_s = \frac{2\pi}{T}
-$$
-
+```
 *(Eq. 6.3)*
 
 (This is a standard result from Chapter 2 of the course.)
@@ -89,20 +80,16 @@ $$
 
 Using the multiplication property of the Fourier transform (multiplication in time $\leftrightarrow$ convolution in frequency, scaled by $1/(2\pi)$):
 
-$$
-
+```math
 x_1(t)\cdot x_2(t) \;\leftrightarrow\; \frac{1}{2\pi}\,X_1(j\Omega) \ast X_2(j\Omega)
-$$
-
+```
 *(Eq. 6.4)*
 
 Applying (6.2)–(6.4) and the sifting property:
 
-$$
-
+```math
 X_s(j\Omega) = \frac{1}{T}\sum_{k=-\infty}^{\infty} X\!\left(j(\Omega - k\Omega_s)\right)
-$$
-
+```
 *(Eq. 6.5)*
 
 **Interpretation:** $X_s(j\Omega)$ is an **infinite sum of shifted copies** of $X(j\Omega)$, each scaled by $1/T$, centred at every integer multiple of $\Omega_s$.
@@ -125,20 +112,16 @@ For $x[n]$ to uniquely represent $x(t)$ we need two things:
 
 Let $x(t)$ be bandlimited with
 
-$$
-
+```math
 X(j\Omega) = 0, \qquad |\Omega| \geq \Omega_b
-$$
-
+```
 *(Eq. 6.6)*
 
 Then $x(t)$ is **uniquely determined** by its samples $x[n] = x(nT)$ if and only if:
 
-$$
-
+```math
 \Omega_s = \frac{2\pi}{T} > 2\Omega_b
-$$
-
+```
 *(Eq. 6.7)*
 
 Terminology:
@@ -166,11 +149,9 @@ Aliasing means that a high-frequency component "masquerades" as a lower frequenc
 
 **Example 6.2.** Find the Nyquist frequency and Nyquist rate for:
 
-$$
-
+```math
 x(t) = 1 + \sin(2000\pi t) + \cos(4000\pi t)
-$$
-
+```
 The component frequencies are $0$, $2000\pi$, and $4000\pi$ rad/s.
 - Nyquist frequency = $4000\pi$ rad/s (highest frequency present)
 - Nyquist rate = $8000\pi$ rad/s (= 4000 Hz in Hz terms)
@@ -185,20 +166,16 @@ So $f_s$ must exceed 4000 Hz to sample this signal without aliasing.
 
 To recover $x(t)$ from $x_s(t)$, we apply a lowpass filter $H(j\Omega)$ in the frequency domain (Fig. 6.6):
 
-$$
-
-H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\\\ 0, & \text{otherwise} \end{cases}
-$$
-
+```math
+H(j\Omega) = \begin{cases} T, & |\Omega| < \Omega_c \\ 0, & \text{otherwise} \end{cases}
+```
 *(Eq. 6.8)*
 
 where the cutoff $\Omega_c$ satisfies $\Omega_b < \Omega_c < \Omega_s - \Omega_b$ (any value in this gap works). For simplicity, set $\Omega_c$ at the midpoint:
 
-$$
-
+```math
 \Omega_c = \frac{\Omega_s}{2} = \frac{\pi}{T}
-$$
-
+```
 *(Eq. 6.9)*
 
 The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copies scaled by $1/T$). In the time domain: $x_r(t) = x_s(t) \ast h(t)$.
@@ -209,20 +186,16 @@ The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copie
 
 Taking the inverse Fourier transform of $H(j\Omega)$:
 
-$$
-
+```math
 h(t) = \frac{1}{2\pi}\int_{-\pi/T}^{\pi/T} T\,e^{j\Omega t}\,d\Omega = \frac{T\sin(\pi t/T)}{\pi t} = \mathrm{sinc}(t/T)
-$$
-
+```
 *(Eq. 6.10)*
 
 where the sinc function is defined as:
 
-$$
-
+```math
 \mathrm{sinc}(u) = \frac{\sin(\pi u)}{\pi u}
-$$
-
+```
 Key properties: $\mathrm{sinc}(0) = 1$ (by L'Hôpital's rule), $\mathrm{sinc}(n) = 0$ for all nonzero integers $n$.
 
 **Fig. 6.7** (DC converter block diagram): $x[n]$ → "sequence to impulse train conversion" → $x_s(t)$ → $H(j\Omega)$ filter → $x_r(t)$.
@@ -231,14 +204,12 @@ Key properties: $\mathrm{sinc}(0) = 1$ (by L'Hôpital's rule), $\mathrm{sinc}(n)
 
 Convolving $x_s(t)$ with $h(t)$:
 
-$$
-
+```math
 x_r(t) = x_s(t) \ast h(t)
         = \left(\sum_{k=-\infty}^{\infty} x[k]\,\delta(t - kT)\right) \ast h(t)
         = \sum_{k=-\infty}^{\infty} x[k]\,h(t - kT)
         = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right)
-$$
-
+```
 *(Eq. 6.11)*
 
 This is the **sinc interpolation formula** — it reconstructs $x(t)$ at any real $t$ from the discrete samples $x[k]$.
@@ -247,20 +218,16 @@ This is the **sinc interpolation formula** — it reconstructs $x(t)$ at any rea
 
 At $t = nT$:
 
-$$
-
+```math
 x_r(nT) = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}(n - k)
-$$
-
+```
 *(Eq. 6.12)*
 
 Since $\mathrm{sinc}(n-k) = 0$ when $n \neq k$ (integer argument, nonzero) and $\mathrm{sinc}(0) = 1$:
 
-$$
-
+```math
 x_r(nT) = x[n] = x(nT)
-$$
-
+```
 *(Eq. 6.15)*
 
 confirming that $x_r(t) = x(t)$ — perfect reconstruction at every sample point, and in fact everywhere for bandlimited signals.
@@ -273,18 +240,14 @@ confirming that $x_r(t) = x(t)$ — perfect reconstruction at every sample point
 
 Applying (6.11) at $t = nT - \Delta$:
 
-$$
-
+```math
 y[n] = x(nT - \Delta) = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}\!\left(\frac{nT - kT - \Delta}{T}\right)
-$$
-
+```
 With change of variable $l = n - k$:
 
-$$
-
+```math
 y[n] = \sum_{l=-\infty}^{\infty} x[n-l]\,\mathrm{sinc}\!\left(\frac{lT - \Delta}{T}\right)
-$$
-
+```
 *(Eq. 6.11')*
 
 **Special case:** When $\Delta = mT$ (integer multiple of $T$), this reduces to a simple shift: $y[n] = x[n-m]$. For non-integer delays, the full infinite sinc sum is required — not practical in real-time systems.
@@ -305,11 +268,9 @@ x(t) → [CD converter] → x[n] → [Digital Signal Processor] → y[n] → [DC
 - DSP: operates entirely in the discrete-time domain to produce $y[n]$
 - DC converter: reconstructs $y(t)$ from $y[n]$ via (6.16):
 
-$$
-
+```math
 y(t) = \sum_{k=-\infty}^{\infty} y[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right)
-$$
-
+```
 *(Eq. 6.16)*
 
 #### 6.2 Practical System (Real-World)
@@ -342,27 +303,21 @@ Additional notes:
 
 Matching $x[n] = x(nT)$:
 
-$$
-
+```math
 \cos(\pi n/4) = \cos(\Omega_0\,n/1000)
-$$
-
+```
 Comparing: $\Omega_0/1000 = \pi/4$, so:
 
-$$
-
+```math
 \Omega_1 = 250\pi \text{ rad/s} \quad (f_1 = 125 \text{ Hz})
-$$
-
+```
 **Step 2: Find $\Omega_2$ (second alias).**
 
 Using the periodicity of cosine: $\cos(\theta) = \cos(\theta + 2n\pi)$:
 
-$$
-
+```math
 \cos(\pi n/4) = \cos(\pi n/4 + 2n\pi) = \cos(9\pi n/4) = \cos(\Omega_2\,n/1000)
-$$
-
+```
 So: $\Omega_2 = 2250\pi$ rad/s ($f_2 = 1125$ Hz).
 
 **What does the DC converter produce?**

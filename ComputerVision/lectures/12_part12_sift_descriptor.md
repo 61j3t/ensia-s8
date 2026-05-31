@@ -73,10 +73,9 @@ For each of the 16 cells:
 
 After concatenation, the raw 128-D vector is normalized to unit length:
 
-$$
+```math
 \mathbf{d} \leftarrow \frac{\mathbf{d}}{\|\mathbf{d}\|_2}
-$$
-
+```
 where $\|\cdot\|_2$ is the Euclidean (L2) norm: $\sqrt{\sum_{k=1}^{128} d_k^2}$.
 
 **Why this achieves illumination invariance:**
@@ -114,20 +113,16 @@ Let H1 and H2 be two 128-D SIFT descriptors.
 
 **Euclidean distance** (most common for SIFT):
 
-$$
-
+```math
 d(H_1, H_2) = \sqrt{\sum_{k} \bigl(H_1(k) - H_2(k)\bigr)^2}
-$$
-
+```
 Smaller distance = more similar descriptors = better match.
 
 **Histogram intersection** (alternative):
 
-$$
-
+```math
 d(H_1, H_2) = \sum_{k} \min\bigl(H_1(k),\, H_2(k)\bigr)
-$$
-
+```
 Larger intersection = better match (this is a similarity measure, not a distance).
 
 #### 4.2 Nearest-neighbor matching
@@ -140,11 +135,9 @@ Given a query keypoint descriptor Q from image A, find the descriptor D* in imag
 
 Lowe's key insight: a match is reliable if the nearest neighbor is **much closer** than the second-nearest neighbor. Formally:
 
-$$
-
+```math
 \frac{d(Q,\, D_{1\text{st}})}{d(Q,\, D_{2\text{nd}})} < \text{threshold}
-$$
-
+```
 where $D_{1\text{st}}$ is the nearest neighbor and $D_{2\text{nd}}$ is the second-nearest neighbor.
 
 **Lowe's recommended threshold: 0.8**

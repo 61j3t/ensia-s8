@@ -39,10 +39,9 @@ Motion in a video can be studied at increasing levels of abstraction:
 
 The key assumption is that the brightness of a moving pixel is preserved across frames:
 
-$$
+```math
 I(x, y, t) = I(x + u, y + v, t + 1)
-$$
-
+```
 where $(u, v)$ is the displacement (flow vector) at pixel $(x, y)$ between frame $t$ and $t+1$. This assumes:
 1. **Constant brightness** — no illumination changes, no specular reflections.
 2. **Small displacements** — the Taylor expansion used in the derivation is first-order accurate only for small $(u, v)$.
@@ -51,18 +50,14 @@ where $(u, v)$ is the displacement (flow vector) at pixel $(x, y)$ between frame
 
 Expand $I(x+u, y+v, t+1)$ by first-order Taylor series around $(x, y, t)$:
 
-$$
-
+```math
 I(x+u, y+v, t+1) \approx I(x,y,t) + I_x \cdot u + I_y \cdot v + I_t
-$$
-
+```
 Substituting into the brightness-constancy equation and cancelling $I(x,y,t)$:
 
-$$
-
+```math
 I_x \cdot u + I_y \cdot v + I_t = 0 \qquad \text{[OFCE]}
-$$
-
+```
 where:
 - $I_x = \partial I / \partial x$ — spatial gradient in x (computed with finite differences, e.g. Sobel)
 - $I_y = \partial I / \partial y$ — spatial gradient in y
@@ -94,34 +89,28 @@ In a local window (neighborhood) of $n$ pixels $q_1, q_2, \ldots, q_n$, the flow
 This gives a system of $n$ equations (one OFCE per pixel in the window):
 
 
-$$
-
+```math
 \begin{aligned}
-I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\\\
-I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\\\
-&\vdots \\\\
+I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\
+I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\
+&\vdots \\
 I_x(q_n) V_x + I_y(q_n) V_y &= -I_t(q_n)
 \end{aligned}
-$$
-
+```
 In matrix form: $\mathbf{A} \mathbf{v} = \mathbf{b}$, where:
 
-$$
-
-\mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\\\ I_x(q_2) & I_y(q_2) \\\\ \vdots & \vdots \\\\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
-\mathbf{v} = \begin{bmatrix} V_x \\\\ V_y \end{bmatrix}, \quad
-\mathbf{b} = \begin{bmatrix} -I_t(q_1) \\\\ -I_t(q_2) \\\\ \vdots \\\\ -I_t(q_n) \end{bmatrix}
-$$
-
+```math
+\mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\ I_x(q_2) & I_y(q_2) \\ \vdots & \vdots \\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
+\mathbf{v} = \begin{bmatrix} V_x \\ V_y \end{bmatrix}, \quad
+\mathbf{b} = \begin{bmatrix} -I_t(q_1) \\ -I_t(q_2) \\ \vdots \\ -I_t(q_n) \end{bmatrix}
+```
 #### 3.2 Least-squares solution
 
 The system is overdetermined ($n \gg 2$), so solve via least squares $\mathbf{A}^\top \mathbf{A} \mathbf{v} = \mathbf{A}^\top \mathbf{b}$:
 
-$$
-
-\begin{bmatrix} V_x \\\\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\\\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\\\ -\sum I_y I_t \end{bmatrix}
-$$
-
+```math
+\begin{bmatrix} V_x \\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\ -\sum I_y I_t \end{bmatrix}
+```
 where all sums are over pixels $q_i$ in the local window.
 
 The 2×2 matrix $M = \mathbf{A}^\top \mathbf{A}$ is the **structure tensor** (same matrix used in Harris corner detection). Eigenvalues of $M$ determine whether the flow can be solved:
@@ -152,11 +141,9 @@ The 2×2 matrix $M = \mathbf{A}^\top \mathbf{A}$ is the **structure tensor** (sa
 
 Rather than restricting to a local window, Horn-Schunck adds a **global smoothness term**. The energy to minimize is:
 
-$$
-
+```math
 E = \iint \left[ (I_x u + I_y v + I_t)^2 + \alpha^2 \left( \|\nabla u\|^2 + \|\nabla v\|^2 \right) \right] dx\, dy
-$$
-
+```
 - First term: **brightness constancy** — penalizes OFCE violation.
 - Second term: **smoothness** — penalizes large spatial variations in the flow field; $\alpha$ is a regularization parameter balancing the two terms.
 
@@ -167,18 +154,14 @@ Minimizing $E$ with respect to $u$ and $v$ leads to coupled Euler-Lagrange equat
 1. Compute local averages $\bar{u}_i$ and $\bar{v}_i$ of the current flow estimates at pixel $i$.
 2. Compute the update scalar:
 
-$$
-
+```math
 \text{update} = \frac{I_x \bar{u}_i + I_y \bar{v}_i + I_t}{\alpha^2 + I_x^2 + I_y^2}
-$$
-
+```
 3. Update the flow:
 
-$$
-
+```math
 u_{i+1} = \bar{u}_i - I_x \cdot \text{update}, \qquad v_{i+1} = \bar{v}_i - I_y \cdot \text{update}
-$$
-
+```
 4. Repeat until convergence.
 
 #### 4.3 Comparison with Lucas-Kanade
@@ -295,11 +278,9 @@ A motion model predicts the next position from previous positions.
 
 State uncertainty is modeled probabilistically. The posterior $p(x_t \mid z_{1:t})$ (distribution over position given all observations) is updated using:
 
-$$
-
+```math
 \text{Posterior} \propto \text{Measurement likelihood} \times \text{Predicted prior}
-$$
-
+```
 Visually: measurement distribution (peaked at observed position) convolved with motion distribution (spread by predicted velocity uncertainty) gives posterior (intermediate peak).
 
 **Kalman filter:** assumes Gaussian distributions for all uncertainties. Optimal for linear motion with Gaussian noise. Used extensively in MOT.
@@ -316,29 +297,23 @@ Track by finding the position in the next frame that best matches the object tem
 
 **SSD (Sum of Squared Differences):**
 
-$$
-
+```math
 R(x, y) = \sum_{x',y'} \bigl(T(x', y') - I(x+x', y+y')\bigr)^2
-$$
-
+```
 Minimum of $R$ = best match position.
 
 **Correlation:**
 
-$$
-
+```math
 R(x, y) = \sum_{x',y'} T(x', y') \cdot I(x+x', y+y')
-$$
-
+```
 Maximum = best match.
 
 **Normalized Cross-Correlation (NCC):**
 
-$$
-
+```math
 R(x, y) = \frac{1}{n \sigma_I \sigma_T} \sum_{x,y} \bigl(I(x,y) - \mu_I\bigr)\bigl(T(x,y) - \mu_T\bigr)
-$$
-
+```
 Invariant to linear illumination changes. NCC produces much sharper, more discriminative response maps than SSD or raw correlation (shown in side-by-side comparison of response maps on a face tracking example).
 
 **Case study: NCC tracker**
@@ -363,11 +338,9 @@ Invariant to linear illumination changes. NCC produces much sharper, more discri
 
 **Bhattacharyya distance** measures similarity between two histograms $p$ and $q$:
 
-$$
-
+```math
 \rho(p, q) = \sum_{i=1}^{B} \sqrt{p_i \cdot q_i}
-$$
-
+```
 Higher $\rho$ = more similar. Used as the similarity function in MeanShift tracking.
 
 **Case study: MeanShift tracker (Comaniciu et al., TPAMI 2003)**
@@ -447,11 +420,9 @@ This is **tracking as detection**: instead of storing a fixed template, a classi
 
 **Formulation:** correlation is convolution with a flipped signal. In the **Fourier domain**, correlation becomes element-wise multiplication:
 
-$$
-
+```math
 G = F \star H \quad \Rightarrow \quad \hat{G} = \hat{F} \odot \overline{\hat{H}}
-$$
-
+```
 This allows computing correlation over the entire search region in $O(n \log n)$ using FFT, rather than $O(n^2)$ for direct sliding-window comparison.
 
 **Circularity issue:** DFT-based correlation is circular (wraps around). This causes **boundary effects** where the filter "sees" the image as tiling. Fix: apply a **Hanning window** (cosine-tapered window) to the search region patch before computing the FFT, smoothly zeroing the boundaries.
@@ -460,11 +431,9 @@ This allows computing correlation over the entire search region in $O(n \log n)$
 
 **Discriminative Correlation Filters (DCF):** instead of using the raw object appearance as the filter, **learn** the filter $F$ such that:
 
-$$
-
+```math
 \arg\min_{F} \| T \star F - G \|^2
-$$
-
+```
 where $T$ is the training example (object patch), and $G$ is the **desired response** — a sharp Gaussian peak centered at the object location. The closed-form solution is computed in the Fourier domain. This is much more discriminative than naive correlation.
 
 **Case study: MOSSE (Bolme et al., CVPR 2010) — Minimum Output Sum of Squared Error:**

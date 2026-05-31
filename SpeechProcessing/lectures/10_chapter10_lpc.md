@@ -32,10 +32,9 @@
 
 Speech is modelled in the z-domain as:
 
-$$
+```math
 S(z) = H(z) \cdot U(z)
-$$
-
+```
 where:
 - $U(z)$ = excitation signal (source)
 - $H(z)$ = vocal tract transfer function (filter)
@@ -54,18 +53,14 @@ where:
 
 The vocal tract is modelled as an **all-pole (AR — auto-regressive) filter**:
 
-$$
-
+```math
 H(z) = \frac{G}{A(z)}
-$$
-
+```
 where:
 
-$$
-
+```math
 A(z) = 1 - \sum_{k=1}^{p} a_k \cdot z^{-k}
-$$
-
+```
 - $a_k$: LPC (vocal tract system) coefficients, $k = 1, \ldots, p$
 - $p$: model order (prediction order)
 - $G$: overall gain factor
@@ -80,11 +75,9 @@ The filter $H(z)$ has $p$ poles and no finite zeros (hence "all-pole"). Its deno
 
 **Prediction equation.** The current speech sample $s[n]$ is predicted from $p$ past samples:
 
-$$
-
+```math
 \hat{s}[n] = \sum_{k=1}^{p} a_k \cdot s[n - k]
-$$
-
+```
 where:
 - $\hat{s}[n]$: predicted value of $s[n]$
 - $s[n-k]$: past speech samples ($k = 1, \ldots, p$)
@@ -103,25 +96,19 @@ The linear predictor is a FIR filter with coefficients $a_1, \ldots, a_p$ operat
 
 **Definition.** The prediction error (residual) is:
 
-$$
-
+```math
 e[n] = s[n] - \hat{s}[n]
-$$
-
+```
 Substituting:
 
-$$
-
+```math
 e[n] = s[n] - \sum_{k=1}^{p} a_k \cdot s[n - k]
-$$
-
+```
 **Z-domain.** The error signal is the output of the **inverse filter** $A(z)$ applied to $S(z)$:
 
-$$
-
+```math
 E(z) = A(z) \cdot S(z) \implies E(z) \approx G \cdot U(z)
-$$
-
+```
 So the inverse filter approximately recovers the (scaled) excitation.
 
 **Characteristics of $e[n]$:**
@@ -141,11 +128,9 @@ So the inverse filter approximately recovers the (scaled) excitation.
 
 Since $H(z) = G / A(z)$, applying $A(z)$ to the speech:
 
-$$
-
+```math
 E(z) = A(z) \cdot S(z) = A(z) \cdot H(z) \cdot U(z) = G \cdot U(z)
-$$
-
+```
 The inverse filter $A(z)$:
 - Removes vocal tract resonances (whitens the spectrum)
 - Suppresses the spectral envelope
@@ -159,11 +144,9 @@ The inverse filter $A(z)$:
 
 **LPC spectrum.** Evaluate $H(z)$ on the unit circle:
 
-$$
-
+```math
 |H(e^{j\omega})| = \frac{|G|}{|A(e^{j\omega})|}
-$$
-
+```
 This magnitude spectrum is the LPC spectral envelope.
 
 **Characteristics of the LPC spectrum:**
@@ -191,34 +174,26 @@ This magnitude spectrum is the LPC spectral envelope.
 
 **Total squared prediction error over a frame of $N$ samples:**
 
-$$
-
+```math
 E = \sum_{n=0}^{N-1} e^2[n]
-$$
-
+```
 **Optimality condition.** Set the partial derivatives to zero:
 
-$$
-
+```math
 \frac{\partial E}{\partial a_i} = 0 \quad \text{for } i = 1, 2, \ldots, p
-$$
-
+```
 Substituting $e[n] = s[n] - \sum_{k=1}^{p} a_k s[n-k]$:
 
-$$
-
+```math
 \sum_{n=0}^{N-1} e[n] \cdot s[n - i] = 0 \quad \text{for } i = 1, 2, \ldots, p
-$$
-
+```
 **Orthogonality Principle.** The prediction error is orthogonal to all past speech samples used in the prediction. This is the fundamental optimality condition.
 
 Expanding:
 
-$$
-
+```math
 \sum_{n=0}^{N-1} s[n] \cdot s[n-i] = \sum_{k=1}^{p} a_k \cdot \sum_{n=0}^{N-1} s[n-k] \cdot s[n-i]
-$$
-
+```
 This gives $p$ equations in $p$ unknowns $a_1, \ldots, a_p$ — the **normal equations** (Yule-Walker equations in the autocorrelation case).
 
 ---
@@ -227,11 +202,9 @@ This gives $p$ equations in $p$ unknowns $a_1, \ldots, a_p$ — the **normal equ
 
 **Autocorrelation function.** For a finite frame of $N$ samples:
 
-$$
-
+```math
 R(i) = \sum_{n=0}^{N-1-i} s[n] \cdot s[n + i]
-$$
-
+```
 where $R(i)$ is the autocorrelation at lag $i$, and $R(-i) = R(i)$ (symmetric).
 
 **Properties:**
@@ -241,11 +214,9 @@ where $R(i)$ is the autocorrelation at lag $i$, and $R(-i) = R(i)$ (symmetric).
 
 **Yule-Walker (normal) equations in autocorrelation form:**
 
-$$
-
+```math
 \sum_{k=1}^{p} a_k \cdot R(i - k) = R(i) \quad \text{for } i = 1, 2, \ldots, p
-$$
-
+```
 These $p$ equations relate the LPC coefficients to the autocorrelation values of the signal.
 
 **How $R(i)$ is obtained in practice.** The speech frame is windowed (e.g., Hamming window) before computing the autocorrelation, which ensures the autocorrelation matrix is positive definite and the Toeplitz structure is exact.
@@ -256,16 +227,12 @@ These $p$ equations relate the LPC coefficients to the autocorrelation values of
 
 **Matrix formulation.** $Ra = r$
 
-$$
-
-R = \begin{bmatrix} R(0) & R(1) & \cdots & R(p-1) \\\\ R(1) & R(0) & \cdots & R(p-2) \\\\ \vdots & \vdots & \ddots & \vdots \\\\ R(p-1) & R(p-2) & \cdots & R(0) \end{bmatrix}
-$$
-
-$$
-
-a = \begin{bmatrix} a_1 \\\\ a_2 \\\\ \vdots \\\\ a_p \end{bmatrix}, \qquad r = \begin{bmatrix} R(1) \\\\ R(2) \\\\ \vdots \\\\ R(p) \end{bmatrix}
-$$
-
+```math
+R = \begin{bmatrix} R(0) & R(1) & \cdots & R(p-1) \\ R(1) & R(0) & \cdots & R(p-2) \\ \vdots & \vdots & \ddots & \vdots \\ R(p-1) & R(p-2) & \cdots & R(0) \end{bmatrix}
+```
+```math
+a = \begin{bmatrix} a_1 \\ a_2 \\ \vdots \\ a_p \end{bmatrix}, \qquad r = \begin{bmatrix} R(1) \\ R(2) \\ \vdots \\ R(p) \end{bmatrix}
+```
 - $\mathbf{R}$: $p \times p$ autocorrelation matrix (symmetric, positive definite)
 - $\mathbf{a}$: LPC coefficient vector (unknowns)
 - $\mathbf{r}$: autocorrelation vector (right-hand side)
@@ -292,59 +259,45 @@ This recursion exploits the Toeplitz structure to solve $Ra = r$ efficiently, bu
 
 **Initialisation (order 0):**
 
-$$
-
+```math
 E_0 = R(0), \qquad a_0^{(0)} = 1
-$$
-
+```
 **Recursion at order $i$ (for $i = 1, 2, \ldots, p$):**
 
 Step 1 — Compute reflection coefficient $k_i$:
 
-$$
-
+```math
 k_i = \frac{R(i) - \sum_{j=1}^{i-1} a_j^{(i-1)} \cdot R(i - j)}{E_{i-1}}
-$$
-
+```
 The numerator is the residual autocorrelation not explained by the order-$(i-1)$ model. The denominator normalises by the previous error energy.
 
 Step 2 — Update LPC coefficients:
 
-$$
-
+```math
 a_i^{(i)} = k_i
-$$
-
-$$
-
+```
+```math
 a_j^{(i)} = a_j^{(i-1)} - k_i \cdot a_{i-j}^{(i-1)} \quad \text{for } j = 1, 2, \ldots, i-1
-$$
-
+```
 This "flips" the previous-order coefficients using the new reflection coefficient.
 
 Step 3 — Update prediction error energy:
 
-$$
-
+```math
 E_i = (1 - k_i^2) \cdot E_{i-1}
-$$
-
+```
 Since $(1 - k_i^2) \leq 1$, the error is non-increasing at each step. The **normalised error** at step $i$ is:
 
-$$
-
+```math
 V^{(i)} = E^{(i)} / R(0)
-$$
-
+```
 **Final output.** After $i = p$ steps: $a_k = a_k^{(p)}$ for $k = 1, \ldots, p$, plus the set of reflection coefficients $k_1, \ldots, k_p$.
 
 **Stability condition.**
 
-$$
-
+```math
 |k_i| < 1 \quad \text{for all } i = 1, \ldots, p
-$$
-
+```
 If all reflection coefficients have magnitude strictly less than 1, then ALL poles of $H(z)$ lie strictly inside the unit circle, guaranteeing a stable synthesis filter. This is automatically monitored during the recursion.
 
 **Complexity comparison.**
@@ -370,20 +323,16 @@ The vocal tract is approximated as a series of $p$ lossless cylindrical tube sec
 
 **Area function formula.** The reflection coefficient at junction $i$ is:
 
-$$
-
+```math
 r_i = \frac{A_{i+1} - A_i}{A_{i+1} + A_i}
-$$
-
+```
 where $A_i$ is the cross-sectional area of tube section $i$.
 
 **Relationship to Levinson-Durbin.** The reflection coefficients $r_i$ from the tube model are related to Levinson-Durbin's $k_i$ by:
 
-$$
-
+```math
 r_i = -k_i
-$$
-
+```
 **Interpretation:**
 - If $A_{i+1} = A_i$ (no area change) then $r_i = 0$ — no reflection at that junction
 - Large area changes (e.g., at a constriction for a consonant) produce larger $|r_i|$

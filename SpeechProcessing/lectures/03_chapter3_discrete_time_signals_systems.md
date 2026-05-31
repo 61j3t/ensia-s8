@@ -19,10 +19,9 @@
 
 A continuous-time signal $x(t)$ is sampled at uniform intervals of length $T$ (the **sampling period**) to produce:
 
-$$
+```math
 x[n] = x(t)\big|_{t=nT} = x(nT), \qquad n = \ldots, -1, 0, 1, 2, \ldots
-$$
-
+```
 *(Eq. 3.1)*
 
 $x[n]$ is a **sequence of numbers** $\ldots, x[-1], x[0], x[1], x[2], \ldots$ where $n$ is the (dimensionless) time index. The continuous variable $t$ is replaced by the integer $n$; information between samples is discarded.
@@ -33,51 +32,41 @@ Fig. 3.1 (conceptual): the smooth analog curve $x(t)$ is represented by vertical
 
 **Unit Sample (Unit Impulse)**
 
-$$
-
-\delta[n] = \begin{cases} 1, & n = 0 \\\\ 0, & n \neq 0 \end{cases}
-$$
-
+```math
+\delta[n] = \begin{cases} 1, & n = 0 \\ 0, & n \neq 0 \end{cases}
+```
 *(Eq. 3.2)*
 
 - Graphically: a single stem of height 1 at $n = 0$, zero elsewhere.
 - Unlike the continuous-time Dirac delta $\delta(t)$, which is undefined at $t = 0$, $\delta[n]$ is perfectly well-defined for all $n$.
 - **Sifting (decomposition) property** — any signal $x[n]$ can be written as a superposition of scaled, shifted impulses:
 
-$$
-
+```math
 x[n] = \sum_{k=-\infty}^{\infty} x[k]\, \delta[n - k]
-$$
-
+```
 *(Eq. 3.4)*
 
 This identity is central: it says $x[n] = \ldots + x[-1]\delta[n+1] + x[0]\delta[n] + x[1]\delta[n-1] + \ldots$
 
 **Unit Step**
 
-$$
-
-u[n] = \begin{cases} 1, & n \geq 0 \\\\ 0, & n < 0 \end{cases}
-$$
-
+```math
+u[n] = \begin{cases} 1, & n \geq 0 \\ 0, & n < 0 \end{cases}
+```
 *(Eq. 3.3)*
 
 - Graphically: stems of height 1 at $n = 0, 1, 2, \ldots$ and zero for $n < 0$.
 
 **Relationships between $\delta[n]$ and $u[n]$**
 
-$$
-
+```math
 u[n] = \sum_{k=0}^{\infty} \delta[n - k]
-$$
-
+```
 *(Eq. 3.5)*
 
-$$
-
+```math
 \delta[n] = u[n] - u[n - 1]
-$$
-
+```
 *(Eq. 3.6)*
 
 (3.5) expresses the step as an accumulation of impulses; (3.6) expresses the impulse as the first difference of the step.
@@ -86,11 +75,9 @@ $$
 
 A **deterministic** discrete-time signal satisfies a known functional form:
 
-$$
-
+```math
 x[n] = f(\psi, n)
-$$
-
+```
 *(Eq. 3.7)*
 
 where $\psi$ is the parameter vector and $n$ is the time index. Examples:
@@ -125,11 +112,9 @@ Fig. 3.3 shows plot: the same values connected, resembling a smooth cosine.
 
 A discrete-time system is an **operator** $T$ that maps an input sequence $x[n]$ to an output sequence $y[n]$:
 
-$$
-
+```math
 y[n] = T\{x[n]\}
-$$
-
+```
 *(Eq. 3.8)*
 
 #### 2.2 Memorylessness
@@ -143,11 +128,9 @@ $y[n]$ depends **only** on $x[n]$ at the same time index $n$ (not on past or fut
 
 $T$ is **linear** if it obeys **superposition**: given $y_1[n] = T\{x_1[n]\}$ and $y_2[n] = T\{x_2[n]\}$, then for any scalars $a$ and $b$:
 
-$$
-
+```math
 T\{a\,x_1[n] + b\,x_2[n]\} = a\,T\{x_1[n]\} + b\,T\{x_2[n]\} = a\,y_1[n] + b\,y_2[n]
-$$
-
+```
 *(Eq. 3.9)*
 
 **Standard test procedure** (to check linearity):
@@ -174,11 +157,9 @@ The cross-term $2ab\,x_1[n]\,x_2[n]$ is the giveaway.
 
 $T$ is **time-invariant** if shifting the input by $n_0$ causes an identical shift in the output: if $y[n] = T\{x[n]\}$, then:
 
-$$
-
+```math
 y[n - n_0] = T\{x[n - n_0]\}
-$$
-
+```
 *(Eq. 3.10)*
 
 **Standard test procedure**:
@@ -206,11 +187,9 @@ $y[n]$ at time $n$ depends on $x[k]$ only for $k \leq n$ (current and past input
 
 For LTI systems, the **equivalent causality condition** is:
 
-$$
-
+```math
 h[n] = 0, \qquad n < 0
-$$
-
+```
 *(Eq. 3.11)*
 
 **Quick test examples (from slides):**
@@ -221,18 +200,14 @@ $$
 
 A system is **stable** (Bounded-Input Bounded-Output, BIBO) if every bounded input produces a bounded output:
 
-$$
-
+```math
 |x[n]| < \infty \text{ for all } n \implies |y[n]| < \infty \text{ for all } n
-$$
-
+```
 For LTI systems, the equivalent stability condition is absolute summability of the impulse response:
 
-$$
-
+```math
 \sum_{n=-\infty}^{\infty} |h[n]| < \infty
-$$
-
+```
 *(Eq. 3.12)*
 
 **Quick test examples (from slides):**
@@ -247,11 +222,9 @@ $$
 
 For any LTI system, the input-output relationship is completely described by the **convolution sum**:
 
-$$
-
+```math
 y[n] = x[n] \otimes h[n] = \sum_{m=-\infty}^{\infty} x[m]\, h[n - m]
-$$
-
+```
 *(Eq. 3.13)*
 
 $h[n]$ is the system's **impulse response** — its output when the input is $\delta[n]$.  
@@ -259,42 +232,34 @@ The formula involves only additions and multiplications, making it computational
 
 Equivalently (by commutativity, below):
 
-$$
-
+```math
 y[n] = \sum_{m=-\infty}^{\infty} h[m]\, x[n - m]
-$$
-
+```
 #### 3.2 Properties of convolution
 
 **Commutative:**
 
-$$
-
+```math
 x[n] \otimes h[n] = h[n] \otimes x[n] = \sum_{m=-\infty}^{\infty} x[m]\,h[n-m] = \sum_{m=-\infty}^{\infty} h[m]\,x[n-m]
-$$
-
+```
 *(Eq. 3.14)*
 
 Implication (Fig. 3.4): two cascaded LTI systems with impulse responses $h_1[n]$ and $h_2[n]$ give the same overall output regardless of the order they are placed.
 
 **Associative / Cascade:**
 
-$$
-
+```math
 y[n] = x[n] \otimes h_1[n] \otimes h_2[n] = x[n] \otimes h_2[n] \otimes h_1[n] = x[n] \otimes (h_1[n] \otimes h_2[n])
-$$
-
+```
 *(Eq. 3.15)*
 
 Two cascaded systems can be replaced by a single system whose impulse response is the convolution of the individual impulse responses.
 
 **Linear (Distributive / Parallel):**
 
-$$
-
+```math
 y[n] = x[n] \otimes (h_1[n] + h_2[n]) = x[n] \otimes h_1[n] + x[n] \otimes h_2[n]
-$$
-
+```
 *(Eq. 3.16)*
 
 Implication (Fig. 3.5): two parallel LTI systems can be collapsed into one system whose impulse response is the sum of their individual impulse responses.
@@ -309,18 +274,14 @@ If $x[n]$ has length $M$ and $h[n]$ has length $N$, then the length of $y[n] = x
 
 Method 1 (substitute $x$ into convolution formula):
 
-$$
-
+```math
 y[n] = \sum_{m=-\infty}^{\infty} u[m]\,(\delta[n-m] + 0.5\,\delta[n-1-m]) = \sum_{m=0}^{\infty} (\delta[n-m] + 0.5\,\delta[n-1-m]) = u[n] + 0.5\,u[n-1]
-$$
-
+```
 Method 2 (general formula then substitute $x[n] = u[n]$):
 
-$$
-
+```math
 y[n] = x[n] + 0.5\,x[n-1] \implies y[n] = u[n] + 0.5\,u[n-1]
-$$
-
+```
 Stability check: $\sum_{n=-\infty}^{\infty} |h[n]| = |h[0]| + |h[1]| = 1 + 0.5 = 1.5 < \infty$ => **stable**  
 Causality check: $h[n] = 0$ for $n < 0$ => **causal**
 
@@ -328,34 +289,26 @@ Causality check: $h[n] = 0$ for $n < 0$ => **causal**
 
 Convolution splits into $y[n] = y_1[n] - y_2[n]$ where:
 
-$$
-
+```math
 y_1[n] = \sum_{m=0}^{\infty} a^m\, u[n-m] = \frac{1 - a^{n+1}}{1-a}\, u[n]
-$$
-
-$$
-
+```
+```math
 y_2[n] = \sum_{m=0}^{\infty} a^m\, u[n-10-m] = \frac{1 - a^{n-9}}{1-a}\, u[n-10]
-$$
-
+```
 Combined result:
 
-$$
-
-y[n] = \begin{cases} 0, & n < 0 \\\\ \dfrac{1 - a^{n+1}}{1-a}, & 0 \leq n < 10 \\\\ a^{n-9}\,\dfrac{1 - a^{10}}{1-a}, & n \geq 10 \end{cases}
-$$
-
+```math
+y[n] = \begin{cases} 0, & n < 0 \\ \dfrac{1 - a^{n+1}}{1-a}, & 0 \leq n < 10 \\ a^{n-9}\,\dfrac{1 - a^{10}}{1-a}, & n \geq 10 \end{cases}
+```
 $\sum |h[n]| = 10 < \infty$ => **stable**; $h[n] = 0$ for $n < 0$ => **causal**
 
 **Example 3.8** — Finite-length convolution, $x[n] = \{1, 2, 5, 10\}$ for $n=0\ldots3$, $h[n] = \{1, 2, 3, 4\}$ for $n=0\ldots3$:
 
 The sum reduces to 4 terms only:
 
-$$
-
+```math
 y[n] = x[0]\,h[n] + x[1]\,h[n-1] + x[2]\,h[n-2] + x[3]\,h[n-3]
-$$
-
+```
 Result: $y[0]=1$, $y[1]=4$, $y[2]=12$, $y[3]=30$, $y[4]=43$, $y[5]=50$, $y[6]=40$, else 0.
 
 Length $= 4 + 4 - 1 = 7$ samples ($n = 0, \ldots, 6$).
@@ -370,11 +323,9 @@ MATLAB: `y = conv(x, h)` gives the correct values. To find the correct starting 
 
 For a LTI system, input $x[n]$ and output $y[n]$ are related by an **N-th order LCCDE**:
 
-$$
-
+```math
 \sum_{k=0}^{N} a_k\, y[n-k] = \sum_{k=0}^{M} b_k\, x[n-k]
-$$
-
+```
 *(Eq. 3.17)*
 
 where $\{a_k\}$ are the feedback (output) coefficients and $\{b_k\}$ are the feedforward (input) coefficients. $N$ is the order of the system.
@@ -383,20 +334,16 @@ A system expressible in this form is guaranteed to be **both linear and time-inv
 
 **Solving for $y[n]$** (assuming $a_0 \neq 0$):
 
-$$
-
+```math
 y[n] = \frac{1}{a_0}\!\left(-\sum_{k=1}^{N} a_k\,y[n-k] + \sum_{k=0}^{M} b_k\,x[n-k]\right)
-$$
-
+```
 *(Eq. 3.18)*
 
 **Solving for $x[n]$** (assuming $b_0 \neq 0$):
 
-$$
-
+```math
 x[n] = \frac{1}{b_0}\!\left(\sum_{k=0}^{N} a_k\,y[n-k] - \sum_{k=1}^{M} b_k\,x[n-k]\right)
-$$
-
+```
 *(Eq. 3.19)*
 
 #### 4.2 Identifying LTI systems from LCCDE
@@ -425,11 +372,9 @@ Expand the convolution $y[n] = \sum_m h[m]\,x[n-m] = \ldots + h[-1]\,x[n+1] + h[
 
 Matching coefficients: $h[0] = 1$ (coefficient of $x[n]$), $h[1] = -1$ (coefficient of $x[n-1]$), all other $h[m] = 0$.
 
-$$
-
+```math
 h[n] = \delta[n] - \delta[n-1]
-$$
-
+```
 #### 4.4 Computing output from LCCDE recursively
 
 **Example 3.11** — $y[n] = 0.5\,y[n-1] + x[n] + x[n-1]$, $x[n] = u[n]$, $y[-1] = 0$:
@@ -468,25 +413,19 @@ stem(0:length(y)-1, y)
 
 An **energy signal** has finite total energy:
 
-$$
-
+```math
 0 < E < \infty
-$$
-
+```
 For a continuous-time signal:
 
-$$
-
+```math
 E = \int_{-\infty}^{+\infty} |x(t)|^2\, dt
-$$
-
+```
 For a discrete-time signal:
 
-$$
-
+```math
 E = \sum_{n=-\infty}^{\infty} |x[n]|^2
-$$
-
+```
 - Energy signals are typically **finite-duration** or **decaying** (e.g., exponentially decaying signals).
 - The **average power of an energy signal is 0** (finite energy divided over infinite time).
 
@@ -494,25 +433,19 @@ $$
 
 A **power signal** has finite average power:
 
-$$
-
+```math
 0 < P < \infty
-$$
-
+```
 For a continuous-time signal:
 
-$$
-
+```math
 P = \lim_{T \to \infty} \frac{1}{T} \int_{-T/2}^{T/2} |x(t)|^2\, dt
-$$
-
+```
 For a discrete-time signal:
 
-$$
-
+```math
 P = \lim_{N \to \infty} \frac{1}{2N+1} \sum_{n=-N}^{N} |x[n]|^2
-$$
-
+```
 - Power signals are typically **periodic** or **infinite-duration** (e.g., a sinusoid that never ends).
 - The **energy of a power signal is infinite**.
 
@@ -534,30 +467,22 @@ $$
 
 Instantaneous power: $P_x(t) = 25$ for $-2 \leq t \leq 2$, else 0.
 
-$$
-
+```math
 E_x = \int_{-2}^{2} 25\, dt = 100 \quad \text{(finite)}
-$$
-
-$$
-
+```
+```math
 P_x = \lim_{T \to \infty} \frac{1}{T} \cdot 100 = 0
-$$
-
+```
 => **Energy signal**
 
 **Signal (b):** $z(t)$ = periodic repetition of the above pulse with fundamental period 8:
 
-$$
-
+```math
 P_z = \frac{1}{8} \int_{-2}^{2} 25\, dt = \frac{100}{8} = 12.5 \quad \text{(finite)}
-$$
-
-$$
-
+```
+```math
 E_z = \int_{-\infty}^{+\infty} |z(t)|^2\, dt = \infty
-$$
-
+```
 => **Power signal**
 
 ---

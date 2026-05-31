@@ -20,10 +20,9 @@
 
 The **Discrete-Time Fourier Transform (DTFT)** relates the time-domain sequence x[n] to its spectrum X(ω):
 
-$$
+```math
 X(\omega) = \sum_{n=-\infty}^{\infty} x[n] \cdot e^{-j\omega n}
-$$
-
+```
 The DTFT characterises the *global* spectral composition of a signal. This is adequate for **stationary signals** (whose statistical properties do not change over time), but speech is fundamentally **non-stationary**:
 
 - A speech record of several seconds contains silences, voiced vowels, unvoiced fricatives, stop consonants, transitions — each with entirely different frequency content.
@@ -76,18 +75,14 @@ When the window slides through the signal, consecutive frames typically overlap 
 
 Recall the **N-point DFT**:
 
-$$
-
+```math
 X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j(2\pi k n/N)}
-$$
-
+```
 The **STFT** extends this by introducing a sliding window $w[n - mH]$ centred at time frame m:
 
-$$
-
+```math
 S[m, k] = \sum_{n=0}^{N-1} x[n] \cdot w[n - mH] \cdot e^{-j(2\pi k n/N)}
-$$
-
+```
 where:
 - **m** = time (frame) index (yellow)
 - **k** = frequency bin index (red)
@@ -105,16 +100,12 @@ where:
 
 The number of frequency bins and frames are computed as:
 
-$$
-
+```math
 \text{\# frequency bins} = \frac{\text{framesize}}{2} + 1
-$$
-
-$$
-
+```
+```math
 \text{\# frames} = \frac{\text{samples} - \text{framesize}}{\text{hopsize}} + 1
-$$
-
+```
 **Worked example (from slides):**
 - Signal = 10,000 samples; frame size = 1000; hop size = 500
 - # frequency bins = 1000/2 + 1 = **501** (covering 0 to sampling_rate/2)
@@ -138,11 +129,9 @@ For **speech**: frame changes occur at 20–40 ms timescales, so target T = 20�
 
 For the rectangular window $w_R[n] = 1$, $0 \leq n \leq M$, the DTFT is:
 
-$$
-
+```math
 W_R(\omega) = \sum_{n=0}^{M} e^{-j\omega n} = e^{-j\omega M/2} \cdot \frac{\sin(\omega(M+1)/2)}{\sin(\omega/2)}
-$$
-
+```
 The magnitude spectrum $|W_R(\omega)|$ has:
 - A **main lobe** centred at $\omega = 0$ with width $\Delta\omega_m = 4\pi/(M+1)$
 - **Sidelobes** at lower amplitude; first zero crossing at $\omega = 2\pi/(M+1)$
@@ -165,11 +154,9 @@ This trade-off is **unavoidable** — it is a direct consequence of the **uncert
 
 **Uncertainty principle:**
 
-$$
-
+```math
 \Delta t \cdot \Delta f \geq \frac{1}{4\pi}
-$$
-
+```
 The "blurring" in the STFT time-frequency plane can be visualised as disks of constant area: a tall narrow disk corresponds to good time resolution / poor frequency resolution; a wide flat disk corresponds to good frequency resolution / poor time resolution. The area of the disk is constant.
 
 #### 4.3 Standard window functions (comparison at same length M)
@@ -178,32 +165,24 @@ All formulas below use $w_R[n]$ as the rectangular window (defining the support)
 
 **Bartlett (triangular) window:**
 
-$$
-
+```math
 w[n] = \left(1 - \left|\frac{2n}{M} - 1\right|\right) \cdot w_R[n]
-$$
-
+```
 **Hann window:**
 
-$$
-
+```math
 w[n] = \frac{1}{2}\left(1 - \cos\left(\frac{2\pi n}{M}\right)\right) \cdot w_R[n]
-$$
-
+```
 **Hamming window:**
 
-$$
-
+```math
 w[n] = \left(0.54 - 0.46\cos\left(\frac{2\pi n}{M}\right)\right) \cdot w_R[n]
-$$
-
+```
 **Blackman window:**
 
-$$
-
+```math
 w[n] = \left(0.42 - 0.5\cos\left(\frac{2\pi n}{M}\right) + 0.08\cos\left(\frac{4\pi n}{M}\right)\right) \cdot w_R[n]
-$$
-
+```
 **Visual comparison (same M):** In the time domain, the rectangular window is flat (amplitude 1 throughout), while Bartlett is triangular, Hann and Hamming are bell-shaped (Hamming has a non-zero pedestal), and Blackman is the broadest bell. In the frequency domain, the rectangular window has the narrowest main lobe but the highest visible sidelobes (around −13 dB). The Hann, Hamming and Blackman windows progressively increase the main lobe width while suppressing sidelobes to much lower levels (Blackman achieves around −60 dB sidelobe attenuation), which is critical for detecting weak spectral components near strong ones.
 
 | Window | Main lobe width | Peak sidelobe level | Tradeoff |
@@ -222,20 +201,16 @@ $$
 
 The **spectrogram** Y[m, k] is defined as the squared magnitude of the STFT:
 
-$$
-
+```math
 Y[m, k] = |S[m, k]|^2
-$$
-
+```
 It represents the **power spectral density** (energy per frequency bin) at each time frame. It is a real-valued, non-negative 2-D function.
 
 In decibels (the standard display form):
 
-$$
-
+```math
 Y_{dB}[m, k] = 10 \log_{10} Y[m, k] = 20 \log_{10} |S[m, k]|
-$$
-
+```
 **Construction (visual from slides):** The procedure is:
 1. Slide the short-time window (frame m=1, m=2, m=3, …).
 2. For each frame, compute the magnitude spectrum $|S[m,k]|$.
@@ -274,11 +249,9 @@ For a frequency-modulated signal (chirp — a sine of constant amplitude but lin
 
 For voiced speech, the signal has a **fundamental frequency $f_0$** (pitch) and harmonics:
 
-$$
-
+```math
 f_n = n \cdot f_0 \qquad (\text{nth order harmonic})
-$$
-
+```
 The magnitude spectrum of the STFT at a voiced frame shows a series of peaks at $f_0$, $2f_0$, $3f_0$, … modulated by the **vocal tract envelope** (the smooth curve connecting the harmonic peaks, corresponding to the filter/formant structure).
 
 Noise-free sounds (intonation, voiced vowels, melodic instruments) exhibit this clean harmonic comb structure. Fricatives and unvoiced sounds do not — they show a noisy broadband spectrum.
@@ -351,11 +324,9 @@ This is the clearest illustration of the trade-off: no single window length reso
 
 The time-frequency uncertainty principle states:
 
-$$
-
+```math
 \Delta t \cdot \Delta f \geq \frac{1}{4\pi}
-$$
-
+```
 where $\Delta t$ is the time localisation uncertainty and $\Delta f$ is the frequency localisation uncertainty. Their product is always bounded below — you cannot make both arbitrarily small simultaneously.
 
 **Consequences:**

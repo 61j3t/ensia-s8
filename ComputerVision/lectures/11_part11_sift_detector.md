@@ -104,10 +104,9 @@ Before extending to 2D images, the course builds intuition with 1D signals.
 
 Define the **normalized ($\sigma$-normalized) 2nd derivative** of the Gaussian-smoothed signal:
 
-$$
+```math
 \sigma^2 \cdot \frac{\partial^2 n_{\sigma}}{\partial x^2} \ast f(x)
-$$
-
+```
 where $n_{\sigma}$ is the 1D Gaussian with standard deviation $\sigma$, and $\ast$ denotes convolution.
 
 **Why normalize by $\sigma^2$?** Without normalization, the response magnitude falls off as $\sigma$ increases (larger blobs produce weaker raw 2nd derivatives). The $\sigma^2$ factor compensates, making the response comparable across scales.
@@ -134,11 +133,9 @@ As $\sigma$ increases across the slides, for a given blob:
 
 **Critical property:** The characteristic scale is **proportional to the blob size**:
 
-$$
-
+```math
 \frac{\text{size of blob A}}{\text{size of blob B}} = \frac{\sigma^{\ast}_A}{\sigma^{\ast}_B} \qquad , \qquad \frac{\text{size of blob B}}{\text{size of blob C}} = \frac{\sigma^{\ast}_B}{\sigma^{\ast}_C}
-$$
-
+```
 **1D blob detection algorithm:**
 
 1. Given a 1D signal $f(x)$
@@ -153,18 +150,14 @@ $$
 
 In 2D, the 2nd derivative generalizes to the **Laplacian**:
 
-$$
-
+```math
 \nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}
-$$
-
+```
 The **Normalized Laplacian of Gaussian (NLoG)** is used:
 
-$$
-
+```math
 \text{NLoG} = \sigma^2 \cdot \nabla^2 n_{\sigma}
-$$
-
+```
 where $n_{\sigma}$ is a 2D isotropic Gaussian. Visually:
 - The Gaussian $n_{\sigma}$ is a smooth bell-shaped surface (peak in center)
 - The LoG $\nabla^2 n_{\sigma}$ is a "Mexican hat" shape (negative central region, positive ring around it)
@@ -180,11 +173,9 @@ where $n_{\sigma}$ is a 2D isotropic Gaussian. Visually:
 
 **Scale space $S(x,y,\sigma)$:** A stack of images created by filtering with different values of $\sigma$:
 
-$$
-
+```math
 S(x, y, \sigma) = n(x, y, \sigma) \ast I(x, y)
-$$
-
+```
 (Reference: Tony Lindeberg, Feature Detection with Automatic Scale Selection, IJCV, 1998.)
 
 As $\sigma$ increases, the image becomes progressively blurrier (higher scale, lower resolution appearance). The NLoG response is computed across this whole stack.
@@ -199,20 +190,16 @@ Computing NLoG at many scales is expensive. Lowe's key insight: the **Difference
 
 **DoG definition:**
 
-$$
-
+```math
 \text{DoG} = (n_{s\sigma} - n_{\sigma}) \approx (s - 1) \cdot \sigma^2 \cdot \nabla^2 n_{\sigma}
-$$
-
+```
 where $s > 1$ is the scale factor between adjacent Gaussian levels (a constant multiplicative step).
 
 Therefore:
 
-$$
-
+```math
 \text{DoG} \approx (s - 1) \cdot \text{NLoG}
-$$
-
+```
 The shape of DoG and the Laplacian are nearly identical (the slide overlays the two curves and shows excellent agreement). Since $(s - 1)$ is just a constant scaling factor, **extrema of DoG coincide with extrema of NLoG** — the same keypoints are found.
 
 **Why DoG is preferred:** Gaussian smoothing at adjacent scales is computed anyway to build the Gaussian pyramid. Subtracting adjacent Gaussian images is essentially free compared to explicitly computing second derivatives.
@@ -235,16 +222,12 @@ SIFT builds a **scale-space pyramid** with two nested levels of scale:
 
 **Structure within one octave (fixed spatial resolution):**
 
-$$
-
+```math
 \text{Gaussian images at scales:} \quad \sigma,\ s\sigma,\ s^2\sigma,\ \ldots,\ s^k\sigma
-$$
-
-$$
-
+```
+```math
 \text{DoG images (differences):} \quad D_1 = s\sigma - \sigma,\quad D_2 = s^2\sigma - s\sigma,\quad \ldots
-$$
-
+```
 Each octave produces $(k - 1)$ DoG images from $k$ Gaussian images. Extrema can only be found in the interior DoG levels (need one above and one below for the 3D neighborhood check), so typically 3–4 DoG images per octave are used for detection.
 
 **Pyramid diagram description:** The full pyramid looks like a stack of layers. On the left side are the Gaussian blurred images (getting progressively blurrier within each octave, then restarting at coarser resolution). On the right side are the DoG images (one fewer than the Gaussians per octave). Arrows show subtraction between adjacent Gaussian layers. The process repeats across multiple octaves.
@@ -257,11 +240,9 @@ Starting from the original image, blurs are applied at scales $\sigma$, $s\sigma
 
 Each keypoint has a characteristic scale $\sigma$ and comes from a specific octave. When visualizing the blob back in the original image, the circle radius is:
 
-$$
-
+```math
 r_{\text{display}} \approx \sqrt{2} \cdot \sigma \cdot 2^{\text{octave}}
-$$
-
+```
 This accounts for the downsampling factor of the octave.
 
 ---
@@ -290,11 +271,9 @@ Once the DoG pyramid is built, **local extrema** are detected across the 3D scal
 
 Detected extrema are at discrete pixel and scale locations. Lowe refines them using a **Taylor expansion** of the DoG function $D(x, y, \sigma)$ around the candidate:
 
-$$
-
+```math
 D(\mathbf{x}) \approx D + \left(\frac{\partial D}{\partial \mathbf{x}}\right)^T \mathbf{x} + \frac{1}{2} \mathbf{x}^T \frac{\partial^2 D}{\partial \mathbf{x}^2} \mathbf{x}
-$$
-
+```
 Setting the derivative to zero gives the refined offset $\hat{\mathbf{x}}$. If $|\hat{\mathbf{x}}| > 0.5$ in any dimension, the candidate is moved to the adjacent sample and the process is repeated.
 
 **Rejection criteria after refinement:**
@@ -303,18 +282,14 @@ Setting the derivative to zero gives the refined offset $\hat{\mathbf{x}}$. If $
 
 2. **Edge response:** Blobs on edges (elongated structures) are unstable — small position errors along the edge lead to large descriptor changes. SIFT checks the **ratio of principal curvatures** using the Hessian matrix $H$ of the DoG image:
 
-$$
-
-H = \begin{pmatrix} D_{xx} & D_{xy} \\\\ D_{xy} & D_{yy} \end{pmatrix}
-$$
-
+```math
+H = \begin{pmatrix} D_{xx} & D_{xy} \\ D_{xy} & D_{yy} \end{pmatrix}
+```
 The ratio of eigenvalues $\lambda_1/\lambda_2$ can be computed from the trace and determinant. The keypoint is rejected if:
 
-$$
-
+```math
 \frac{(\text{Tr}(H))^2}{\text{Det}(H)} > \frac{(r+1)^2}{r}
-$$
-
+```
 where $r$ is the threshold ratio (Lowe uses $r = 10$). This eliminates edge-like responses while retaining blob-like responses.
 
 ---
@@ -328,16 +303,12 @@ After localizing the keypoint at $(x^{\ast}, y^{\ast}, \sigma^{\ast})$, SIFT ass
 1. Take the **Gaussian-smoothed image** at the scale closest to $\sigma^{\ast}$.
 2. Compute the **gradient magnitude and direction** at each pixel in a neighborhood around the keypoint:
 
-$$
-
+```math
 m(x, y) = \sqrt{(L(x+1,y) - L(x-1,y))^2 + (L(x,y+1) - L(x,y-1))^2}
-$$
-
-$$
-
+```
+```math
 \theta(x, y) = \tan^{-1}\!\left(\frac{\partial I/\partial y}{\partial I/\partial x}\right)
-$$
-
+```
 3. Build an **orientation histogram** with 36 bins (one per 10°, covering 0°–360°). Each gradient vote is weighted by its magnitude and by a Gaussian centered on the keypoint (to downweight distant pixels).
 
 4. The **dominant peak** of the histogram gives the keypoint's principal orientation.

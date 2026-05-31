@@ -53,10 +53,9 @@ The problem of finding the dominant directions of the gradient distribution is e
 **Step 2 — The structure tensor M (second-moment matrix).**
 Rather than running PCA directly, the Harris detector encodes the gradient distribution in the **structure tensor M**, a 2×2 symmetric matrix computed for each pixel using a weighted sum over a local window:
 
-$$
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2(x,y) & I_x(x,y)\,I_y(x,y) \\\\ I_x(x,y)\,I_y(x,y) & I_y^2(x,y) \end{bmatrix}
-$$
-
+```math
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2(x,y) & I_x(x,y)\,I_y(x,y) \\ I_x(x,y)\,I_y(x,y) & I_y^2(x,y) \end{bmatrix}
+```
 Where:
 - **$I_x(x,y)$** and **$I_y(x,y)$** are the image partial derivatives (gradients) in x and y.
 - **$w(x,y)$** is a weighting function — typically a **Gaussian kernel**, which gives more weight to pixels near the centre of the window. The Gaussian width determines the **scale** at which corners are detected.
@@ -66,11 +65,9 @@ M is computed **at every pixel** in the image (every pixel is a candidate corner
 
 **Relationship to covariance:** M is mathematically very similar to the covariance matrix of gradient vectors in the window:
 
-$$
-
+```math
 \text{Cov}(I_x, I_y) = \mathbb{E}\!\left[(\nabla I)(\nabla I)^T\right]
-$$
-
+```
 This is why the eigenvalues of M directly describe the shape of the gradient distribution ellipse.
 
 **Reference:** C.G. Harris and M.J. Stephens, "A Combined Corner and Edge Detector," Alvey Vision Conference, 1988.
@@ -96,11 +93,9 @@ Imagine a plot with $\lambda_1$ on the horizontal axis and $\lambda_2$ on the ve
 
 Computing eigenvalues explicitly is expensive. Harris proposes an empirically designed scalar **Corner Response Function** that avoids eigendecomposition:
 
-$$
-
+```math
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2
-$$
-
+```
 Where:
 - $\det(M) = \lambda_1 \cdot \lambda_2$ (product of eigenvalues — also equals $I_x^2 \cdot I_y^2 - (I_x I_y)^2$ in terms of the matrix entries)
 - $\text{tr}(M) = \lambda_1 + \lambda_2$ (sum of eigenvalues — also equals $I_x^2 + I_y^2$)
@@ -116,11 +111,9 @@ Where:
 
 Expanding R in terms of eigenvalues:
 
-$$
-
+```math
 R = \lambda_1 \lambda_2 - k\,(\lambda_1 + \lambda_2)^2
-$$
-
+```
 The k term penalises large traces (i.e., edge-like responses where one eigenvalue dominates). A larger k makes the detector less sensitive (fewer corners detected); a smaller k makes it more sensitive.
 
 **Why not just use $\det(M)$?** $\det(M) = \lambda_1 \cdot \lambda_2$ alone would be large for a corner, but would be near zero for an edge (one eigenvalue small). The trace² penalty ensures that when one eigenvalue dominates (edge), R is driven negative rather than simply being small. This provides cleaner separation.
@@ -135,20 +128,16 @@ The k term penalises large traces (i.e., edge-like responses where one eigenvalu
 
 2. **Compute the structure tensor M at every pixel:**
 
-$$
-
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
-$$
-
+```math
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix}
+```
    The Gaussian window size ($\sigma$) determines the **scale** of the detected corners.
 
 3. **Compute the corner response score R at every pixel:**
 
-$$
-
+```math
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2
-$$
-
+```
 4. **Threshold R:** keep only pixels where $R > T$ (user-chosen threshold).
    - This produces clusters of high-R pixels at each real corner.
 
@@ -246,11 +235,9 @@ All three detectors below share the same structure tensor M and its eigenvalues.
 
 3. **Write and explain the structure tensor M:**
 
-$$
-
-M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
-$$
-
+```math
+M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix}
+```
    State what $w(x,y)$ is, why a Gaussian is used, and how M relates to the covariance of gradient vectors.
 
 4. **Write the eigenvalue classification table:**
@@ -263,11 +250,9 @@ $$
 
 5. **Write and derive the corner response R:**
 
-$$
-
+```math
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2 = \lambda_1\lambda_2 - k(\lambda_1+\lambda_2)^2
-$$
-
+```
    Explain the sign of R for each region type. State the range of k.
 
 6. **Describe the full Harris algorithm** in 4 steps: gradient computation → M at each pixel → compute R → threshold + NMS.

@@ -150,10 +150,9 @@ Each block and its parameters:
 
 The excitation for **voiced sounds** is a periodic impulse train:
 
-$$
+```math
 s[n] = \sum_{k=-\infty}^{\infty} \delta[n - kT]
-$$
-
+```
 where $T$ = pitch period (in samples), and $k$ ranges over all integers.
 - Generates periodic impulses
 - Models vibration of vocal folds
@@ -163,11 +162,9 @@ where $T$ = pitch period (in samples), and $k$ ranges over all integers.
 
 The glottal pulse model converts ideal impulses into a realistic airflow waveform:
 
-$$
-
+```math
 U_G(z) = G(z) \cdot S(z)
-$$
-
+```
 - Shapes impulses into smooth, asymmetric pulses (closed phase, open phase, return phase) with period $P \approx$ 5–30 ms ($F_0 \approx$ 33–200 Hz for male, higher for female)
 - **Introduces spectral tilt**: the glottal pulse spectrum falls off at approximately -12 dB/octave
 - Models airflow through the vocal folds during the open phase
@@ -186,22 +183,18 @@ Glottal pulse time-domain shape (observed in a period of ~20 ms at 8 kHz):
 
 **Noise model:**
 
-$$
-
+```math
 u_n[n] \sim \mathcal{N}(0,\, \sigma^2)
-$$
-
+```
 White Gaussian noise with zero mean and variance $\sigma^2$. The voiced/unvoiced switch selects the appropriate excitation path.
 
 #### 3.6. Vocal tract model V(z)
 
 The vocal tract is modeled as an **all-pole (IIR) filter**:
 
-$$
-
+```math
 V(z) = \frac{1}{1 + \sum_{k=1}^{p} a_k \cdot z^{-k}}
-$$
-
+```
 - All-pole (purely recursive) — captures resonances (formants) efficiently
 - The order $p$ is typically 8–14 for telephone speech (8 kHz sampling); higher for wideband
 - The denominator coefficients $a_k$ are the **LPC coefficients** (see §8)
@@ -211,11 +204,9 @@ $$
 
 The radiation of sound at the lips acts as a **first-order high-pass filter**:
 
-$$
-
+```math
 R(z) = 1 - 0.99\, z^{-1} \qquad \text{(general form: } R(z) = 1 - \alpha z^{-1},\; \alpha \approx 0.99\text{)}
-$$
-
+```
 - Differentiates the acoustic volume velocity at the lips into sound pressure
 - High-pass effect: boosts high frequencies by +6 dB/octave
 - This partially compensates for the -12 dB/octave glottal tilt, resulting in a net -6 dB/octave spectral roll-off for voiced speech
@@ -224,11 +215,9 @@ $$
 
 The **complete speech production model** in Z-domain is a cascade:
 
-$$
-
+```math
 P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)
-$$
-
+```
 - Source–filter cascade
 - Linear time-invariant approximation (valid over a short analysis frame)
 - Parameters to estimate from the signal: pitch period $T$ (or $N_p$), voiced/unvoiced/silence decision, gains $A_V$ and $A_N$, glottal pulse shape, vocal tract polynomial coefficients $a_k$, radiation model parameter $\alpha$
@@ -242,11 +231,9 @@ $$
 - Poles close to the unit circle in the Z-plane produce sharp, prominent resonance peaks
 - Each pole is a complex number:
 
-$$
-
+```math
 z_k = r_k \cdot e^{j\omega_k}
-$$
-
+```
 where $\omega_k$ = formant angular frequency (in rad/sample) and $r_k$ = bandwidth control ($r_k \to 1$ means narrower bandwidth / sharper formant).
 
 **Physical interpretation:**
@@ -285,11 +272,9 @@ Rules of thumb:
 
 **Linear Predictive Coding (LPC)** estimates the all-pole vocal tract filter coefficients $a_k$ by minimizing prediction error:
 
-$$
-
+```math
 V(z) = \frac{1}{1 + a_1 z^{-1} + a_2 z^{-2} + \cdots + a_p z^{-p}}
-$$
-
+```
 LPC provides:
 - Pole locations (= formant frequencies and bandwidths)
 - Efficient coded representation for **speech coding** (e.g., CELP vocoders in mobile telephony)
@@ -303,11 +288,9 @@ LPC provides:
 
 All short-time measures follow the general form:
 
-$$
-
+```math
 Q_{\hat{n}} = \left( \sum_{m=-\infty}^{\infty} T(x[m]) \cdot \tilde{w}[\hat{n}-m] \right)\bigg|_{n=\hat{n}}
-$$
-
+```
 where:
 - $T(\cdot)$ is a linear or non-linear transformation of the signal
 - $\tilde{w}[n]$ is a window function (usually finite length)
@@ -321,12 +304,10 @@ The window $\tilde{w}$ slides along the signal; the output $Q_{\hat{n}}$ is samp
 
 **Definition:**
 
-$$
-
+```math
 E_{\hat{n}} = \sum_{m=-\infty}^{\infty} \bigl[x[m] \cdot \tilde{w}[\hat{n} - m]\bigr]^2
            = \sum_{m=-\infty}^{\infty} x^2[m] \cdot h[\hat{n} - m]
-$$
-
+```
 where $h[n] = \tilde{w}^2[n]$ (the squared window acts as a low-pass filter).
 
 **Block diagram:**
@@ -344,11 +325,9 @@ x[n] ---> ( )^2 ---> x^2[n] ---> h[n] (lowpass) ---> E_{n-hat}   (at rate F_s/R)
 
 An alternative to STE that is less sensitive to large outliers:
 
-$$
-
+```math
 M_{\hat{n}} = \sum_{m=-\infty}^{\infty} |x[m]| \cdot \tilde{w}[\hat{n} - m]
-$$
-
+```
 - Weighted sum of magnitudes rather than squared values
 - Dynamic range of $M_{\hat{n}} \approx \sqrt{\text{dynamic range of } E_{\hat{n}}}$
 - Level differences between voiced and unvoiced segments are smaller than with STE
@@ -363,27 +342,21 @@ $$
 
 **Formal definition:**
 
-$$
-
+```math
 Z_{\hat{n}} = \frac{1}{2L_{\text{eff}}} \sum_{m=\hat{n}-L+1}^{\hat{n}} \bigl|\mathrm{sgn}(x[m]) - \mathrm{sgn}(x[m-1])\bigr| \cdot \tilde{w}[\hat{n} - m]
-$$
-
+```
 where:
 - $\mathrm{sgn}(x[n]) = +1$ if $x[n] \geq 0$, $-1$ if $x[n] < 0$
 - For a rectangular window: $\tilde{w}[n] = 1$ for $0 \leq n \leq L-1$, else $0$; $L_{\text{eff}} = L$
 
 **Key property for a sinusoid at frequency $F_0$:**
 
-$$
-
+```math
 z_1 = \frac{2F_0}{F_s} \quad \text{crossings/sample} \qquad \text{(ZCR proportional to frequency)}
-$$
-
-$$
-
+```
+```math
 z_M = M \cdot \frac{2F_0}{F_s} \quad \text{crossings per } M \text{ samples}
-$$
-
+```
 **Block diagram:**
 ```
 x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] ---> Z_{n-hat}
@@ -405,11 +378,9 @@ x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] --->
 
 **Definition:** the autocorrelation of a windowed segment at lag $k$:
 
-$$
-
+```math
 r_k = \sum_{i=0}^{N-k-1} s_i \cdot s_{i+k}
-$$
-
+```
 - $r_0$ = energy (the zero-lag value equals the signal energy in the window)
 - $r_k$ is symmetric: $r_{-k} = r_k$
 
@@ -430,11 +401,9 @@ $$
 
 **Definition:**
 
-$$
-
+```math
 \gamma_{\hat{n}}[k] = \sum_{m=-\infty}^{\infty} \bigl|x[\hat{n}+m]\cdot\tilde{w}_1[m] - x[\hat{n}+m-k]\cdot\tilde{w}_2[m-k]\bigr|
-$$
-
+```
 where $\tilde{w}_1[m]$ and $\tilde{w}_2[m]$ are rectangular windows. If both windows have the same length, AMDF is structurally similar to STACF.
 
 **Properties:**
