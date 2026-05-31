@@ -365,11 +365,11 @@ $$
 
 $$
 
-Z_{\hat{n}} = \frac{1}{2L_{\text{eff}}} \sum_{m=\hat{n}-L+1}^{\hat{n}} \bigl|\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])\bigr| \cdot \tilde{w}[\hat{n} - m]
+Z_{\hat{n}} = \frac{1}{2L_{\text{eff}}} \sum_{m=\hat{n}-L+1}^{\hat{n}} \bigl|\mathrm{sgn}(x[m]) - \mathrm{sgn}(x[m-1])\bigr| \cdot \tilde{w}[\hat{n} - m]
 $$
 
 where:
-- $\operatorname{sgn}(x[n]) = +1$ if $x[n] \geq 0$, $-1$ if $x[n] < 0$
+- $\mathrm{sgn}(x[n]) = +1$ if $x[n] \geq 0$, $-1$ if $x[n] < 0$
 - For a rectangular window: $\tilde{w}[n] = 1$ for $0 \leq n \leq L-1$, else $0$; $L_{\text{eff}} = L$
 
 **Key property for a sinusoid at frequency $F_0$:**

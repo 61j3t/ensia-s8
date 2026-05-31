@@ -281,10 +281,10 @@ $$
 
 $$
 
-X(j\Omega) = \frac{2\sin(\Omega T_0)}{\Omega} = 2T_0 \cdot \operatorname{sinc}\!\left(\frac{\Omega T_0}{\pi}\right)
+X(j\Omega) = \frac{2\sin(\Omega T_0)}{\Omega} = 2T_0 \cdot \mathrm{sinc}\!\left(\frac{\Omega T_0}{\pi}\right)
 $$
 
-where $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$.
+where $\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)$.
 
 Fig. 2.4 (described): Left — rectangular pulse of height 1, width $2T_0$. Right — sinc-shaped spectrum with peak value $2T_0$ at $\Omega=0$ and zero-crossings at $\pm\pi/T_0$, $\pm 2\pi/T_0$, ...
 
@@ -297,7 +297,7 @@ $$
 
 $$
 
-x(t) = \frac{\sin(W_0 t)}{\pi t} = \frac{W_0}{\pi} \cdot \operatorname{sinc}\!\left(\frac{W_0 t}{\pi}\right)
+x(t) = \frac{\sin(W_0 t)}{\pi t} = \frac{W_0}{\pi} \cdot \mathrm{sinc}\!\left(\frac{W_0 t}{\pi}\right)
 $$
 
 Fig. 2.5 (described): Left — rectangular pulse in frequency domain with width $2W_0$. Right — sinc function in time with peak $W_0/\pi$ and zero-crossings at $\pm\pi/W_0$, $\pm 2\pi/W_0$, ...
@@ -523,7 +523,7 @@ Therefore $y(t) = \mathcal{F}^{-1}\{ X(j\Omega)\, H(j\Omega) \}$.
 | **Dirac delta $\delta(t)$** | Generalized function: zero for $t\neq 0$, integrates to 1; defined via the sifting property. |
 | **Sifting property** | $\int f(t)\,\delta(t-t_0)\,dt = f(t_0)$; extracts the value of $f$ at $t_0$. |
 | **Unit step $u(t)$** | 1 for $t>0$, 0 for $t<0$; undefined at $t=0$. |
-| **sinc function** | $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$; appears as the FT of a rectangular pulse. |
+| **sinc function** | $\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)$; appears as the FT of a rectangular pulse. |
 | **Duality property** | If $x(t) \leftrightarrow X(j\Omega)$, then $X(jt) \leftrightarrow 2\pi x(-\Omega)$; rect in time $\leftrightarrow$ sinc in freq and vice versa. |
 | **Impulse train** | $\sum_{k} \delta(t-kT)$; periodic signal whose FT is also an impulse train. |
 | **Impulse response $h(t)$** | Output of an LTI system when the input is $\delta(t)$; fully characterizes the system. |

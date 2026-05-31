@@ -79,14 +79,14 @@ $$
 
 $$
 
-|X(e^{j\omega})| = \sqrt{\left[\operatorname{Re}\{X(e^{j\omega})\}\right]^2 + \left[\operatorname{Im}\{X(e^{j\omega})\}\right]^2}
+|X(e^{j\omega})| = \sqrt{\left[\mathrm{Re}\{X(e^{j\omega})\}\right]^2 + \left[\mathrm{Im}\{X(e^{j\omega})\}\right]^2}
 $$
 
 *(Eq. 4.6)*
 
 $$
 
-\angle X(e^{j\omega}) = \arctan\!\left(\frac{\operatorname{Im}\{X(e^{j\omega})\}}{\operatorname{Re}\{X(e^{j\omega})\}}\right)
+\angle X(e^{j\omega}) = \arctan\!\left(\frac{\mathrm{Im}\{X(e^{j\omega})\}}{\mathrm{Re}\{X(e^{j\omega})\}}\right)
 $$
 
 *(Eq. 4.7)*
@@ -157,11 +157,11 @@ $$
 \angle X(e^{j\omega}) = -\frac{\omega(N-1)}{2} + \angle\!\left[\frac{\sin(\omega N/2)}{\sin(\omega/2)}\right]
 $$
 
-Using the sinc function $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$, this can be rewritten as:
+Using the sinc function $\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)$, this can be rewritten as:
 
 $$
 
-\frac{\sin(\omega N/2)}{\sin(\omega/2)} = N \cdot \frac{\operatorname{sinc}(\omega N/(2\pi))}{\operatorname{sinc}(\omega/(2\pi))}
+\frac{\sin(\omega N/2)}{\sin(\omega/2)} = N \cdot \frac{\mathrm{sinc}(\omega N/(2\pi))}{\mathrm{sinc}(\omega/(2\pi))}
 $$
 
 **Fig. 4.2 (described):** Upper plot shows the magnitude response $|X(e^{j\omega})|$ vs $\omega/\pi$ for $N=10$: peak value of 10 at $\omega=0$, then decaying oscillations (sinc-like envelope) going to zero at multiples of $2\pi/N$, with minor lobes between nulls. Lower plot shows the phase response $\angle X(e^{j\omega})$: a linear (sawtooth-wrapped) function with slope $-\omega(N-1)/2$, showing the expected linear phase characteristic.
@@ -174,7 +174,7 @@ Given $X(e^{j\omega}) = 1$ for $-\omega_0 < \omega < \omega_0$ and $0$ otherwise
 
 $$
 
-x[n] = \frac{1}{2\pi} \int_{-\omega_0}^{\omega_0} e^{j\omega n}\, d\omega = \frac{\sin(\omega_0 n)}{\pi n} = \frac{\omega_0}{\pi}\operatorname{sinc}(\omega_0 n/\pi)
+x[n] = \frac{1}{2\pi} \int_{-\omega_0}^{\omega_0} e^{j\omega n}\, d\omega = \frac{\sin(\omega_0 n)}{\pi n} = \frac{\omega_0}{\pi}\mathrm{sinc}(\omega_0 n/\pi)
 $$
 
 This is an **infinite-duration sinc sequence** — the ideal lowpass filter impulse response is non-causal and infinite.
@@ -349,7 +349,7 @@ That is, the DFT is a sampled (discrete) version of the continuous DTFT. As we a
 
 $$
 
-\operatorname{Re}\{X[k]\} = \operatorname{Re}\{X[N-k]\} \qquad \text{and} \qquad \operatorname{Im}\{X[k]\} = -\operatorname{Im}\{X[N-k]\}
+\mathrm{Re}\{X[k]\} = \mathrm{Re}\{X[N-k]\} \qquad \text{and} \qquad \mathrm{Im}\{X[k]\} = -\mathrm{Im}\{X[N-k]\}
 $$
 
 This means only about half the DFT coefficients carry independent information — the upper half is the conjugate-mirror image of the lower half.
@@ -488,7 +488,7 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 - **Zero-padding** — appending zeros to an $N$-point sequence before DFT to increase frequency resolution (sample the DTFT on a finer grid).
 - **Parseval's relation** — energy equivalence: total time-domain energy = total spectral energy (with $1/2\pi$ or $1/N$ normalization for DTFT/DFT respectively).
 - **FFT** — Fast Fourier Transform; Cooley-Tukey algorithm reducing DFT cost from $O(N^2)$ to $O(N\log_2 N)$.
-- **sinc function** — $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$; the DTFT magnitude of a rectangular pulse reduces to a sinc envelope.
+- **sinc function** — $\mathrm{sinc}(u) = \sin(\pi u)/(\pi u)$; the DTFT magnitude of a rectangular pulse reduces to a sinc envelope.
 - **Conjugate symmetry** — for real $x[n]$: $X[k] = X^{\ast}[N-k]$; only $N/2 + 1$ independent DFT values.
 
 ---
