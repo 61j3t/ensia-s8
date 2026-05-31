@@ -240,7 +240,7 @@ Raw gradient computation on a noisy image completely obscures the true edge. The
 
 Convolve the image with a Gaussian $n_\sigma$, then take the gradient:
 
-$$\nabla(n_\sigma * f)$$
+$$\nabla(n_\sigma \ast f)$$
 
 This works but requires two passes.
 
@@ -248,15 +248,15 @@ This works but requires two passes.
 
 Since both $\nabla$ and Gaussian convolution are linear:
 
-$$\nabla(n_\sigma * f) = (\nabla n_\sigma) * f$$
+$$\nabla(n_\sigma \ast f) = (\nabla n_\sigma) \ast f$$
 
-Therefore, pre-compute $\nabla n_\sigma$ once and convolve directly with f. This single kernel performs smoothing and differentiation simultaneously. The result for a step-edge signal: the noisy f(x) produces a clean, localised peak in $(\nabla n_\sigma) * f$ at the true edge location.
+Therefore, pre-compute $\nabla n_\sigma$ once and convolve directly with f. This single kernel performs smoothing and differentiation simultaneously. The result for a step-edge signal: the noisy f(x) produces a clean, localised peak in $(\nabla n_\sigma) \ast f$ at the true edge location.
 
 **Method 3 — Laplacian of Gaussian (LoG):**
 
 Analogously:
 
-$$\nabla^2(n_\sigma * f) = (\nabla^2 n_\sigma) * f$$
+$$\nabla^2(n_\sigma \ast f) = (\nabla^2 n_\sigma) \ast f$$
 
 The **Laplacian of Gaussian** kernel is:
 
@@ -334,7 +334,7 @@ A practical 5×5 discrete approximation of LoG:
 
 9. **Explain the noise problem** for derivative-based detectors (noise = rapid changes = same signature as edges). State the solution (smooth first).
 
-10. **Derive the Derivative of Gaussian trick**: $\nabla(n_\sigma * f) = (\nabla n_\sigma) * f$ — why this works (linearity of both operations) and why it is efficient (one precomputed kernel).
+10. **Derive the Derivative of Gaussian trick**: $\nabla(n_\sigma \ast f) = (\nabla n_\sigma) \ast f$ — why this works (linearity of both operations) and why it is efficient (one precomputed kernel).
 
 11. **State the LoG formula** and describe its shape (inverted sombrero / Mexican hat). Give the zero-crossing positions ($\pm\sqrt{2}\,\sigma$ from centre in 1-D).
 

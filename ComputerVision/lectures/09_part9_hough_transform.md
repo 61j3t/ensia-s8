@@ -67,7 +67,7 @@ If two edge points lie on the same image-space line, their corresponding paramet
 4. **Vote:** for each edge point $(x_i, y_i)$:
    - For each quantized value of $m$, compute $c = -m x_i + y_i$.
    - Increment $A(m, c) \mathrel{+}= 1$.
-5. **Find peaks:** identify local maxima in $A(m, c)$. Each peak $(m^*, c^*)$ corresponds to a detected line $y = m^*x + c^*$.
+5. **Find peaks:** identify local maxima in $A(m, c)$. Each peak $(m^{*}, c^{*})$ corresponds to a detected line $y = m^{*}x + c^{*}$.
 
 **Worked example (from slides, 3 collinear points):**
 
@@ -116,7 +116,7 @@ For a fixed edge point $(x_i, y_i)$, all lines through it satisfy:
 
 $$\rho = x_i\cos\theta + y_i\sin\theta$$
 
-As $\theta$ varies from $0$ to $\pi$, this traces a **sinusoidal curve** in the $(\theta, \rho)$ plane (the accumulator). Points lying on the same image-space line produce sinusoids that intersect at a single $(\theta^*, \rho^*)$ in parameter space.
+As $\theta$ varies from $0$ to $\pi$, this traces a **sinusoidal curve** in the $(\theta, \rho)$ plane (the accumulator). Points lying on the same image-space line produce sinusoids that intersect at a single $(\theta^{*}, \rho^{*})$ in parameter space.
 
 | Image space | $(\theta, \rho)$ parameter space |
 |---|---|
@@ -130,8 +130,8 @@ As $\theta$ varies from $0$ to $\pi$, this traces a **sinusoidal curve** in the 
    - For $\theta = 0$ to $\pi$ (in discrete steps):
      - Compute $\rho = x_i\cos\theta + y_i\sin\theta$
      - Increment $A(\rho, \theta) \mathrel{+}= 1$
-3. Find $(\rho^*, \theta^*)$ where $A(\rho, \theta)$ is maximum.
-4. The detected line is: $\rho^* = x\cos\theta^* + y\sin\theta^*$
+3. Find $(\rho^{*}, \theta^{*})$ where $A(\rho, \theta)$ is maximum.
+4. The detected line is: $\rho^{*} = x\cos\theta^{*} + y\sin\theta^{*}$
 
 **What the accumulator looks like:** a dark 2-D image with $\theta$ on the horizontal axis and $\rho$ on the vertical axis. Each edge point contributes a sinusoidal bright streak. Where many streaks cross, bright spots (peaks) appear — each spot is one detected line.
 
@@ -178,9 +178,9 @@ This is a circle of radius $r$ in parameter space, centered at $(x_i, y_i)$.
 
 **Voting procedure:**
 - For each edge point $(x_i, y_i)$, draw a circle of radius $r$ in the 2-D accumulator $A(a, b)$ — increment all cells on that circle.
-- After all edge points vote, the cell with the highest count is the estimated center $(a^*, b^*)$.
+- After all edge points vote, the cell with the highest count is the estimated center $(a^{*}, b^{*})$.
 
-**What the accumulator looks like:** for 8 edge points scattered on the circumference of one circle, 8 circles of radius $r$ appear in $(a, b)$ space — all passing through the true center, producing a "flower" pattern with a bright peak at $(a^*, b^*)$.
+**What the accumulator looks like:** for 8 edge points scattered on the circumference of one circle, 8 circles of radius $r$ appear in $(a, b)$ space — all passing through the true center, producing a "flower" pattern with a bright peak at $(a^{*}, b^{*})$.
 
 **Example (coins image):** three coins of different sizes are detected by running the Hough circle transform separately for $r = r_1$ and $r = r_2$. At $r_1$, the accumulator shows a bright peak for the smaller coin; at $r_2$, peaks appear for the two larger coins.
 
@@ -194,7 +194,7 @@ $$(x_i - a)^2 + (y_i - b)^2 = r^2$$
 
 (for fixed $(x_i, y_i)$, varying $a$, $b$, $r$ traces a cone with apex at $r = 0$ and axis along the $r$ direction).
 
-**Finding the circle:** the peak of $A(a, b, r)$ gives the center $(a^*, b^*)$ and radius $r^*$.
+**Finding the circle:** the peak of $A(a, b, r)$ gives the center $(a^{*}, b^{*})$ and radius $r^{*}$.
 
 **Cost:** a 3-D accumulator requires substantially more memory and computation than a 2-D one. This is the fundamental curse-of-dimensionality challenge in the Hough approach.
 

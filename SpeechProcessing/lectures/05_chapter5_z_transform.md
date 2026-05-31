@@ -373,7 +373,7 @@ Example 5.18: $n\, a^n u[n] \leftrightarrow -z \cdot \frac{d}{dz}\left[\frac{1}{
 #### Property 5: Conjugation (5.35)
 
 $$
-x^*[n] \;\longleftrightarrow\; X^*(z^*)
+x^{*}[n] \;\longleftrightarrow\; X^{*}(z^{*})
 $$
 
 ROC identical to that of $X(z)$.
@@ -395,7 +395,7 @@ $$
 #### Property 7: Convolution (5.37)
 
 $$
-x_1[n] * x_2[n] \;\longleftrightarrow\; X_1(z)\, X_2(z)
+x_1[n] \ast x_2[n] \;\longleftrightarrow\; X_1(z)\, X_2(z)
 $$
 
 ROC includes $R_{x_1} \cap R_{x_2}$.
@@ -428,7 +428,7 @@ $$
 
 The impulse response $h[n]$ is the inverse z-transform of $H(z)$ with an appropriate ROC.
 
-**Workflow**: $y[n] = x[n] * h[n]$ in time domain $\Leftrightarrow$ $Y(z) = X(z)\, H(z)$ in z-domain.
+**Workflow**: $y[n] = x[n] \ast h[n]$ in time domain $\Leftrightarrow$ $Y(z) = X(z)\, H(z)$ in z-domain.
 
 #### 7.2 Causality and stability from poles and ROC
 

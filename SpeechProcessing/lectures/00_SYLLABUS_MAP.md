@@ -50,7 +50,7 @@ This course builds a pipeline from **general DSP foundations → speech-specific
 - **DTFT**: $X(e^{j\omega})=\sum x[n]e^{-j\omega n}$ (discrete/aperiodic signal → continuous, $2\pi$-periodic spectrum). Converges iff absolutely summable (= BIBO).
 - **9 DTFT properties**: linearity, time/freq shift, differentiation, conjugation, reversal, convolution↔multiplication, Parseval.
 - **DFT**: $X[k]=X(e^{j\omega})|_{\omega=2\pi k/N}$, N-point pair, twiddle $W_N=e^{-j2\pi/N}$; **circular** convolution (vs linear for DTFT).
-- **Frequency estimation**: peak at $k^*$ → $\hat{\omega}_0=2\pi k^*/N$; **zero-padding** densifies the grid (no new info).
+- **Frequency estimation**: peak at $k^{*}$ → $\hat{\omega}_0=2\pi k^{*}/N$; **zero-padding** densifies the grid (no new info).
 - **FFT**: Cooley-Tukey reduces $N^2$ → $(N/2)\log_2 N$; a fast DFT, not a new transform.
 
 ## Ch 5 — z-Transform (63 pp)

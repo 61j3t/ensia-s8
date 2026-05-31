@@ -82,7 +82,7 @@ $$
 Using the multiplication property of the Fourier transform (multiplication in time $\leftrightarrow$ convolution in frequency, scaled by $1/(2\pi)$):
 
 $$
-x_1(t)\cdot x_2(t) \;\leftrightarrow\; \frac{1}{2\pi}\,X_1(j\Omega) * X_2(j\Omega)
+x_1(t)\cdot x_2(t) \;\leftrightarrow\; \frac{1}{2\pi}\,X_1(j\Omega) \ast X_2(j\Omega)
 $$
 *(Eq. 6.4)*
 
@@ -180,7 +180,7 @@ $$
 $$
 *(Eq. 6.9)*
 
-The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copies scaled by $1/T$). In the time domain: $x_r(t) = x_s(t) * h(t)$.
+The gain $T$ ensures $X_r(j\Omega) = X(j\Omega)$ (since $X_s(j\Omega)$ has copies scaled by $1/T$). In the time domain: $x_r(t) = x_s(t) \ast h(t)$.
 
 **Fig. 6.6**: Three panels — $X_s(j\Omega)$ (periodic triangular copies scaled $1/T$, with gap between $\Omega_b$ and $\Omega_s - \Omega_b$), $H(j\Omega)$ (rectangular window of height $T$ and width $2\Omega_c$), $X_r(j\Omega)$ (single triangle of height 1, $= X(j\Omega)$ recovered). The multiplication in frequency selects only the baseband copy.
 
@@ -208,8 +208,8 @@ Key properties: $\mathrm{sinc}(0) = 1$ (by L'Hôpital's rule), $\mathrm{sinc}(n)
 Convolving $x_s(t)$ with $h(t)$:
 
 $$
-x_r(t) = x_s(t) * h(t)
-        = \left(\sum_{k=-\infty}^{\infty} x[k]\,\delta(t - kT)\right) * h(t)
+x_r(t) = x_s(t) \ast h(t)
+        = \left(\sum_{k=-\infty}^{\infty} x[k]\,\delta(t - kT)\right) \ast h(t)
         = \sum_{k=-\infty}^{\infty} x[k]\,h(t - kT)
         = \sum_{k=-\infty}^{\infty} x[k]\,\mathrm{sinc}\!\left(\frac{t - kT}{T}\right)
 $$
@@ -383,7 +383,7 @@ The sequence has 4001 samples covering 0.5 s. Other notes: B (493.88 Hz), C# (55
 
 4. **Sketch spectra for both cases:** Draw $X(j\Omega)$ (bandlimited triangle), $I(j\Omega)$ (impulse train), and $X_s(j\Omega)$ — once for $\Omega_s > 2\Omega_b$ (non-overlapping, reconstruction possible) and once for $\Omega_s < 2\Omega_b$ (overlapping, aliasing). Clearly mark $\Omega_b$, $\Omega_s$, and $\Omega_s - \Omega_b$.
 
-5. **Derive the sinc interpolation formula (6.11):** Start from $x_r(t) = x_s(t) * h(t)$, expand $x_s(t)$ as an impulse train, convolve with $h(t) = \mathrm{sinc}(t/T)$. Verify $x_r(nT) = x[n]$ using $\mathrm{sinc}(0) = 1$ and $\mathrm{sinc}(\text{integer} \neq 0) = 0$, quoting L'Hôpital for $\mathrm{sinc}(0)$.
+5. **Derive the sinc interpolation formula (6.11):** Start from $x_r(t) = x_s(t) \ast h(t)$, expand $x_s(t)$ as an impulse train, convolve with $h(t) = \mathrm{sinc}(t/T)$. Verify $x_r(nT) = x[n]$ using $\mathrm{sinc}(0) = 1$ and $\mathrm{sinc}(\text{integer} \neq 0) = 0$, quoting L'Hôpital for $\mathrm{sinc}(0)$.
 
 6. **Write out the reconstruction filter $H(j\Omega)$ (6.8):** piecewise definition, explain gain $T$, and the constraint on cutoff frequency $\Omega_b < \Omega_c < \Omega_s - \Omega_b$. Know the default choice $\Omega_c = \Omega_s/2 = \pi/T$.
 

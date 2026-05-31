@@ -104,7 +104,7 @@ The Gaussian self-similarity under FT is a crucial property: it means Gaussian f
 
 **1-D convolution definition:**
 
-$$g(x) = f(x) * h(x) = \int_{-\infty}^{+\infty} f(\tau)\, h(x - \tau)\, d\tau$$
+$$g(x) = f(x) \ast h(x) = \int_{-\infty}^{+\infty} f(\tau)\, h(x - \tau)\, d\tau$$
 
 **Convolution theorem (derivation sketch):**
 Computing the FT of g(x) and expanding:
@@ -121,8 +121,8 @@ $$= F(u) \times H(u)$$
 
 | Spatial Domain | Frequency Domain |
 |---|---|
-| $g(x) = f(x) * h(x)$ (convolution) | $G(u) = F(u) \times H(u)$ (multiplication) |
-| $g(x) = f(x) \times h(x)$ (multiplication) | $G(u) = F(u) * H(u)$ (convolution) |
+| $g(x) = f(x) \ast h(x)$ (convolution) | $G(u) = F(u) \times H(u)$ (multiplication) |
+| $g(x) = f(x) \times h(x)$ (multiplication) | $G(u) = F(u) \ast H(u)$ (convolution) |
 
 **Practical workflow using the theorem:**
 
@@ -382,7 +382,7 @@ Image $f(m,n)$ convolved with Gaussian kernel $h_\sigma(m,n)$ gives smoothed out
 | **BLPF / BHPF** | Butterworth Low/High-Pass Filter — smooth roll-off parameterized by order n; no ringing. |
 | **GLPF / GHPF** | Gaussian Low/High-Pass Filter — Gaussian profile; no ringing, maps to spatial Gaussian kernel. |
 | **Ringing artifact** | Oscillatory fringes appearing around sharp edges after ILPF/IHPF filtering; caused by the sinc-shaped spatial kernel of the ideal filter. |
-| **Convolution theorem** | $f * h$ in space $\leftrightarrow$ $F \times H$ in frequency; multiplication in frequency domain is equivalent to convolution in spatial domain. |
+| **Convolution theorem** | $f \ast h$ in space $\leftrightarrow$ $F \times H$ in frequency; multiplication in frequency domain is equivalent to convolution in spatial domain. |
 | **D(u,v)** | Euclidean distance from spectral origin: $D(u,v) = \sqrt{u^2 + v^2}$; all filter transfer functions depend on this. |
 | **Butterworth order n** | Controls roll-off steepness; n=1 is very gradual; $n\to\infty$ approaches ideal brick-wall. |
 

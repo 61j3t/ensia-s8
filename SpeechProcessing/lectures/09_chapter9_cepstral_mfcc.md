@@ -5,7 +5,7 @@
 ## Bird's eye view
 
 - The **cepstrum** is the inverse DFT of the log-magnitude spectrum — a "spectrum of a spectrum" — living in the **quefrency** domain (measured in seconds, like time).
-- Speech obeys the **source-filter model**: $s[n] = e[n] * h[n]$. The cepstrum converts convolution into addition, allowing excitation (high quefrency) and vocal tract (low quefrency) to be separated by **liftering**.
+- Speech obeys the **source-filter model**: $s[n] = e[n] \ast h[n]$. The cepstrum converts convolution into addition, allowing excitation (high quefrency) and vocal tract (low quefrency) to be separated by **liftering**.
 - **Homomorphic deconvolution** is the three-step pipeline: DFT → log|·| → inverse DFT; liftering in quefrency then separates source from filter.
 - A cepstrum plot of a voiced vowel shows a smooth low-quefrency bulge (vocal tract) plus a sharp peak at $q_0$ (pitch period); pitch frequency = $F_s / q_0$.
 - **MFCCs** are the dominant ASR feature: they mimic human hearing via a Mel-scale filterbank, and compress the result via DCT, yielding ~12 static coefficients per frame.
@@ -60,7 +60,7 @@ In words:
 Speech is modeled as a convolution:
 
 $$
-s[n] = e[n] * h[n]
+s[n] = e[n] \ast h[n]
 $$
 
 where:
@@ -482,7 +482,7 @@ Both aim to capture the **spectral envelope** without the harmonic structure:
 - **Real cepstrum** — cepstrum computed using only $\log|X(k)|$; discards phase.
 - **Complex cepstrum** — cepstrum computed using $\log X(k) = \log|X(k)| + j\,\arg X(k)$; retains phase.
 - **Homomorphic deconvolution** — the transform pipeline (DFT → log → IDFT) that converts convolution into addition.
-- **Source-filter model** — speech = excitation * vocal-tract filter; $s[n] = e[n] * h[n]$.
+- **Source-filter model** — speech = excitation * vocal-tract filter; $s[n] = e[n] \ast h[n]$.
 - **Cutoff quefrency ($N_c$)** — the lifter threshold separating low-quefrency (vocal tract) from high-quefrency (excitation) cepstral regions.
 - **Spectral tilt** — the natural -6 dB/octave fall-off of speech energy at high frequencies, caused by the glottal pulse.
 - **Pre-emphasis** — first-order high-pass filter applied to flatten spectral tilt; $x[n] = x'[n] - \alpha\cdot x'[n-1]$, $\alpha \approx 0.97$.

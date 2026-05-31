@@ -270,7 +270,7 @@ The mask moves in the same direction as the shift — no rotation.
 
 **Convolution** (symbol: *):
 
-$$(w * f)(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x - s, y - t)$$
+$$(w \ast f)(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x - s, y - t)$$
 
 The mask is **rotated 180°** before the shift (equivalently, the image coordinates are negated in the sum).
 

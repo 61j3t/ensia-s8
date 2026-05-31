@@ -112,7 +112,7 @@ The speech production process is an **LTI system** that convolves the excitation
 
 - **Source** $e(t)$: either a periodic pulse train (voiced) or broadband noise (unvoiced)
 - **System (vocal tract)** $v(t)$: resonant cavity with multiple resonance frequencies (formants)
-- **Output** $s(t) = e(t) * v(t)$ (convolution) → in frequency domain: $S(\Omega) = E(\Omega) \cdot V(\Omega)$
+- **Output** $s(t) = e(t) \ast v(t)$ (convolution) → in frequency domain: $S(\Omega) = E(\Omega) \cdot V(\Omega)$
 
 **Spectral picture of voiced speech:**
 - $|E(\Omega)|$: a comb of harmonics spaced at $1/T_p$ (the pitch period), flat amplitude envelope

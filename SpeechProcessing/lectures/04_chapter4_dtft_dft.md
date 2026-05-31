@@ -9,7 +9,7 @@
 - **Key duality** of signal representations: discrete → periodic (time-domain discrete ↔ frequency-domain periodic), and aperiodic → continuous (time-domain aperiodic ↔ frequency-domain continuous).
 - Nine **DTFT properties** (linearity, time shift, frequency shift, differentiation, conjugation, time reversal, convolution, multiplication, Parseval) each have parallel **DFT counterparts** — but with circular convolution replacing linear convolution in the DFT.
 - The **FFT** (Cooley-Tukey, 1965) reduces DFT complexity from $O(N^2)$ multiplications to $O(N/2 \cdot \log_2 N)$, making spectral analysis computationally practical for large $N$.
-- **Frequency estimation** with DFT: locate the magnitude peak at index $k^*$ → $\hat{\omega}_0 = 2\pi k^*/N$; accuracy improves dramatically by **zero-padding** (appending zeros to push $N$ large before computing `fft`).
+- **Frequency estimation** with DFT: locate the magnitude peak at index $k^{*}$ → $\hat{\omega}_0 = 2\pi k^{*}/N$; accuracy improves dramatically by **zero-padding** (appending zeros to push $N$ large before computing `fft`).
 
 ---
 
@@ -209,9 +209,9 @@ DTFT properties follow from the z-transform (evaluated on the unit circle). ROC 
 | 2 | Time Shifting | $x[n - n_0]$ | $e^{-j\omega n_0} X(e^{j\omega})$ | (4.9) |
 | 3 | Freq. Shifting (Modulation) | $e^{j\omega_0 n} x[n]$ | $X(e^{j(\omega-\omega_0)})$ | (4.10) |
 | 4 | Differentiation | $nx[n]$ | $j\, dX(e^{j\omega})/d\omega$ | (4.11) |
-| 5 | Conjugation | $x^*[n]$ | $X^*(e^{-j\omega})$ | (4.13) |
+| 5 | Conjugation | $x^{*}[n]$ | $X^{*}(e^{-j\omega})$ | (4.13) |
 | 6 | Time Reversal | $x[-n]$ | $X(e^{-j\omega})$ | (4.14) |
-| 7 | Convolution | $x_1[n] * x_2[n]$ | $X_1(e^{j\omega}) X_2(e^{j\omega})$ | (4.15) |
+| 7 | Convolution | $x_1[n] \ast x_2[n]$ | $X_1(e^{j\omega}) X_2(e^{j\omega})$ | (4.15) |
 | 8 | Multiplication | $x_1[n] \cdot x_2[n]$ | $\frac{1}{2\pi} \int X_1(e^{j\tau}) X_2(e^{j(\omega-\tau)})\, d\tau$ | (4.17) |
 | 9 | Parseval's Relation | $\sum\|x[n]\|^2$ | $\frac{1}{2\pi} \int_{-\pi}^{\pi} \|X(e^{j\omega})\|^2\, d\omega$ | (4.18) |
 
@@ -230,7 +230,7 @@ Equivalently, using the chain rule: $-e^{j\omega} dX/d(e^{j\omega}) = j\, dX/d\o
 **Convolution (property 7) — LTI application:**
 
 $$
-y[n] = x[n] * h[n] \quad\longleftrightarrow\quad Y(e^{j\omega}) = X(e^{j\omega})\, H(e^{j\omega})
+y[n] = x[n] \ast h[n] \quad\longleftrightarrow\quad Y(e^{j\omega}) = X(e^{j\omega})\, H(e^{j\omega})
 $$
 *(Eq. 4.16)*
 
@@ -241,9 +241,9 @@ Convolution in time = multiplication in frequency. This is the fundamental theor
 **Parseval's relation (property 9) — proof:**
 
 $$
-\sum_{n=-\infty}^{\infty} |x[n]|^2 = \sum x[n]\, x^*[n]
-= \sum x[n] \left[\frac{1}{2\pi} \int X(e^{j\omega})\, e^{j\omega n}\, d\omega\right]^*
-= \frac{1}{2\pi} \int X^*(e^{j\omega}) \left[\sum x[n]\, e^{-j\omega n}\right] d\omega
+\sum_{n=-\infty}^{\infty} |x[n]|^2 = \sum x[n]\, x^{*}[n]
+= \sum x[n] \left[\frac{1}{2\pi} \int X(e^{j\omega})\, e^{j\omega n}\, d\omega\right]^{*}
+= \frac{1}{2\pi} \int X^{*}(e^{j\omega}) \left[\sum x[n]\, e^{-j\omega n}\right] d\omega
 = \frac{1}{2\pi} \int_{-\pi}^{\pi} |X(e^{j\omega})|^2\, d\omega
 $$
 *(Eq. 4.19)*
@@ -302,7 +302,7 @@ That is, the DFT is a sampled (discrete) version of the continuous DTFT. As we a
 | 2 | Time-shifting | $x[n - m]$ | $e^{-j2\pi km/N} X[k]$ |
 | 3 | Freq-shifting (modulation) | $e^{-j2\pi k_0 n/N} x[n]$ | $X[k - k_0]$ |
 | 4 | Time reversal | $x[-n]$ | $X[-k]$ |
-| 5 | Conjugation | $x^*[n]$ | $X^*[-k]$ |
+| 5 | Conjugation | $x^{*}[n]$ | $X^{*}[-k]$ |
 | 6 | Time-convolution | $x_1[n] \circledast x_2[n]$ (circular) | $X_1[k]\, X_2[k]$ |
 | 7 | Freq-convolution | $x_1[n] \cdot x_2[n]$ | $\frac{1}{N} X_1[k] \circledast X_2[k]$ (circular) |
 | 8 | Parseval's relation | $E_x = \sum_{n=0}^{N-1} \|x[n]\|^2$ | $E_x = \frac{1}{N} \sum_{k=0}^{N-1} \|X[k]\|^2$ |
@@ -445,7 +445,7 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 - **Parseval's relation** — energy equivalence: total time-domain energy = total spectral energy (with $1/2\pi$ or $1/N$ normalization for DTFT/DFT respectively).
 - **FFT** — Fast Fourier Transform; Cooley-Tukey algorithm reducing DFT cost from $O(N^2)$ to $O(N\log_2 N)$.
 - **sinc function** — $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$; the DTFT magnitude of a rectangular pulse reduces to a sinc envelope.
-- **Conjugate symmetry** — for real $x[n]$: $X[k] = X^*[N-k]$; only $N/2 + 1$ independent DFT values.
+- **Conjugate symmetry** — for real $x[n]$: $X[k] = X^{*}[N-k]$; only $N/2 + 1$ independent DFT values.
 
 ---
 
@@ -469,9 +469,9 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 
 9. **State FFT complexity vs DFT complexity** ($N^2$ vs $N/2\log_2 N$) and reproduce or explain the comparison table for key values of $N$. Know that FFT is an algorithm, not a new transform.
 
-10. **Frequency estimation workflow** (Ex. 4.6): identify peak index $k^*$ in $|X[k]|$, convert to $\hat{\omega}_0 = 2\pi k^*/N$, and understand why zero-padding improves the estimate.
+10. **Frequency estimation workflow** (Ex. 4.6): identify peak index $k^{*}$ in $|X[k]|$, convert to $\hat{\omega}_0 = 2\pi k^{*}/N$, and understand why zero-padding improves the estimate.
 
-11. **Parseval's relation for DTFT and DFT** — write both forms and prove the DTFT version (the proof uses the iDTFT to substitute for $x^*[n]$).
+11. **Parseval's relation for DTFT and DFT** — write both forms and prove the DTFT version (the proof uses the iDTFT to substitute for $x^{*}[n]$).
 
 ---
 
@@ -483,7 +483,7 @@ The speedup factor at $N=1024$ is ~204×. MATLAB/OCTAVE commands: `fft` (FFT) an
 - **DFT circular convolution ≠ linear convolution.** If you compute $X_1[k] \cdot X_2[k]$ and take iDFT, you get circular ($N$-periodic) convolution. To get linear convolution, zero-pad to at least $N_1+N_2-1$ first.
 - **Zero-padding does not add new information** about the signal; it only produces a finer sampling of the existing DTFT (interpolates in frequency domain). It does NOT improve spectral resolution of two close frequencies unless the signal itself is long enough.
 - **The FFT requires $N$ to be a power of 2 for peak efficiency** (radix-2 Cooley-Tukey). MATLAB's `fft` works for any $N$ but is slower for non-powers of 2.
-- **Conjugate symmetry applies only for real-valued sequences**: $X[k] = X^*[N-k]$. Do not assume this for complex-valued $x[n]$.
+- **Conjugate symmetry applies only for real-valued sequences**: $X[k] = X^{*}[N-k]$. Do not assume this for complex-valued $x[n]$.
 - **DFT index $k$ maps to frequency $\omega = 2\pi k/N$**, not $\omega = k$. The DFT domain is indexed by integer $k$, the corresponding frequency is $\omega_k = 2\pi k/N$.
 - **Time-shift in DFT**: $x[n-m]$ corresponds to $e^{-j2\pi km/N} X[k]$, not $e^{-j\omega m} X(e^{j\omega})$ — the exponent uses discrete index $m$ and fixed $N$.
 - **iDFT has $+j$ in the exponent and a $1/N$ normalization**; iDTFT has $+j$ in the exponent and $1/(2\pi)$ normalization. Do not confuse the two.

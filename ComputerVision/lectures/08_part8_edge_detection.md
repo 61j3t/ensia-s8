@@ -114,11 +114,11 @@ $$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
 
 Convolving the image with a Gaussian $g_\sigma$ and then taking the Laplacian:
 
-$$\text{LoG}(x,y) = \nabla^2 [g_\sigma(x,y) * I(x,y)]$$
+$$\text{LoG}(x,y) = \nabla^2 [g_\sigma(x,y) \ast I(x,y)]$$
 
 Because convolution is linear and shift-invariant, this equals:
 
-$$[\nabla^2 g_\sigma(x,y)] * I(x,y)$$
+$$[\nabla^2 g_\sigma(x,y)] \ast I(x,y)$$
 
 So you can precompute the LoG kernel once and apply it to the image directly. The LoG kernel in 2D is:
 
@@ -159,11 +159,11 @@ Canny showed that the optimal 1D filter satisfying these criteria is well approx
 
 One way to use both the gradient (for direction and magnitude) and the Laplacian (for precise localization via zero-crossings):
 
-1. Smooth with Gaussian: $g_\sigma * I$
-2. Compute gradient: $\nabla(g_\sigma) * I$
-3. Find gradient magnitude: $\|\nabla(g_\sigma) * I\|$
+1. Smooth with Gaussian: $g_\sigma \ast I$
+2. Compute gradient: $\nabla(g_\sigma) \ast I$
+3. Find gradient magnitude: $\|\nabla(g_\sigma) \ast I\|$
 4. Find gradient direction: $\hat{n} = [\nabla(g_\sigma)*I] / \|\nabla(g_\sigma)*I\|$
-5. Compute 1D Laplacian along gradient direction $\hat{n}$: $\partial^2(g_\sigma * I) / \partial \hat{n}^2$
+5. Compute 1D Laplacian along gradient direction $\hat{n}$: $\partial^2(g_\sigma \ast I) / \partial \hat{n}^2$
 6. Find zero-crossings in the 1D Laplacian to pinpoint edge location.
 
 This approach is equivalent to Canny's non-maximum suppression step (see below).
@@ -174,7 +174,7 @@ This approach is equivalent to Canny's non-maximum suppression step (see below).
 
 Convolve the image $I$ with a 2D Gaussian filter with standard deviation $\sigma$:
 
-$$I_{\text{smooth}} = G_\sigma * I$$
+$$I_{\text{smooth}} = G_\sigma \ast I$$
 
 where
 
@@ -189,7 +189,7 @@ Example (Lena image): $\sigma=1$ gives many fine edges, $\sigma=2$ gives cleaner
 
 Apply Sobel (or equivalent) operator to the smoothed image:
 
-$$G_x = \text{Sobel}_x * I_{\text{smooth}}, \qquad G_y = \text{Sobel}_y * I_{\text{smooth}}$$
+$$G_x = \text{Sobel}_x \ast I_{\text{smooth}}, \qquad G_y = \text{Sobel}_y \ast I_{\text{smooth}}$$
 
 $$M(x,y) = \sqrt{G_x^2 + G_y^2}$$
 
@@ -435,7 +435,7 @@ One classical solution: **The Hough Transform** (Hough 1962, U.S. Patent 3,069,6
 
 6. **State the Laplacian discrete kernel** and explain why edges are zero-crossings (not maxima) of the Laplacian.
 
-7. **Explain LoG:** what it is, why Gaussian smoothing is applied first, and what the "Mexican hat" shape means. Know that $\nabla^2 [g_\sigma * I] = [\nabla^2 g_\sigma] * I$.
+7. **Explain LoG:** what it is, why Gaussian smoothing is applied first, and what the "Mexican hat" shape means. Know that $\nabla^2 [g_\sigma \ast I] = [\nabla^2 g_\sigma] \ast I$.
 
 8. **Give Pratt's FOM formula**, name all variables, and interpret: what does FOM = 1 mean? What drives FOM down?
 

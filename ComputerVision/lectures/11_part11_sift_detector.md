@@ -7,10 +7,10 @@
 - **SIFT** (Scale-Invariant Feature Transform) was introduced by David G. Lowe (IJCV, 2004, ~78 000 citations) and transformed object recognition by providing features invariant to **scale, rotation, and illumination**.
 - The method has two stages: a **detector** (find keypoints + assign scale and orientation) and a **descriptor** (encode local appearance as a feature vector). This part covers only the detector.
 - Blob detection is the core idea: SIFT treats interest points as **blobs** — regions visually distinct from their surroundings — localized in both space and scale.
-- The **scale space** $L(x,y,\sigma) = G(x,y,\sigma) * I(x,y)$ is searched for extrema via the **Difference-of-Gaussians (DoG)**, which efficiently approximates the Normalized Laplacian of Gaussian (NLoG).
+- The **scale space** $L(x,y,\sigma) = G(x,y,\sigma) \ast I(x,y)$ is searched for extrema via the **Difference-of-Gaussians (DoG)**, which efficiently approximates the Normalized Laplacian of Gaussian (NLoG).
 - The Gaussian pyramid is organized into **octaves** (each halving image resolution) with several **blur levels** (controlled by $\sigma$) per octave; DoG images are computed between adjacent blur levels.
 - **Extrema detection** compares each DoG sample against its 26 neighbors (3×3 in the same scale ± 3×3 in adjacent scales) to find scale-space extrema as keypoint candidates.
-- Each keypoint is assigned a **characteristic scale** ($\sigma^*$ at which the NLoG response peaks) and a **principal orientation** from a weighted gradient histogram, giving full invariance to scale and rotation.
+- Each keypoint is assigned a **characteristic scale** ($\sigma^{*}$ at which the NLoG response peaks) and a **principal orientation** from a weighted gradient histogram, giving full invariance to scale and rotation.
 - Knowing scale and orientation allows rotation and scale variations between images to be **undone**, enabling reliable matching; the ratio of blob sizes between two views equals $\sigma_1/\sigma_2$.
 
 ---
@@ -87,8 +87,8 @@ Formally: blobs are areas where **image intensity remains relatively constant** 
 
 **Why blobs are good interest points:** They have a fixed position, consistent shape/appearance, and a definite size. This makes them reliable across viewpoints. The goal is:
 
-1. Locate the blob (position $x^*$, $y^*$)
-2. Determine its size (scale $\sigma^*$)
+1. Locate the blob (position $x^{*}$, $y^{*}$)
+2. Determine its size (scale $\sigma^{*}$)
 3. Determine its orientation
 4. Formulate an invariant description
 
@@ -105,7 +105,7 @@ Before extending to 2D images, the course builds intuition with 1D signals.
 Define the **normalized ($\sigma$-normalized) 2nd derivative** of the Gaussian-smoothed signal:
 
 $$
-\sigma^2 \cdot \frac{\partial^2 n_{\sigma}}{\partial x^2} * f(x)
+\sigma^2 \cdot \frac{\partial^2 n_{\sigma}}{\partial x^2} \ast f(x)
 $$
 
 where $n_{\sigma}$ is the 1D Gaussian with standard deviation $\sigma$, and $*$ denotes convolution.
@@ -118,8 +118,8 @@ The course shows three 1D blobs (A, B, C) of increasing width. For each blob, at
 - Row 1: $f(x)$ — the original signal
 - Row 2: $n_{\sigma}$ — Gaussian at that $\sigma$
 - Row 3: $\partial^2 n_{\sigma}/\partial x^2$ — 2nd derivative of Gaussian (a "W" shaped kernel)
-- Row 4: $(\partial^2 n_{\sigma}/\partial x^2) * f(x)$ — convolution result (unnormalized)
-- Row 5: $\sigma^2 \cdot (\partial^2 n_{\sigma}/\partial x^2) * f(x)$ — $\sigma$-normalized result
+- Row 4: $(\partial^2 n_{\sigma}/\partial x^2) \ast f(x)$ — convolution result (unnormalized)
+- Row 5: $\sigma^2 \cdot (\partial^2 n_{\sigma}/\partial x^2) \ast f(x)$ — $\sigma$-normalized result
 
 As $\sigma$ increases across the slides, for a given blob:
 - When $\sigma$ is small relative to the blob width: the convolution produces oscillating responses, and the normalized 2nd derivative shows a **clear minimum** (negative peak) right at the blob center.
@@ -127,24 +127,24 @@ As $\sigma$ increases across the slides, for a given blob:
 - When $\sigma$ is large relative to the blob: the response flattens out (the blob is "subsumed" by the large Gaussian).
 
 **Conclusion:** Each blob is detected as a **minimum or maximum of the $\sigma$-normalized 2nd derivative in the $(x, \sigma)$ joint space.** The blob is localized at:
-- $x^*$ = position of the extremum → **blob position**
-- $\sigma^*$ = $\sigma$ at which the extremum occurs → **characteristic scale** = **blob size**
+- $x^{*}$ = position of the extremum → **blob position**
+- $\sigma^{*}$ = $\sigma$ at which the extremum occurs → **characteristic scale** = **blob size**
 
 **Characteristic scale definition:** The $\sigma$ at which the $\sigma$-normalized 2nd derivative of the signal attains its minimum/maximum.
 
 **Critical property:** The characteristic scale is **proportional to the blob size**:
 
 $$
-\frac{\text{size of blob A}}{\text{size of blob B}} = \frac{\sigma^*_A}{\sigma^*_B} \qquad , \qquad \frac{\text{size of blob B}}{\text{size of blob C}} = \frac{\sigma^*_B}{\sigma^*_C}
+\frac{\text{size of blob A}}{\text{size of blob B}} = \frac{\sigma^{*}_A}{\sigma^{*}_B} \qquad , \qquad \frac{\text{size of blob B}}{\text{size of blob C}} = \frac{\sigma^{*}_B}{\sigma^{*}_C}
 $$
 
 **1D blob detection algorithm:**
 
 1. Given a 1D signal $f(x)$
-2. Compute $\sigma^2 \cdot (\partial^2 n_{\sigma}/\partial x^2) * f(x)$ at $k$ different scales $(\sigma_0, \sigma_1, \ldots, \sigma_k)$
-3. Find $(x^*, \sigma^*) = \arg\max_{(x,\sigma)} \left|\sigma^2 \cdot \frac{\partial^2 n_{\sigma}}{\partial x^2} * f(x)\right|$
-   - $x^*$ = the blob position
-   - $\sigma^*$ = the characteristic scale (blob size)
+2. Compute $\sigma^2 \cdot (\partial^2 n_{\sigma}/\partial x^2) \ast f(x)$ at $k$ different scales $(\sigma_0, \sigma_1, \ldots, \sigma_k)$
+3. Find $(x^{*}, \sigma^{*}) = \arg\max_{(x,\sigma)} \left|\sigma^2 \cdot \frac{\partial^2 n_{\sigma}}{\partial x^2} \ast f(x)\right|$
+   - $x^{*}$ = the blob position
+   - $\sigma^{*}$ = the characteristic scale (blob size)
 
 ---
 
@@ -171,14 +171,14 @@ where $n_{\sigma}$ is a 2D isotropic Gaussian. Visually:
 
 1. Given an image $I(x,y)$
 2. Convolve $I$ with the NLoG at $k$ different scales $(\sigma_0, \sigma_1, \ldots, \sigma_k)$
-3. Find $(x^*, y^*, \sigma^*) = \arg\max_{(x,y,\sigma)} \left|\sigma^2 \cdot \nabla^2 n_{\sigma} * I(x,y)\right|$
-   - $(x^*, y^*)$ = the blob position in the image
-   - $\sigma^*$ = the characteristic scale (blob size)
+3. Find $(x^{*}, y^{*}, \sigma^{*}) = \arg\max_{(x,y,\sigma)} \left|\sigma^2 \cdot \nabla^2 n_{\sigma} \ast I(x,y)\right|$
+   - $(x^{*}, y^{*})$ = the blob position in the image
+   - $\sigma^{*}$ = the characteristic scale (blob size)
 
 **Scale space $S(x,y,\sigma)$:** A stack of images created by filtering with different values of $\sigma$:
 
 $$
-S(x, y, \sigma) = n(x, y, \sigma) * I(x, y)
+S(x, y, \sigma) = n(x, y, \sigma) \ast I(x, y)
 $$
 
 (Reference: Tony Lindeberg, Feature Detection with Automatic Scale Selection, IJCV, 1998.)
@@ -309,11 +309,11 @@ where $r$ is the threshold ratio (Lowe uses $r = 10$). This eliminates edge-like
 
 ### 10. Orientation assignment
 
-After localizing the keypoint at $(x^*, y^*, \sigma^*)$, SIFT assigns a **principal orientation** to make descriptors rotation-invariant.
+After localizing the keypoint at $(x^{*}, y^{*}, \sigma^{*})$, SIFT assigns a **principal orientation** to make descriptors rotation-invariant.
 
 **Procedure:**
 
-1. Take the **Gaussian-smoothed image** at the scale closest to $\sigma^*$.
+1. Take the **Gaussian-smoothed image** at the scale closest to $\sigma^{*}$.
 2. Compute the **gradient magnitude and direction** at each pixel in a neighborhood around the keypoint:
 
 $$
@@ -339,17 +339,17 @@ $$
 ### 11. Scale and orientation — the payoff
 
 Once each keypoint has:
-- Position $(x^*, y^*)$
-- Characteristic scale $\sigma^*$ (from the DoG extremum)
-- Principal orientation $\theta^*$ (from the gradient histogram)
+- Position $(x^{*}, y^{*})$
+- Characteristic scale $\sigma^{*}$ (from the DoG extremum)
+- Principal orientation $\theta^{*}$ (from the gradient histogram)
 
 The local **coordinate frame** of the keypoint is fully defined. All subsequent description is computed relative to this frame. Consequently:
 
-- **Scale invariance:** Two views of the same blob at different scales produce keypoints with different $\sigma^*$ values. The ratio $\sigma_1/\sigma_2$ equals the actual scale ratio between the two images. The descriptor region is normalized by $\sigma^*$ before computing.
+- **Scale invariance:** Two views of the same blob at different scales produce keypoints with different $\sigma^{*}$ values. The ratio $\sigma_1/\sigma_2$ equals the actual scale ratio between the two images. The descriptor region is normalized by $\sigma^{*}$ before computing.
 
-- **Rotation invariance:** Two views of the same blob at different orientations produce keypoints with different $\theta^*$ values. The descriptor is computed in the rotated frame, so rotation differences are factored out.
+- **Rotation invariance:** Two views of the same blob at different orientations produce keypoints with different $\theta^{*}$ values. The descriptor is computed in the rotated frame, so rotation differences are factored out.
 
-**Visualization (slides 47–48):** Two images of the same DVD cover, one upright and one rotated ~45°. The orange circle marks the same large blob in both images. In the upright image the orientation arrow points upward; in the rotated image the arrow has rotated accordingly. After "undoing" the rotation (normalizing by $\theta^*$), both blobs produce the same canonical patch.
+**Visualization (slides 47–48):** Two images of the same DVD cover, one upright and one rotated ~45°. The orange circle marks the same large blob in both images. In the upright image the orientation arrow points upward; in the rotated image the arrow has rotated accordingly. After "undoing" the rotation (normalizing by $\theta^{*}$), both blobs produce the same canonical patch.
 
 **Scale ratio between images (slides 49–50):** The same flame/person blob appears at scale $\sigma_1$ in the cover photo and $\sigma_2$ in the full scene photo. The ratio of blob sizes equals $\sigma_1/\sigma_2$, giving a direct estimate of the scale change between the two images.
 
@@ -402,18 +402,18 @@ Output: Set of keypoints, each described by (x*, y*, σ*, θ*)
 | **SIFT** | Scale-Invariant Feature Transform; Lowe 2004 method for detecting and describing local image features |
 | **Keypoint / interest point** | A local image region selected for its richness, distinctiveness, localizability, and invariance properties |
 | **Blob** | A region visually distinct from its surroundings (in brightness/color/texture), localized in space and scale |
-| **Scale space** | $S(x,y,\sigma) = n(x,y,\sigma) * I(x,y)$; the family of images obtained by convolving $I$ with Gaussians of increasing $\sigma$ |
+| **Scale space** | $S(x,y,\sigma) = n(x,y,\sigma) \ast I(x,y)$; the family of images obtained by convolving $I$ with Gaussians of increasing $\sigma$ |
 | **$\sigma$ (sigma)** | Standard deviation of the Gaussian kernel; controls the smoothing scale |
 | **Octave** | One level of the image resolution pyramid; each octave halves image dimensions |
 | **Gaussian pyramid** | The full multi-octave, multi-blur-level stack of Gaussian-smoothed images |
 | **DoG (Difference of Gaussians)** | $D = G(\cdot,s\sigma) - G(\cdot,\sigma)$; efficient approximation of the normalized Laplacian of Gaussian |
 | **NLoG (Normalized Laplacian of Gaussian)** | $\sigma^2 \nabla^2 n_{\sigma}$; the operator used for scale-normalized blob detection |
-| **Characteristic scale** | $\sigma^*$ at which the NLoG (or DoG) response is extremized; proportional to blob size |
+| **Characteristic scale** | $\sigma^{*}$ at which the NLoG (or DoG) response is extremized; proportional to blob size |
 | **Scale-space extremum** | A DoG sample that is a local min or max among all 26 neighbors in the 3D $(x,y,\sigma)$ space |
 | **26-neighbor check** | The 3×3×3 neighborhood comparison: 8 in-plane + 9 above + 9 below |
 | **Hessian edge test** | Uses $\text{Tr}(H)^2/\text{Det}(H)$ to reject keypoints on edges (unstable elongated structures) |
 | **Orientation histogram** | 36-bin gradient direction histogram over a Gaussian-weighted neighborhood around the keypoint; peak gives principal orientation |
-| **Principal orientation $\theta^*$** | The dominant gradient direction assigned to a keypoint; enables rotation invariance in descriptor computation |
+| **Principal orientation $\theta^{*}$** | The dominant gradient direction assigned to a keypoint; enables rotation invariance in descriptor computation |
 | **$r_{\text{display}}$** | Visual radius of a detected blob: $\approx \sqrt{2} \cdot \sigma \cdot 2^{\text{octave}}$ |
 | **Ratio of blob sizes** | $\sigma_1/\sigma_2$; gives the relative scale factor between the same blob in two images |
 | **Signature / descriptor / feature vector** | Synonymous terms for the numerical representation of a keypoint (computed by the descriptor stage, Part 12) |
@@ -428,9 +428,9 @@ Output: Set of keypoints, each described by (x*, y*, σ*, θ*)
 
 3. **Define a blob** and list three characteristics. Explain why edges are poor interest points but blobs are good ones.
 
-4. **Derive the 1D blob detection principle.** Explain the $\sigma$-normalized 2nd derivative, what "characteristic scale" means, and why $\sigma^2$ normalization is necessary. Write the algorithm formally: given $f(x)$, compute at $k$ scales, find $(x^*, \sigma^*) = \arg\max \left|\sigma^2 (\partial^2 n_{\sigma}/\partial x^2) * f(x)\right|$.
+4. **Derive the 1D blob detection principle.** Explain the $\sigma$-normalized 2nd derivative, what "characteristic scale" means, and why $\sigma^2$ normalization is necessary. Write the algorithm formally: given $f(x)$, compute at $k$ scales, find $(x^{*}, \sigma^{*}) = \arg\max \left|\sigma^2 (\partial^2 n_{\sigma}/\partial x^2) \ast f(x)\right|$.
 
-5. **Write the NLoG formula in 2D** and the 2D blob detection algorithm. Write the scale-space equation $S(x,y,\sigma) = n(x,y,\sigma) * I(x,y)$.
+5. **Write the NLoG formula in 2D** and the 2D blob detection algorithm. Write the scale-space equation $S(x,y,\sigma) = n(x,y,\sigma) \ast I(x,y)$.
 
 6. **Derive why $\text{DoG} \approx (s-1)\text{NLoG}$.** Write the DoG equation. Explain why DoG is used in practice instead of NLoG directly.
 
@@ -456,7 +456,7 @@ Output: Set of keypoints, each described by (x*, y*, σ*, θ*)
 
 - **The 26-neighbor check is 3×3×3 minus 1, not 3×3×3.** Count: 9+8+9 = 26. The center point is the candidate itself.
 
-- **Characteristic scale is proportional to blob SIZE, not to position.** $\sigma^*$ tells you how large the blob is, not where it is. Position comes from $(x^*, y^*)$.
+- **Characteristic scale is proportional to blob SIZE, not to position.** $\sigma^{*}$ tells you how large the blob is, not where it is. Position comes from $(x^{*}, y^{*})$.
 
 - **Orientation histogram has 36 bins (10° each), not 8.** The 8-bin diagram in slides is a simplified illustration. In the actual SIFT algorithm, 36 bins are used for the orientation assignment stage.
 
