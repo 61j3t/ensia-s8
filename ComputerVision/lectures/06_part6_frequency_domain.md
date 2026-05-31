@@ -330,7 +330,7 @@ Image $f(m,n)$ convolved with Gaussian kernel $h_\sigma(m,n)$ gives smoothed out
 | **Inverse Fourier Transform (IFT)** | Operation recovering f(x) from F(u). |
 | **DFT** | Discrete Fourier Transform — the sampled, finite version of FT used on digital images. |
 | **FFT** | Fast Fourier Transform — efficient $O(MN \log MN)$ algorithm to compute the DFT. Discovered early 1960s. |
-| **Amplitude spectrum** | $|F(u,v)|$ — the magnitude of the complex DFT coefficients; typically displayed after log compression. |
+| **Amplitude spectrum** | $\vert F(u,v)\vert$ — the magnitude of the complex DFT coefficients; typically displayed after log compression. |
 | **Phase spectrum** | $\angle F(u,v)$ — the phase angle of each DFT coefficient; encodes spatial positions of structures. |
 | **DC coefficient** | F[0,0] = sum of all pixel values; represents the mean brightness scaled by MN. |
 | **Frequency (spatial)** | Rate at which intensity varies across the image. Low = smooth; High = edges/noise. |

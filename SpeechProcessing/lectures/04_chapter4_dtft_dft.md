@@ -202,7 +202,7 @@ DTFT properties follow from the z-transform (evaluated on the unit circle). ROC 
 | 6 | Time Reversal | $x[-n]$ | $X(e^{-j\omega})$ | (4.14) |
 | 7 | Convolution | $x_1[n] \ast x_2[n]$ | $X_1(e^{j\omega}) X_2(e^{j\omega})$ | (4.15) |
 | 8 | Multiplication | $x_1[n] \cdot x_2[n]$ | $\frac{1}{2\pi} \int X_1(e^{j\tau}) X_2(e^{j(\omega-\tau)}) d\tau$ | (4.17) |
-| 9 | Parseval's Relation | $\sum\|x[n]\|^2$ | $\frac{1}{2\pi} \int_{-\pi}^{\pi} \|X(e^{j\omega})\|^2 d\omega$ | (4.18) |
+| 9 | Parseval's Relation | $\sum\\vert x[n]\\vert ^2$ | $\frac{1}{2\pi} \int_{-\pi}^{\pi} \\vert X(e^{j\omega})\\vert ^2 d\omega$ | (4.18) |
 
 **Notes on selected properties:**
 
@@ -292,7 +292,7 @@ That is, the DFT is a sampled (discrete) version of the continuous DTFT. As we a
 | 5 | Conjugation | $x^{\ast}[n]$ | $X^{\ast}[-k]$ |
 | 6 | Time-convolution | $x_1[n] \circledast x_2[n]$ (circular) | $X_1[k] X_2[k]$ |
 | 7 | Freq-convolution | $x_1[n] \cdot x_2[n]$ | $\frac{1}{N} X_1[k] \circledast X_2[k]$ (circular) |
-| 8 | Parseval's relation | $E_x = \sum_{n=0}^{N-1} \|x[n]\|^2$ | $E_x = \frac{1}{N} \sum_{k=0}^{N-1} \|X[k]\|^2$ |
+| 8 | Parseval's relation | $E_x = \sum_{n=0}^{N-1} \\vert x[n]\\vert ^2$ | $E_x = \frac{1}{N} \sum_{k=0}^{N-1} \\vert X[k]\\vert ^2$ |
 
 **Critical distinction — Circular convolution:** In the DFT, the time-domain convolution property uses **circular (cyclic) convolution** of period $N$, not linear convolution. This is because DFT treats signals as periodic with period $N$. Linear convolution can be obtained from circular convolution by zero-padding both sequences to length $\geq N_1 + N_2 - 1$ before taking DFTs.
 

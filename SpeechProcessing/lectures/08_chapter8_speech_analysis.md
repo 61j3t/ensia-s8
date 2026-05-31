@@ -578,11 +578,11 @@ Applications downstream of parameter estimation: pitch shifting, time stretching
 | **Phoneme** | Minimal unit of sound that distinguishes meaning; English has ~48 (ARPAbet) |
 | **ARPAbet** | Machine-readable phonetic alphabet for American English (48 symbols) |
 | **Short-Time Energy (STE)** | $E_{\hat{n}} = \sum x^2[m] h[\hat{n}-m]$; measures local signal power; used for voicing detection |
-| **Short-Time Magnitude (STM)** | $M_{\hat{n}} = \sum |x[m]| \tilde{w}[\hat{n}-m]$; less sensitive to outliers than STE |
+| **Short-Time Magnitude (STM)** | $M_{\hat{n}} = \sum \vert x[m]\vert  \tilde{w}[\hat{n}-m]$; less sensitive to outliers than STE |
 | **Zero-Crossing Rate (ZCR)** | Rate at which the speech waveform crosses zero; high for unvoiced, low for voiced |
 | **Autocorrelation (STACF)** | $r_k = \sum s_i \cdot s_{i+k}$; emphasises periodicity; peak at lag $k = T_p$ used for pitch detection |
 | **AMDF** | Average Magnitude Difference Function; minimum at lag = pitch period; computationally lighter than ACF |
-| **Spectrogram** | Time-frequency representation $|\text{STFT}(\omega, m)|^2$; wideband shows formant tracks, narrowband shows harmonics |
+| **Spectrogram** | Time-frequency representation $\vert \text{STFT}(\omega, m)\vert ^2$; wideband shows formant tracks, narrowband shows harmonics |
 | **VOT (Voice Onset Time)** | Time between plosive burst and onset of voicing; longer for unvoiced plosives |
 | **Voice bar** | Low-frequency voicing visible in spectrogram during voiced plosive closure |
 | **Diphthong** | Vowel with moving articulation; formants sweep continuously during production |

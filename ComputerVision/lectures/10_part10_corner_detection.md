@@ -107,7 +107,7 @@ Where:
 |---|---|
 | R large and positive | **Corner** (both $\lambda_1$, $\lambda_2$ large → det large, trace² is also large but det dominates) |
 | R large and negative | **Edge** (one eigenvalue dominates → det $\approx$ 0, trace² large → R negative) |
-| $|R|$ small | **Flat region** (both eigenvalues small → both terms near zero) |
+| $\vert R\vert$ small | **Flat region** (both eigenvalues small → both terms near zero) |
 
 Expanding R in terms of eigenvalues:
 

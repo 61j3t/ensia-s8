@@ -117,13 +117,13 @@ ROC = entire z-plane except $z = 0$.
 | Sequence $x[n]$ | Transform $X(z)$ | ROC |
 |---|---|---|
 | $\delta[n]$ | $1$ | All $z$ |
-| $\delta[n - m]$ | $z^{-m}$ | $|z| > 0$ ($m > 0$); $|z| < \infty$ ($m < 0$) |
-| $a^n u[n]$ | $\dfrac{1}{1 - a z^{-1}}$ | $|z| > |a|$ |
-| $-a^n u[-n-1]$ | $\dfrac{1}{1 - a z^{-1}}$ | $|z| < |a|$ |
-| $n a^n u[n]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| > |a|$ |
-| $-n a^n u[-n-1]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $|z| < |a|$ |
-| $a^n \cos(bn) u[n]$ | $\dfrac{1 - a\cos(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
-| $a^n \sin(bn) u[n]$ | $\dfrac{a\sin(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $|z| > |a|$ |
+| $\delta[n - m]$ | $z^{-m}$ | $\vert z\vert  > 0$ ($m > 0$); $\vert z\vert  < \infty$ ($m < 0$) |
+| $a^n u[n]$ | $\dfrac{1}{1 - a z^{-1}}$ | $\vert z\vert  > \vert a\vert$ |
+| $-a^n u[-n-1]$ | $\dfrac{1}{1 - a z^{-1}}$ | $\vert z\vert  < \vert a\vert$ |
+| $n a^n u[n]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $\vert z\vert  > \vert a\vert$ |
+| $-n a^n u[-n-1]$ | $\dfrac{a z^{-1}}{(1 - a z^{-1})^2}$ | $\vert z\vert  < \vert a\vert$ |
+| $a^n \cos(bn) u[n]$ | $\dfrac{1 - a\cos(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $\vert z\vert  > \vert a\vert$ |
+| $a^n \sin(bn) u[n]$ | $\dfrac{a\sin(b) z^{-1}}{1 - 2a\cos(b) z^{-1} + a^2 z^{-2}}$ | $\vert z\vert  > \vert a\vert$ |
 
 **Critical observation:** $a^n u[n]$ and $-a^n u[-n-1]$ give the SAME algebraic $X(z) = 1/(1-az^{-1})$ but with DIFFERENT ROCs ($|z|>|a|$ vs $|z|<|a|$). The ROC distinguishes which signal is meant.
 
@@ -399,9 +399,9 @@ From Example 5.8 analysis (poles at $0.8$ and $1.25$):
 
 | ROC | $h[n]$ | Causal? | Stable? |
 |---|---|---|---|
-| $|z| > 1.25$ | $(2(0.8)^n - 3(1.25)^n) u[n]$ | Yes | No (pole outside unit circle) |
-| $0.8 < |z| < 1.25$ | $2(0.8)^n u[n] + 3(1.25)^n u[-n-1]$ | No | Yes (unit circle in ROC) |
-| $|z| < 0.8$ | $(-2(0.8)^n + 3(1.25)^n) u[-n-1]$ | No | No |
+| $\vert z\vert  > 1.25$ | $(2(0.8)^n - 3(1.25)^n) u[n]$ | Yes | No (pole outside unit circle) |
+| $0.8 < \vert z\vert  < 1.25$ | $2(0.8)^n u[n] + 3(1.25)^n u[-n-1]$ | No | Yes (unit circle in ROC) |
+| $\vert z\vert  < 0.8$ | $(-2(0.8)^n + 3(1.25)^n) u[-n-1]$ | No | No |
 
 **Rules**:
 - **Causal** system: $h[n] = 0$ for $n < 0$ $\Leftrightarrow$ ROC is exterior of circle beyond the outermost pole (right-sided, P5).
