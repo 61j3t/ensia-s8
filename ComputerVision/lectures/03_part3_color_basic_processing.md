@@ -69,11 +69,8 @@ Key insight: **2% of cones are blue-sensitive (S) yet they are the most sensitiv
 A color is perceived through **simultaneous stimulation** of all three cone types. The brain receives three numbers — the **tristimulus values** S, M, L:
 
 $$S = \int I(\lambda)\, S(\lambda)\, d\lambda$$
-
 $$M = \int I(\lambda)\, M(\lambda)\, d\lambda$$
-
 $$L = \int I(\lambda)\, L(\lambda)\, d\lambda$$
-
 Where:
 - $I(\lambda)$ = incoming light spectrum (spectral power distribution).
 - $S(\lambda), M(\lambda), L(\lambda)$ = cone sensitivity functions.
@@ -229,9 +226,7 @@ To eliminate the **negative values** in the CIE RGB color matching functions, th
 These primaries are **mathematical constructs** — they do not correspond to real physical light sources. You cannot build a lamp that emits "pure X light."
 
 **RGB → XYZ conversion matrix**:
-
 $$\begin{bmatrix} X \\\\ Y \\\\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\\\ 0.17697 & 0.81240 & 0.01063 \\\\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\\\ G \\\\ B \end{bmatrix}$$
-
 Or compactly: $[X, Y, Z]^T = M \cdot [R, G, B]^T$
 
 Key property: **Y corresponds to luminance**.
@@ -254,9 +249,7 @@ Limitations:
 #### 7.3 Chromaticity coordinates
 
 Dividing XYZ values by their sum removes the luminance component:
-
 $$x = \frac{X}{X+Y+Z}, \quad y = \frac{Y}{X+Y+Z}, \quad z = \frac{Z}{X+Y+Z}$$
-
 Note: $x + y + z = 1$, so $z = 1 - x - y$. Only **two coordinates $(x, y)$ are needed** to fully describe chromaticity. This gives the **CIE 1931 chromaticity diagram**.
 
 ---
@@ -343,13 +336,9 @@ In **OpenCV** (slightly different encoding):
 ### 10. RGB → HSV Conversion (Full Algorithm)
 
 **Step 1**: Normalize RGB to $[0, 1]$:
-
 $$r = \frac{R}{255}, \quad g = \frac{G}{255}, \quad b = \frac{B}{255}$$
-
 **Step 2**: Compute Value:
-
 $$V = \max(r, g, b)$$
-
 **Step 3**: Compute Saturation:
 - If $V = 0$ (color is black): $S = 0$.
 - Otherwise: $S = \frac{V - \min(r, g, b)}{V}$
@@ -358,9 +347,7 @@ $$V = \max(r, g, b)$$
 - Let $\Delta = V - \min(r, g, b)$
 - If $\Delta = 0$: $H = 0$ (achromatic).
 - Otherwise:
-
 $$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\\\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\\\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}$$
-
 - If $H$ is negative, add 360° to bring into $[0°, 360°]$.
 
 **Intuition**:
@@ -371,17 +358,11 @@ $$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \t
 **RGB → HSV is not creating new information; it reorganizes color information into perceptual dimensions.**
 
 #### Worked example: RGB(255, 0, 0) → HSV
-
 $$\text{Normalize:} \quad r = 1,\; g = 0,\; b = 0$$
-
 $$V = \max(1, 0, 0) = 1$$
-
 $$S = \frac{1 - 0}{1} = 1$$
-
 $$\Delta = 1 - 0 = 1$$
-
 $$V = r, \text{ so } H = 0° + 60° \times \frac{0 - 0}{1} = 0°$$
-
 **Result: HSV(0°, 100%, 100%) — pure red**
 
 ---
@@ -393,13 +374,9 @@ A four-step process ($H$ in $[0°, 360°]$, $S$ and $V$ in $[0, 1]$):
 **Step 1 — Input normalization**: ensure $H \in [0°, 360°]$, $S$ and $V \in [0, 1]$.
 
 **Step 2 — Compute base values**:
-
 $$C = V \times S$$
-
 $$X = C \times \left(1 - \left|\left(\frac{H}{60°}\right) \bmod 2 - 1\right|\right)$$
-
 $$m = V - C$$
-
 **Step 3 — Assign pre-shift RGB based on hue sector**:
 
 | Hue range | $(R', G', B')$ |
@@ -412,7 +389,6 @@ $$m = V - C$$
 | $300° \leq H < 360°$ | $(C, 0, X)$ |
 
 **Step 4 — Adjust to $[0, 255]$**:
-
 $$R = (R' + m) \times 255, \quad G = (G' + m) \times 255, \quad B = (B' + m) \times 255$$
 
 ---

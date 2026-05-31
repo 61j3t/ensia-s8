@@ -135,6 +135,7 @@ As $\sigma$ increases across the slides, for a given blob:
 **Critical property:** The characteristic scale is **proportional to the blob size**:
 
 $$
+
 \frac{\text{size of blob A}}{\text{size of blob B}} = \frac{\sigma^{\ast}_A}{\sigma^{\ast}_B} \qquad , \qquad \frac{\text{size of blob B}}{\text{size of blob C}} = \frac{\sigma^{\ast}_B}{\sigma^{\ast}_C}
 $$
 
@@ -153,12 +154,14 @@ $$
 In 2D, the 2nd derivative generalizes to the **Laplacian**:
 
 $$
+
 \nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}
 $$
 
 The **Normalized Laplacian of Gaussian (NLoG)** is used:
 
 $$
+
 \text{NLoG} = \sigma^2 \cdot \nabla^2 n_{\sigma}
 $$
 
@@ -178,6 +181,7 @@ where $n_{\sigma}$ is a 2D isotropic Gaussian. Visually:
 **Scale space $S(x,y,\sigma)$:** A stack of images created by filtering with different values of $\sigma$:
 
 $$
+
 S(x, y, \sigma) = n(x, y, \sigma) \ast I(x, y)
 $$
 
@@ -196,6 +200,7 @@ Computing NLoG at many scales is expensive. Lowe's key insight: the **Difference
 **DoG definition:**
 
 $$
+
 \text{DoG} = (n_{s\sigma} - n_{\sigma}) \approx (s - 1) \cdot \sigma^2 \cdot \nabla^2 n_{\sigma}
 $$
 
@@ -204,6 +209,7 @@ where $s > 1$ is the scale factor between adjacent Gaussian levels (a constant m
 Therefore:
 
 $$
+
 \text{DoG} \approx (s - 1) \cdot \text{NLoG}
 $$
 
@@ -230,10 +236,12 @@ SIFT builds a **scale-space pyramid** with two nested levels of scale:
 **Structure within one octave (fixed spatial resolution):**
 
 $$
+
 \text{Gaussian images at scales:} \quad \sigma,\ s\sigma,\ s^2\sigma,\ \ldots,\ s^k\sigma
 $$
 
 $$
+
 \text{DoG images (differences):} \quad D_1 = s\sigma - \sigma,\quad D_2 = s^2\sigma - s\sigma,\quad \ldots
 $$
 
@@ -250,6 +258,7 @@ Starting from the original image, blurs are applied at scales $\sigma$, $s\sigma
 Each keypoint has a characteristic scale $\sigma$ and comes from a specific octave. When visualizing the blob back in the original image, the circle radius is:
 
 $$
+
 r_{\text{display}} \approx \sqrt{2} \cdot \sigma \cdot 2^{\text{octave}}
 $$
 
@@ -282,6 +291,7 @@ Once the DoG pyramid is built, **local extrema** are detected across the 3D scal
 Detected extrema are at discrete pixel and scale locations. Lowe refines them using a **Taylor expansion** of the DoG function $D(x, y, \sigma)$ around the candidate:
 
 $$
+
 D(\mathbf{x}) \approx D + \left(\frac{\partial D}{\partial \mathbf{x}}\right)^T \mathbf{x} + \frac{1}{2} \mathbf{x}^T \frac{\partial^2 D}{\partial \mathbf{x}^2} \mathbf{x}
 $$
 
@@ -294,12 +304,14 @@ Setting the derivative to zero gives the refined offset $\hat{\mathbf{x}}$. If $
 2. **Edge response:** Blobs on edges (elongated structures) are unstable — small position errors along the edge lead to large descriptor changes. SIFT checks the **ratio of principal curvatures** using the Hessian matrix $H$ of the DoG image:
 
 $$
+
 H = \begin{pmatrix} D_{xx} & D_{xy} \\\\ D_{xy} & D_{yy} \end{pmatrix}
 $$
 
 The ratio of eigenvalues $\lambda_1/\lambda_2$ can be computed from the trace and determinant. The keypoint is rejected if:
 
 $$
+
 \frac{(\text{Tr}(H))^2}{\text{Det}(H)} > \frac{(r+1)^2}{r}
 $$
 
@@ -317,10 +329,12 @@ After localizing the keypoint at $(x^{\ast}, y^{\ast}, \sigma^{\ast})$, SIFT ass
 2. Compute the **gradient magnitude and direction** at each pixel in a neighborhood around the keypoint:
 
 $$
+
 m(x, y) = \sqrt{(L(x+1,y) - L(x-1,y))^2 + (L(x,y+1) - L(x,y-1))^2}
 $$
 
 $$
+
 \theta(x, y) = \tan^{-1}\!\left(\frac{\partial I/\partial y}{\partial I/\partial x}\right)
 $$
 

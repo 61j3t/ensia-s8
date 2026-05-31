@@ -21,19 +21,14 @@ A **spatial filter** (neighborhood operator) computes the output pixel $g(x, y)$
 For a **linear spatial filter** with coefficient matrix W of half-size $a \times b$:
 
 $$g(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x + s, y + t)$$
-
 - The filter is defined by the kernel W (a $(2a+1) \times (2b+1)$ matrix of weights).
 - The same kernel is slid over every position in the image (shift-invariant application).
 - The output pixel sits at the center of the neighborhood.
 
 **Expanded example for a 3×3 kernel** (indices s,t run from -1 to +1):
-
 $$g(x, y) = w(-1,-1)\cdot f(x-1, y-1) + w(-1,0)\cdot f(x-1, y) + w(-1,1)\cdot f(x-1, y+1)$$
-
 $$+ w(0,-1)\cdot f(x, y-1) + w(0,0)\cdot f(x, y) + w(0,1)\cdot f(x, y+1)$$
-
 $$+ w(1,-1)\cdot f(x+1, y-1) + w(1,0)\cdot f(x+1, y) + w(1,1)\cdot f(x+1, y+1)$$
-
 ---
 
 ### 2. Properties of linear filters
@@ -46,9 +41,7 @@ A filter R is **linear** if it satisfies both:
 | **Scaling (homogeneity)** | R(kf) = k·R(f) | Scaling the image scales the output by the same factor |
 
 A filter is **shift-invariant** if:
-
 $$R\bigl(f(x - x_0)\bigr) = R(f)(x - x_0)$$
-
 The response to a shifted input is just a shift of the response — same behavior everywhere.
 
 **Key theorem:** A filter that is linear AND shift-invariant can be implemented as a **convolution**.
@@ -60,13 +53,9 @@ The response to a shifted input is just a shift of the response — same behavio
 #### 3.1 Average filter
 
 Replaces each pixel by the mean of all pixels in a $(2k+1) \times (2k+1)$ neighborhood:
-
 $$R_{ij} = \frac{1}{(2k+1)^2} \sum_{u=i-k}^{i+k} \sum_{v=j-k}^{j+k} f_{uv}$$
-
 The kernel is all-ones scaled by $1/n^2$. For $k=1$ (3×3):
-
 $$\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\\\ 1 & 1 & 1 \\\\ 1 & 1 & 1 \end{bmatrix}$$
-
 **Visual effect (from slides):**
 - 3×3: mild smoothing, barely visible blur.
 - 5×5: clear smoothing, fine texture begins to disappear.
@@ -80,13 +69,9 @@ $$\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\\\ 1 & 1 & 1 \\\\ 1 & 1 & 1 \end{bmatr
 A weighted average where closer pixels receive higher weight, following a 2D Gaussian bell shape:
 
 **Continuous form:**
-
 $$h(x, y) = \exp\!\left(-\frac{x^2 + y^2}{2\sigma^2}\right)$$
-
 **Discrete kernel** of size $(2k+1) \times (2k+1)$: the $(i, j)$-th entry is:
-
 $$H_{ij} = \frac{1}{2\pi\sigma^2} \exp\!\left(-\frac{(i-k-1)^2 + (j-k-1)^2}{2\sigma^2}\right)$$
-
 The kernel is then normalized so its entries sum to 1 before use.
 
 **Role of sigma:**
@@ -119,13 +104,9 @@ The goal of sharpening is to **highlight transitions in intensity** (edges). Sha
 Since images are discrete, derivatives are approximated by **finite differences**:
 
 **First-order derivative (1D):**
-
 $$\frac{df}{dx} \approx f(x+1) - f(x)$$
-
 **Second-order derivative (1D):**
-
 $$\frac{d^2f}{dx^2} \approx f(x+1) + f(x-1) - 2f(x)$$
-
 **Interpretation (from scan-line example in slides):**
 - Along a flat region (constant intensity): first derivative = 0, second derivative = 0.
 - Along a ramp: first derivative is nonzero and constant, second derivative = 0 in the interior.
@@ -150,31 +131,21 @@ A practical sharpening pipeline:
 The **Laplacian** is the simplest **isotropic** second-order derivative operator (responds equally in all directions — no directional preference for horizontal, vertical, or diagonal).
 
 **Continuous definition:**
-
 $$\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}$$
-
 **Discrete form (finite differences in both axes):**
-
 $$\nabla^2 f(x,y) = f(x+1, y) + f(x-1, y) + f(x, y+1) + f(x, y-1) - 4f(x, y)$$
-
 Since the Laplacian is a linear operator, it can be implemented as a convolution with the following kernels:
 
 **4-neighbor Laplacian kernel (isotropic for 90° increments):**
-
 $$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
-
 **8-neighbor Laplacian kernel (isotropic for 45° increments — includes diagonals):**
-
 $$\begin{bmatrix} 1 & 1 & 1 \\\\ 1 & -8 & 1 \\\\ 1 & 1 & 1 \end{bmatrix}$$
-
 The 8-neighbor version adds two diagonal difference terms to capture edges at 45°.
 
 **Sharpening with the Laplacian:**
 
 The Laplacian highlights intensity discontinuities and suppresses slow gradients. To sharpen while preserving background:
-
 $$g(x, y) = f(x, y) + c \cdot \nabla^2 f(x, y)$$
-
 where $c = +1$ if the Laplacian kernel has a negative center (as above), or $c = -1$ if the center is positive. This adds edge information back to the original.
 
 **Worked example (moon image, from slides):** Original moon image → Laplacian response (grey background, white/dark rings at crater edges) → adding back gives sharpened image with clearly defined crater walls.
@@ -182,9 +153,7 @@ where $c = +1$ if the Laplacian kernel has a negative center (as above), or $c =
 **Sharpening kernels** that combine original + Laplacian in a single convolution step:
 
 For the 4-neighbor version, the combined kernel is:
-
 $$\begin{bmatrix} 0 & -1 & 0 \\\\ -1 & 5 & -1 \\\\ 0 & -1 & 0 \end{bmatrix}$$
-
 (center becomes $1 + 4 = 5$ because $g = f - \nabla^2 f$, adjusting sign convention)
 
 ---
@@ -234,17 +203,11 @@ A non-linear, **edge-preserving** smoothing filter. Unlike Gaussian smoothing (w
 - **Intensity similarity** (pixels with similar intensity matter more)
 
 **Formula:**
-
 $$I'(x) = \frac{1}{W_p} \sum_{x_i \in N(x)} I(x_i) \cdot f_s(\|x_i - x\|) \cdot f_r(|I(x_i) - I(x)|)$$
-
 where:
-
 $$f_s(\|x_i - x\|) = \exp\!\left(-\frac{\|x_i - x\|^2}{2\sigma_s^2}\right) \quad \text{[spatial Gaussian]}$$
-
 $$f_r(|I(x_i) - I(x)|) = \exp\!\left(-\frac{|I(x_i) - I(x)|^2}{2\sigma_r^2}\right) \quad \text{[range/intensity Gaussian]}$$
-
 $$W_p = \sum_{x_i} f_s(\cdots) \cdot f_r(\cdots) \quad \text{[normalization]}$$
-
 | Parameter | Effect |
 |---|---|
 | $\sigma_s$ | Spatial spread — how large the spatial neighborhood is |
@@ -263,15 +226,11 @@ $$W_p = \sum_{x_i} f_s(\cdots) \cdot f_r(\cdots) \quad \text{[normalization]}$$
 Both operations slide a filter mask over an image and compute inner products at each location. The difference is whether the mask is flipped first.
 
 **Correlation** (symbol: ⊗):
-
 $$(w \otimes f)(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x + s, y + t)$$
-
 The mask moves in the same direction as the shift — no rotation.
 
 **Convolution** (symbol: *):
-
 $$(w \ast f)(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x - s, y - t)$$
-
 The mask is **rotated 180°** before the shift (equivalently, the image coordinates are negated in the sum).
 
 #### 6.2 Key distinction
@@ -337,13 +296,9 @@ The mask appears **unrotated** — a direct copy of w at the impulse location.
 #### 7.1 SSD-based matching
 
 To locate a template w in image f, compute the **Sum of Squared Differences** at every candidate position $(i, j)$:
-
 $$E[i, j] = \sum_{s=-a}^{a} \sum_{t=-b}^{b} \bigl[w(s,t) - f(i+s, j+t)\bigr]^2$$
-
 Expanding:
-
 $$E[i,j] = \sum w(s,t)^2 + \sum f(i+s,j+t)^2 - 2 \sum w(s,t) \cdot f(i+s,j+t)$$
-
 - The first term is constant (template energy, fixed).
 - Minimizing $E[i,j]$ is equivalent to **maximizing** the cross-correlation term $\sum w(s,t)\cdot f(i+s,j+t) = (w \otimes f)(i,j)$.
 
@@ -358,7 +313,6 @@ Raw correlation is a **dot product** between the vectorized template and the vec
 #### 7.3 Normalized correlation (solution)
 
 Divide by the magnitudes of both the template and the image patch:
-
 $$N_{wf}[i,j] = \frac{\displaystyle\sum_{s,t} w(s,t)\cdot f(i+s, j+t)}{\sqrt{\displaystyle\sum_{s,t} w(s,t)^2} \cdot \sqrt{\displaystyle\sum_{s,t} f(i+s, j+t)^2}}$$
 
 This is the **cosine similarity** between the template vector and the image-patch vector. It lies in $[-1, 1]$ and is **insensitive to brightness** (absolute intensity magnitude cancels out).

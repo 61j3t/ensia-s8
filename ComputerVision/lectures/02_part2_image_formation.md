@@ -70,7 +70,6 @@ Key insight: **Brightness is NOT luminance.** Two patches with identical luminan
 When light hits a surface it scatters and reflects. The most general model for this interaction is the **Bidirectional Reflectance Distribution Function (BRDF)**:
 
 $$f_r(\theta_i, \phi_i, \theta_r, \phi_r, \lambda)$$
-
 A 5-dimensional function parameterised by:
 - $(\theta_i, \phi_i)$: polar angles of the **incoming** light direction relative to the surface normal
 - $(\theta_r, \phi_r)$: polar angles of the **reflected** (outgoing) direction
@@ -162,9 +161,7 @@ The sensor array is placed at the focal plane of the lens. Each sensor cell prod
 #### 6.1 Formal definition
 
 An image is modelled as a function:
-
 $$I : \Omega \subset \mathbb{R}^2 \to \mathbb{R}$$
-
 where:
 - **Domain** $\Omega$ is a (usually rectangular) subset of the real image plane (continuous spatial coordinates)
 - **Codomain** $\mathbb{R}$ is the set of possible intensity values
@@ -185,9 +182,7 @@ A continuous real image $I(x, y)$ must be converted to a digital image through t
 #### 7.1 Sampling (spatial discretisation)
 
 **Definition**: reduces the (continuous) image domain $\mathbb{R}^2$ to a finite set of $M \times N$ spatial coordinates.
-
 $$\text{Sampling}: \mathbb{R}^2 \to M \times N$$
-
 In practice, an **equi-spaced grid** of values (a matrix) is used. This reflects the regular arrangement of cells in a CMOS or CCD sensor. Each sample point is called a **pixel** (picture element).
 
 Visually: a continuous smooth shape on the left becomes a pixelated grid representation on the right when overlaid with a coarse sampling grid.
@@ -195,9 +190,7 @@ Visually: a continuous smooth shape on the left becomes a pixelated grid represe
 #### 7.2 Quantization (intensity discretisation)
 
 **Definition**: reduces the continuous sensor response (function codomain) to a finite set of $b$-bit integer values.
-
 $$\text{Quantization}: \mathbb{R} \to \{0, 1, 2, \ldots, 2^b - 1\}$$
-
 The continuous intensity range is divided into $2^b$ equal intervals; each $f(x, y)$ is rounded to the nearest discrete level. This is illustrated by the 3-bit quantization graph: a smooth sinusoidal analog input (blue) becomes a staircase digital output (red) with 8 discrete levels (000 through 111).
 
 **Combined effect**: the continuous blob image, when first sampled (fine grid) and then quantized (coarser grey levels), produces the blocky pixelated representation seen on slides 41.
@@ -251,11 +244,8 @@ A system can have wide dynamic range but coarse intensity resolution (few steps 
 ### 9. Memory requirements for a digital image
 
 For a digital image of size $M \times N$ pixels with $b$ bits per pixel:
-
 $$\text{Storage} = M \times N \times b \text{ bits} = \frac{M \times N \times b}{8} \text{ bytes}$$
-
 For colour images (3 channels RGB):
-
 $$\text{Storage} = M \times N \times b \times 3 \text{ bits}$$
 
 Example: a 1920 × 1080 × 8-bit greyscale image requires $1920 \times 1080 \times 1 = 2{,}073{,}600$ bytes $\approx$ 2 MB (uncompressed).

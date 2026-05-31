@@ -52,12 +52,14 @@ where $(u, v)$ is the displacement (flow vector) at pixel $(x, y)$ between frame
 Expand $I(x+u, y+v, t+1)$ by first-order Taylor series around $(x, y, t)$:
 
 $$
+
 I(x+u, y+v, t+1) \approx I(x,y,t) + I_x \cdot u + I_y \cdot v + I_t
 $$
 
 Substituting into the brightness-constancy equation and cancelling $I(x,y,t)$:
 
 $$
+
 I_x \cdot u + I_y \cdot v + I_t = 0 \qquad \text{[OFCE]}
 $$
 
@@ -93,6 +95,7 @@ This gives a system of $n$ equations (one OFCE per pixel in the window):
 
 
 $$
+
 \begin{aligned}
 I_x(q_1) V_x + I_y(q_1) V_y &= -I_t(q_1) \\\\
 I_x(q_2) V_x + I_y(q_2) V_y &= -I_t(q_2) \\\\
@@ -104,6 +107,7 @@ $$
 In matrix form: $\mathbf{A} \mathbf{v} = \mathbf{b}$, where:
 
 $$
+
 \mathbf{A} = \begin{bmatrix} I_x(q_1) & I_y(q_1) \\\\ I_x(q_2) & I_y(q_2) \\\\ \vdots & \vdots \\\\ I_x(q_n) & I_y(q_n) \end{bmatrix}, \quad
 \mathbf{v} = \begin{bmatrix} V_x \\\\ V_y \end{bmatrix}, \quad
 \mathbf{b} = \begin{bmatrix} -I_t(q_1) \\\\ -I_t(q_2) \\\\ \vdots \\\\ -I_t(q_n) \end{bmatrix}
@@ -114,6 +118,7 @@ $$
 The system is overdetermined ($n \gg 2$), so solve via least squares $\mathbf{A}^\top \mathbf{A} \mathbf{v} = \mathbf{A}^\top \mathbf{b}$:
 
 $$
+
 \begin{bmatrix} V_x \\\\ V_y \end{bmatrix} = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\\\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}^{-1} \begin{bmatrix} -\sum I_x I_t \\\\ -\sum I_y I_t \end{bmatrix}
 $$
 
@@ -148,6 +153,7 @@ The 2×2 matrix $M = \mathbf{A}^\top \mathbf{A}$ is the **structure tensor** (sa
 Rather than restricting to a local window, Horn-Schunck adds a **global smoothness term**. The energy to minimize is:
 
 $$
+
 E = \iint \left[ (I_x u + I_y v + I_t)^2 + \alpha^2 \left( \|\nabla u\|^2 + \|\nabla v\|^2 \right) \right] dx\, dy
 $$
 
@@ -162,12 +168,14 @@ Minimizing $E$ with respect to $u$ and $v$ leads to coupled Euler-Lagrange equat
 2. Compute the update scalar:
 
 $$
+
 \text{update} = \frac{I_x \bar{u}_i + I_y \bar{v}_i + I_t}{\alpha^2 + I_x^2 + I_y^2}
 $$
 
 3. Update the flow:
 
 $$
+
 u_{i+1} = \bar{u}_i - I_x \cdot \text{update}, \qquad v_{i+1} = \bar{v}_i - I_y \cdot \text{update}
 $$
 
@@ -288,6 +296,7 @@ A motion model predicts the next position from previous positions.
 State uncertainty is modeled probabilistically. The posterior $p(x_t \mid z_{1:t})$ (distribution over position given all observations) is updated using:
 
 $$
+
 \text{Posterior} \propto \text{Measurement likelihood} \times \text{Predicted prior}
 $$
 
@@ -308,6 +317,7 @@ Track by finding the position in the next frame that best matches the object tem
 **SSD (Sum of Squared Differences):**
 
 $$
+
 R(x, y) = \sum_{x',y'} \bigl(T(x', y') - I(x+x', y+y')\bigr)^2
 $$
 
@@ -316,6 +326,7 @@ Minimum of $R$ = best match position.
 **Correlation:**
 
 $$
+
 R(x, y) = \sum_{x',y'} T(x', y') \cdot I(x+x', y+y')
 $$
 
@@ -324,6 +335,7 @@ Maximum = best match.
 **Normalized Cross-Correlation (NCC):**
 
 $$
+
 R(x, y) = \frac{1}{n \sigma_I \sigma_T} \sum_{x,y} \bigl(I(x,y) - \mu_I\bigr)\bigl(T(x,y) - \mu_T\bigr)
 $$
 
@@ -352,6 +364,7 @@ Invariant to linear illumination changes. NCC produces much sharper, more discri
 **Bhattacharyya distance** measures similarity between two histograms $p$ and $q$:
 
 $$
+
 \rho(p, q) = \sum_{i=1}^{B} \sqrt{p_i \cdot q_i}
 $$
 
@@ -435,6 +448,7 @@ This is **tracking as detection**: instead of storing a fixed template, a classi
 **Formulation:** correlation is convolution with a flipped signal. In the **Fourier domain**, correlation becomes element-wise multiplication:
 
 $$
+
 G = F \star H \quad \Rightarrow \quad \hat{G} = \hat{F} \odot \overline{\hat{H}}
 $$
 
@@ -447,6 +461,7 @@ This allows computing correlation over the entire search region in $O(n \log n)$
 **Discriminative Correlation Filters (DCF):** instead of using the raw object appearance as the filter, **learn** the filter $F$ such that:
 
 $$
+
 \arg\min_{F} \| T \star F - G \|^2
 $$
 

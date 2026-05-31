@@ -26,20 +26,25 @@ DTFT is a frequency analysis tool for **aperiodic discrete-time signals**.
 $$
 X(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\omega n}
 $$
+
 *(Eq. 4.1)*
 
 **Derivation sketch:** Construct the continuous-time sampled signal with sampling interval $T$:
 
 $$
+
 x_s(t) = \sum_{n=-\infty}^{\infty} x[n]\, \delta(t - nT)
 $$
+
 *(Eq. 4.2)*
 
 Taking the Fourier transform and using the sifting property of $\delta(t)$:
 
 $$
+
 X_s(j\Omega) = \int_{-\infty}^{\infty} x_s(t)\, e^{-j\Omega t}\, dt = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\Omega nT}
 $$
+
 *(Eq. 4.3)*
 
 Define **$\omega = \Omega T$** as the discrete-time frequency parameter. Writing $X_s(j\Omega)$ as $X(e^{j\omega})$ recovers eq. (4.1).
@@ -47,18 +52,22 @@ Define **$\omega = \Omega T$** as the discrete-time frequency parameter. Writing
 **Synthesis equation (Inverse DTFT):**
 
 $$
+
 x[n] = \frac{1}{2\pi} \int_{-\pi}^{\pi} X(e^{j\omega})\, e^{j\omega n}\, d\omega
 $$
+
 *(Eq. 4.4)*
 
 **Proof of inverse:** Substituting (4.1) into (4.4):
 
 $$
+
 \frac{1}{2\pi} \int_{-\pi}^{\pi} \left[\sum_m x[m]\, e^{-j\omega m}\right] e^{j\omega n}\, d\omega
 = \frac{1}{2\pi} \sum_m x[m] \int_{-\pi}^{\pi} e^{j\omega(n-m)}\, d\omega
 = \frac{1}{2\pi} \sum_m x[m] \cdot \frac{2\sin((n-m)\pi)}{n-m}
 = x[n]
 $$
+
 *(Eq. 4.5)*
 
 (The integral evaluates to $2\pi$ when $n = m$ and $0$ otherwise — the discrete orthogonality condition.)
@@ -69,13 +78,17 @@ $$
 - $X(e^{j\omega})$ is generally **complex-valued**. Represent using:
 
 $$
+
 |X(e^{j\omega})| = \sqrt{\left[\operatorname{Re}\{X(e^{j\omega})\}\right]^2 + \left[\operatorname{Im}\{X(e^{j\omega})\}\right]^2}
 $$
+
 *(Eq. 4.6)*
 
 $$
+
 \angle X(e^{j\omega}) = \arctan\!\left(\frac{\operatorname{Im}\{X(e^{j\omega})\}}{\operatorname{Re}\{X(e^{j\omega})\}}\right)
 $$
+
 *(Eq. 4.7)*
 
 Both the magnitude spectrum and phase spectrum are continuous and $2\pi$-periodic.
@@ -87,8 +100,10 @@ Both the magnitude spectrum and phase spectrum are continuous and $2\pi$-periodi
 The DTFT converges if:
 
 $$
+
 |X(e^{j\omega})| \leq \sum_{n=-\infty}^{\infty} |x[n]| \cdot |e^{-j\omega n}| = \sum_{n=-\infty}^{\infty} |x[n]| < \infty
 $$
+
 *(Eq. 4.8)*
 
 This is the **absolute summability** condition.
@@ -104,6 +119,7 @@ $H(e^{j\omega})$ is also called the **system frequency response**.
 **Example 4.1 — DTFT of unit step $u[n]$:**
 
 $$
+
 X(e^{j\omega}) = \sum_{n=0}^{\infty} e^{-j\omega n}
 $$
 
@@ -118,28 +134,33 @@ Equivalently: $\sum |u[n]| = \infty$ → stability condition fails → DTFT does
 The sequence has $x[n] = 1$ for $n = 0, 1, \ldots, N-1$ and $0$ otherwise.
 
 $$
+
 X(e^{j\omega}) = \sum_{n=0}^{N-1} e^{-j\omega n} = \frac{1 - e^{-j\omega N}}{1 - e^{-j\omega}}
 $$
 
 To obtain closed-form magnitude and phase, factor out $e^{-j\omega N/2}$ and $e^{-j\omega/2}$:
 
 $$
+
 X(e^{j\omega}) = e^{-j\omega(N-1)/2} \cdot \frac{\sin(\omega N/2)}{\sin(\omega/2)}
 $$
 
 Therefore:
 
 $$
+
 |X(e^{j\omega})| = \left|\frac{\sin(\omega N/2)}{\sin(\omega/2)}\right|
 $$
 
 $$
+
 \angle X(e^{j\omega}) = -\frac{\omega(N-1)}{2} + \angle\!\left[\frac{\sin(\omega N/2)}{\sin(\omega/2)}\right]
 $$
 
 Using the sinc function $\operatorname{sinc}(u) = \sin(\pi u)/(\pi u)$, this can be rewritten as:
 
 $$
+
 \frac{\sin(\omega N/2)}{\sin(\omega/2)} = N \cdot \frac{\operatorname{sinc}(\omega N/(2\pi))}{\operatorname{sinc}(\omega/(2\pi))}
 $$
 
@@ -152,6 +173,7 @@ $$
 Given $X(e^{j\omega}) = 1$ for $-\omega_0 < \omega < \omega_0$ and $0$ otherwise (ideal lowpass, $0 < \omega_0 < \pi$):
 
 $$
+
 x[n] = \frac{1}{2\pi} \int_{-\omega_0}^{\omega_0} e^{j\omega n}\, d\omega = \frac{\sin(\omega_0 n)}{\pi n} = \frac{\omega_0}{\pi}\operatorname{sinc}(\omega_0 n/\pi)
 $$
 
@@ -166,6 +188,7 @@ Given $X(e^{j\omega}) = e^{-j2\omega} / (1 + 0.7 e^{-j\omega})$.
 Recognising that $1/(1+0.7 e^{-j\omega})$ is the DTFT of $(-0.7)^n u[n]$ and $e^{-j2\omega}$ corresponds to a 2-sample delay:
 
 $$
+
 x[n] = (-0.7)^{n-2}\, u[n-2]
 $$
 
@@ -176,12 +199,14 @@ $$
 **Frequency response definition:**
 
 $$
+
 H(e^{j\omega}) = \sum_{n=-\infty}^{\infty} h[n]\, e^{-j\omega n}, \qquad -\pi < \omega \leq \pi
 $$
 
 **Eigenfunction property:** If $x[n] = e^{j\omega_0 n}$ (complex exponential), then:
 
 $$
+
 y[n] = H(e^{j\omega_0})\, e^{j\omega_0 n}
 $$
 
@@ -190,6 +215,7 @@ The complex exponential $e^{j\omega_0 n}$ is an eigenfunction of any LTI system;
 **Sinusoidal input:** If $x[n] = A\cos(\omega_0 n + \varphi)$, then by Euler's formula and linearity:
 
 $$
+
 y[n] = A\,|H(e^{j\omega_0})|\cos\!\left(\omega_0 n + \varphi + \arg H(e^{j\omega_0})\right)
 $$
 
@@ -222,6 +248,7 @@ DTFT properties follow from the z-transform (evaluated on the unit circle). ROC 
 Differentiating $X(e^{j\omega}) = \sum x[n]\, e^{-j\omega n}$ with respect to $\omega$:
 
 $$
+
 \frac{dX(e^{j\omega})}{d\omega} = \sum x[n]\, (-jn)\, e^{-j\omega n} \quad \Rightarrow \quad nx[n] \longleftrightarrow j\,\frac{dX(e^{j\omega})}{d\omega}
 $$
 
@@ -230,8 +257,10 @@ Equivalently, using the chain rule: $-e^{j\omega} dX/d(e^{j\omega}) = j\, dX/d\o
 **Convolution (property 7) — LTI application:**
 
 $$
+
 y[n] = x[n] \ast h[n] \quad\longleftrightarrow\quad Y(e^{j\omega}) = X(e^{j\omega})\, H(e^{j\omega})
 $$
+
 *(Eq. 4.16)*
 
 Convolution in time = multiplication in frequency. This is the fundamental theorem underlying all LTI filter design.
@@ -241,11 +270,13 @@ Convolution in time = multiplication in frequency. This is the fundamental theor
 **Parseval's relation (property 9) — proof:**
 
 $$
+
 \sum_{n=-\infty}^{\infty} |x[n]|^2 = \sum x[n]\, x^{\ast}[n]
 = \sum x[n] \left[\frac{1}{2\pi} \int X(e^{j\omega})\, e^{j\omega n}\, d\omega\right]^{\ast}
 = \frac{1}{2\pi} \int X^{\ast}(e^{j\omega}) \left[\sum x[n]\, e^{-j\omega n}\right] d\omega
 = \frac{1}{2\pi} \int_{-\pi}^{\pi} |X(e^{j\omega})|^2\, d\omega
 $$
+
 *(Eq. 4.19)*
 
 Parseval's relation states that total signal energy = total spectral energy (up to the $1/2\pi$ factor).
@@ -263,8 +294,10 @@ Let $x[n]$, $n = 0, 1, \ldots, N-1$, be an **N-point finite sequence**. The DFT 
 **DFT (Analysis):**
 
 $$
+
 X[k] = \sum_{n=0}^{N-1} x[n]\, e^{-j2\pi kn/N}, \qquad 0 \leq k \leq N-1
 $$
+
 *(Eq. 4.20)*
 
 (0 otherwise)
@@ -272,8 +305,10 @@ $$
 **Inverse DFT (iDFT / Synthesis):**
 
 $$
+
 x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k]\, e^{j2\pi kn/N}, \qquad 0 \leq n \leq N-1
 $$
+
 *(Eq. 4.21)*
 
 (0 otherwise)
@@ -287,6 +322,7 @@ $$
 #### 3.2 DTFT–DFT Relationship
 
 $$
+
 X[k] = X(e^{j\omega})\big|_{\omega = 2\pi k/N}
 $$
 
@@ -312,6 +348,7 @@ That is, the DFT is a sampled (discrete) version of the continuous DTFT. As we a
 **Conjugate symmetry for real sequences:** For a real-valued $x[n]$:
 
 $$
+
 \operatorname{Re}\{X[k]\} = \operatorname{Re}\{X[N-k]\} \qquad \text{and} \qquad \operatorname{Im}\{X[k]\} = -\operatorname{Im}\{X[N-k]\}
 $$
 
@@ -324,6 +361,7 @@ This means only about half the DFT coefficients carry independent information �
 Using $W_N = e^{-j2\pi/N}$:
 
 $$
+
 X[k] = \sum_{n=0}^{2} x[n]\, W_3^{kn} = W_3^0 + W_3^k + W_3^{2k}
 = e^{-j2\pi k/3}\left[1 + 2\cos(2\pi k/3)\right]
 = \begin{cases} 3 & k=0 \\\\ 0 & k=1,2 \end{cases}
@@ -332,6 +370,7 @@ $$
 With $N=5$ (zero-padding with $x[3]=x[4]=0$):
 
 $$
+
 X[k] = W_5^0 + W_5^k + W_5^{2k}
 = e^{-j2\pi k/5}\left[1 + 2\cos(2\pi k/5)\right], \quad k=0,1,2,3,4
 $$
@@ -349,6 +388,7 @@ Continuous-time analogy: $e^{j\Omega_0 t} \leftrightarrow 2\pi\delta(\Omega - \O
 For DFT index $k$, the corresponding discrete frequency is $\omega = 2\pi k/N$. The DFT magnitude will have two peaks at $k=7$ ($\omega \approx 0.667\pi$) and $k=14$ ($\omega \approx -0.7\pi$, aliased).
 
 $$
+
 \hat{\omega}_0 = \frac{2\pi \cdot 7}{21} \approx 0.6667\pi \quad \text{(coarse estimate)}
 $$
 
@@ -361,6 +401,7 @@ x = [A*cos(w*n+p)  zeros(1,1980)];
 Peak found at $k=702$, $N=2001$:
 
 $$
+
 \hat{\omega}_0 = \frac{2\pi \cdot 702}{2001} \approx 0.7016\pi \quad \text{(much closer to true } 0.7\pi\text{)}
 $$
 
@@ -375,6 +416,7 @@ $$
 Given $X[k] = \{1,1,1,0,0\}$ ($N=5$):
 
 $$
+
 x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k]\, W_N^{-kn}
 = \frac{1}{5}\!\left(W_5^0 + W_5^{-n} + W_5^{-2n}\right)
 = \frac{1}{5}\, e^{j2\pi n/5}\left[1 + 2\cos(2\pi n/5)\right], \quad n=0,1,\ldots,4
@@ -393,12 +435,14 @@ This is the inverse of Example 4.5 — DFT and iDFT are exact duals for $N$-poin
 Direct DFT computation: each $X[k]$ requires $N$ complex multiplications and $N-1$ complex additions. For $k = 0, \ldots, N-1$, the total cost is:
 
 $$
+
 \text{DFT:} \quad N^2 \text{ complex multiplications,} \quad N(N-1) \text{ complex additions}
 $$
 
 For large $N$ this is prohibitively expensive. The FFT algorithm (Cooley and Tukey, 1965) dramatically reduces this.
 
 $$
+
 \text{FFT:} \quad \frac{N}{2}\log_2 N \text{ complex multiplications}
 $$
 

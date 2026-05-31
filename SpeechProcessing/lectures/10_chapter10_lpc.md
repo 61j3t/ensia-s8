@@ -55,12 +55,14 @@ where:
 The vocal tract is modelled as an **all-pole (AR — auto-regressive) filter**:
 
 $$
+
 H(z) = \frac{G}{A(z)}
 $$
 
 where:
 
 $$
+
 A(z) = 1 - \sum_{k=1}^{p} a_k \cdot z^{-k}
 $$
 
@@ -79,6 +81,7 @@ The filter $H(z)$ has $p$ poles and no finite zeros (hence "all-pole"). Its deno
 **Prediction equation.** The current speech sample $s[n]$ is predicted from $p$ past samples:
 
 $$
+
 \hat{s}[n] = \sum_{k=1}^{p} a_k \cdot s[n - k]
 $$
 
@@ -101,18 +104,21 @@ The linear predictor is a FIR filter with coefficients $a_1, \ldots, a_p$ operat
 **Definition.** The prediction error (residual) is:
 
 $$
+
 e[n] = s[n] - \hat{s}[n]
 $$
 
 Substituting:
 
 $$
+
 e[n] = s[n] - \sum_{k=1}^{p} a_k \cdot s[n - k]
 $$
 
 **Z-domain.** The error signal is the output of the **inverse filter** $A(z)$ applied to $S(z)$:
 
 $$
+
 E(z) = A(z) \cdot S(z) \implies E(z) \approx G \cdot U(z)
 $$
 
@@ -136,6 +142,7 @@ So the inverse filter approximately recovers the (scaled) excitation.
 Since $H(z) = G / A(z)$, applying $A(z)$ to the speech:
 
 $$
+
 E(z) = A(z) \cdot S(z) = A(z) \cdot H(z) \cdot U(z) = G \cdot U(z)
 $$
 
@@ -153,6 +160,7 @@ The inverse filter $A(z)$:
 **LPC spectrum.** Evaluate $H(z)$ on the unit circle:
 
 $$
+
 |H(e^{j\omega})| = \frac{|G|}{|A(e^{j\omega})|}
 $$
 
@@ -184,18 +192,21 @@ This magnitude spectrum is the LPC spectral envelope.
 **Total squared prediction error over a frame of $N$ samples:**
 
 $$
+
 E = \sum_{n=0}^{N-1} e^2[n]
 $$
 
 **Optimality condition.** Set the partial derivatives to zero:
 
 $$
+
 \frac{\partial E}{\partial a_i} = 0 \quad \text{for } i = 1, 2, \ldots, p
 $$
 
 Substituting $e[n] = s[n] - \sum_{k=1}^{p} a_k s[n-k]$:
 
 $$
+
 \sum_{n=0}^{N-1} e[n] \cdot s[n - i] = 0 \quad \text{for } i = 1, 2, \ldots, p
 $$
 
@@ -204,6 +215,7 @@ $$
 Expanding:
 
 $$
+
 \sum_{n=0}^{N-1} s[n] \cdot s[n-i] = \sum_{k=1}^{p} a_k \cdot \sum_{n=0}^{N-1} s[n-k] \cdot s[n-i]
 $$
 
@@ -216,6 +228,7 @@ This gives $p$ equations in $p$ unknowns $a_1, \ldots, a_p$ — the **normal equ
 **Autocorrelation function.** For a finite frame of $N$ samples:
 
 $$
+
 R(i) = \sum_{n=0}^{N-1-i} s[n] \cdot s[n + i]
 $$
 
@@ -229,6 +242,7 @@ where $R(i)$ is the autocorrelation at lag $i$, and $R(-i) = R(i)$ (symmetric).
 **Yule-Walker (normal) equations in autocorrelation form:**
 
 $$
+
 \sum_{k=1}^{p} a_k \cdot R(i - k) = R(i) \quad \text{for } i = 1, 2, \ldots, p
 $$
 
@@ -243,10 +257,12 @@ These $p$ equations relate the LPC coefficients to the autocorrelation values of
 **Matrix formulation.** $Ra = r$
 
 $$
+
 R = \begin{bmatrix} R(0) & R(1) & \cdots & R(p-1) \\\\ R(1) & R(0) & \cdots & R(p-2) \\\\ \vdots & \vdots & \ddots & \vdots \\\\ R(p-1) & R(p-2) & \cdots & R(0) \end{bmatrix}
 $$
 
 $$
+
 a = \begin{bmatrix} a_1 \\\\ a_2 \\\\ \vdots \\\\ a_p \end{bmatrix}, \qquad r = \begin{bmatrix} R(1) \\\\ R(2) \\\\ \vdots \\\\ R(p) \end{bmatrix}
 $$
 
@@ -277,6 +293,7 @@ This recursion exploits the Toeplitz structure to solve $Ra = r$ efficiently, bu
 **Initialisation (order 0):**
 
 $$
+
 E_0 = R(0), \qquad a_0^{(0)} = 1
 $$
 
@@ -285,6 +302,7 @@ $$
 Step 1 — Compute reflection coefficient $k_i$:
 
 $$
+
 k_i = \frac{R(i) - \sum_{j=1}^{i-1} a_j^{(i-1)} \cdot R(i - j)}{E_{i-1}}
 $$
 
@@ -293,10 +311,12 @@ The numerator is the residual autocorrelation not explained by the order-$(i-1)$
 Step 2 — Update LPC coefficients:
 
 $$
+
 a_i^{(i)} = k_i
 $$
 
 $$
+
 a_j^{(i)} = a_j^{(i-1)} - k_i \cdot a_{i-j}^{(i-1)} \quad \text{for } j = 1, 2, \ldots, i-1
 $$
 
@@ -305,12 +325,14 @@ This "flips" the previous-order coefficients using the new reflection coefficien
 Step 3 — Update prediction error energy:
 
 $$
+
 E_i = (1 - k_i^2) \cdot E_{i-1}
 $$
 
 Since $(1 - k_i^2) \leq 1$, the error is non-increasing at each step. The **normalised error** at step $i$ is:
 
 $$
+
 V^{(i)} = E^{(i)} / R(0)
 $$
 
@@ -319,6 +341,7 @@ $$
 **Stability condition.**
 
 $$
+
 |k_i| < 1 \quad \text{for all } i = 1, \ldots, p
 $$
 
@@ -348,6 +371,7 @@ The vocal tract is approximated as a series of $p$ lossless cylindrical tube sec
 **Area function formula.** The reflection coefficient at junction $i$ is:
 
 $$
+
 r_i = \frac{A_{i+1} - A_i}{A_{i+1} + A_i}
 $$
 
@@ -356,6 +380,7 @@ where $A_i$ is the cross-sectional area of tube section $i$.
 **Relationship to Levinson-Durbin.** The reflection coefficients $r_i$ from the tube model are related to Levinson-Durbin's $k_i$ by:
 
 $$
+
 r_i = -k_i
 $$
 

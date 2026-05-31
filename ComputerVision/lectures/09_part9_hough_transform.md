@@ -43,11 +43,8 @@
 A straight line in image space is written:
 
 $$y = mx + c$$
-
 For a fixed edge point $(x_i, y_i)$, any line passing through it satisfies:
-
 $$y_i = m x_i + c \quad\Rightarrow\quad c = -m x_i + y_i$$
-
 This is a **line equation in parameter space** $(m, c)$: the set of all $(m, c)$ pairs corresponding to lines through $(x_i, y_i)$ forms a straight line in the $m$-$c$ plane.
 
 **Point-Line duality:**
@@ -95,17 +92,13 @@ The slope $m$ ranges from $-\infty$ to $+\infty$ (for vertical lines $m$ is infi
 #### 3.1 The polar line equation
 
 A line in the image can always be described by:
-
 $$\rho = x\cos\theta + y\sin\theta$$
-
 where:
 - $\rho$ = perpendicular distance from the origin to the line (always finite; bounded by the image diagonal).
 - $\theta$ = angle of the perpendicular from the x-axis, in $[0, \pi]$.
 
 Both parameters are **bounded and finite**:
-
 $$0 \leq \theta \leq \pi$$
-
 $$|\rho| \leq \sqrt{w^2 + h^2} \quad \text{(image diagonal)}$$
 
 **Geometric interpretation:** draw a perpendicular from the image origin to the line. The length of that perpendicular is $\rho$; the angle it makes with the x-axis is $\theta$.
@@ -113,9 +106,7 @@ $$|\rho| \leq \sqrt{w^2 + h^2} \quad \text{(image diagonal)}$$
 #### 3.2 Point-curve duality in polar space
 
 For a fixed edge point $(x_i, y_i)$, all lines through it satisfy:
-
 $$\rho = x_i\cos\theta + y_i\sin\theta$$
-
 As $\theta$ varies from $0$ to $\pi$, this traces a **sinusoidal curve** in the $(\theta, \rho)$ plane (the accumulator). Points lying on the same image-space line produce sinusoids that intersect at a single $(\theta^{\ast}, \rho^{\ast})$ in parameter space.
 
 | Image space | $(\theta, \rho)$ parameter space |
@@ -157,9 +148,7 @@ The accumulator image shows sweeping bright curves (contributions from long edge
 #### 4.1 Circle parameterization
 
 A circle is described by three parameters:
-
 $$(x_i - a)^2 + (y_i - b)^2 = r^2$$
-
 where:
 - **(a, b)** = center of the circle
 - **r** = radius
@@ -171,9 +160,7 @@ Finding a circle means finding the three parameters $a$, $b$, $r$ from a set of 
 If $r$ is given (or pre-hypothesized), the accumulator is only 2-D: $A(a, b)$.
 
 **Duality:** each edge point $(x_i, y_i)$ constrains the center to lie on a **circle of radius $r$ centered at $(x_i, y_i)$** in the $(a, b)$ parameter plane. In other words:
-
 $$(x_i - a)^2 + (y_i - b)^2 = r^2$$
-
 This is a circle of radius $r$ in parameter space, centered at $(x_i, y_i)$.
 
 **Voting procedure:**
@@ -189,9 +176,7 @@ This is a circle of radius $r$ in parameter space, centered at $(x_i, y_i)$.
 All three parameters $(a, b, r)$ must be found. The accumulator becomes **3-D**: $A(a, b, r)$.
 
 **Duality:** each edge point $(x_i, y_i)$ maps to a **cone** in the 3-D parameter space $(a, b, r)$. The cone equation is:
-
 $$(x_i - a)^2 + (y_i - b)^2 = r^2$$
-
 (for fixed $(x_i, y_i)$, varying $a$, $b$, $r$ traces a cone with apex at $r = 0$ and axis along the $r$ direction).
 
 **Finding the circle:** the peak of $A(a, b, r)$ gives the center $(a^{\ast}, b^{\ast})$ and radius $r^{\ast}$.
@@ -252,11 +237,8 @@ RANSAC can handle up to approximately **50% outliers**, which classical least-sq
 | $(1 - (1-e)^s)^N$ | Probability that **all N trials** fail |
 
 We require the probability of all-N-failing to equal $(1 - p)$:
-
 $$\bigl(1 - (1 - e)^s\bigr)^N = 1 - p$$
-
 Solving for $N$:
-
 $$N = \frac{\log(1 - p)}{\log(1 - (1 - e)^s)}$$
 
 **Illustrative values ($p = 0.99$):**

@@ -115,6 +115,7 @@ Let H1 and H2 be two 128-D SIFT descriptors.
 **Euclidean distance** (most common for SIFT):
 
 $$
+
 d(H_1, H_2) = \sqrt{\sum_{k} \bigl(H_1(k) - H_2(k)\bigr)^2}
 $$
 
@@ -123,6 +124,7 @@ Smaller distance = more similar descriptors = better match.
 **Histogram intersection** (alternative):
 
 $$
+
 d(H_1, H_2) = \sum_{k} \min\bigl(H_1(k),\, H_2(k)\bigr)
 $$
 
@@ -139,6 +141,7 @@ Given a query keypoint descriptor Q from image A, find the descriptor D* in imag
 Lowe's key insight: a match is reliable if the nearest neighbor is **much closer** than the second-nearest neighbor. Formally:
 
 $$
+
 \frac{d(Q,\, D_{1\text{st}})}{d(Q,\, D_{2\text{nd}})} < \text{threshold}
 $$
 

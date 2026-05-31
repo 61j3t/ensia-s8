@@ -77,12 +77,14 @@ When the window slides through the signal, consecutive frames typically overlap 
 Recall the **N-point DFT**:
 
 $$
+
 X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j(2\pi k n/N)}
 $$
 
 The **STFT** extends this by introducing a sliding window $w[n - mH]$ centred at time frame m:
 
 $$
+
 S[m, k] = \sum_{n=0}^{N-1} x[n] \cdot w[n - mH] \cdot e^{-j(2\pi k n/N)}
 $$
 
@@ -104,10 +106,12 @@ where:
 The number of frequency bins and frames are computed as:
 
 $$
+
 \text{\# frequency bins} = \frac{\text{framesize}}{2} + 1
 $$
 
 $$
+
 \text{\# frames} = \frac{\text{samples} - \text{framesize}}{\text{hopsize}} + 1
 $$
 
@@ -135,6 +139,7 @@ For **speech**: frame changes occur at 20–40 ms timescales, so target T = 20�
 For the rectangular window $w_R[n] = 1$, $0 \leq n \leq M$, the DTFT is:
 
 $$
+
 W_R(\omega) = \sum_{n=0}^{M} e^{-j\omega n} = e^{-j\omega M/2} \cdot \frac{\sin(\omega(M+1)/2)}{\sin(\omega/2)}
 $$
 
@@ -161,6 +166,7 @@ This trade-off is **unavoidable** — it is a direct consequence of the **uncert
 **Uncertainty principle:**
 
 $$
+
 \Delta t \cdot \Delta f \geq \frac{1}{4\pi}
 $$
 
@@ -173,24 +179,28 @@ All formulas below use $w_R[n]$ as the rectangular window (defining the support)
 **Bartlett (triangular) window:**
 
 $$
+
 w[n] = \left(1 - \left|\frac{2n}{M} - 1\right|\right) \cdot w_R[n]
 $$
 
 **Hann window:**
 
 $$
+
 w[n] = \frac{1}{2}\left(1 - \cos\left(\frac{2\pi n}{M}\right)\right) \cdot w_R[n]
 $$
 
 **Hamming window:**
 
 $$
+
 w[n] = \left(0.54 - 0.46\cos\left(\frac{2\pi n}{M}\right)\right) \cdot w_R[n]
 $$
 
 **Blackman window:**
 
 $$
+
 w[n] = \left(0.42 - 0.5\cos\left(\frac{2\pi n}{M}\right) + 0.08\cos\left(\frac{4\pi n}{M}\right)\right) \cdot w_R[n]
 $$
 
@@ -213,6 +223,7 @@ $$
 The **spectrogram** Y[m, k] is defined as the squared magnitude of the STFT:
 
 $$
+
 Y[m, k] = |S[m, k]|^2
 $$
 
@@ -221,6 +232,7 @@ It represents the **power spectral density** (energy per frequency bin) at each 
 In decibels (the standard display form):
 
 $$
+
 Y_{dB}[m, k] = 10 \log_{10} Y[m, k] = 20 \log_{10} |S[m, k]|
 $$
 
@@ -263,6 +275,7 @@ For a frequency-modulated signal (chirp — a sine of constant amplitude but lin
 For voiced speech, the signal has a **fundamental frequency $f_0$** (pitch) and harmonics:
 
 $$
+
 f_n = n \cdot f_0 \qquad (\text{nth order harmonic})
 $$
 
@@ -339,6 +352,7 @@ This is the clearest illustration of the trade-off: no single window length reso
 The time-frequency uncertainty principle states:
 
 $$
+
 \Delta t \cdot \Delta f \geq \frac{1}{4\pi}
 $$
 

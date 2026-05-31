@@ -108,27 +108,20 @@ In 1-D, an edge = rapid change in intensity f(x). The **first derivative** $df/d
 For a 2-D image $I(x, y)$, the **gradient** is:
 
 $$\nabla I = \left[\frac{\partial I}{\partial x},\ \frac{\partial I}{\partial y}\right]$$
-
 - A vertical edge (transition along x): $\nabla I = [\partial I/\partial x,\ 0]$
 - A horizontal edge (transition along y): $\nabla I = [0,\ \partial I/\partial y]$
 - A diagonal edge: $\nabla I = [\partial I/\partial x,\ \partial I/\partial y]$
 
 **Gradient magnitude (edge strength):**
-
 $$S = \|\nabla I\| = \sqrt{\left(\frac{\partial I}{\partial x}\right)^2 + \left(\frac{\partial I}{\partial y}\right)^2}$$
-
 **Gradient direction:**
-
 $$\theta = \arctan\!\left(\frac{\partial I/\partial y}{\partial I/\partial x}\right)$$
-
 The gradient vector points in the direction of steepest intensity increase; the edge orientation is perpendicular to this.
 
 #### 3.3 Discrete approximation (convolution kernels)
 
 For a discrete image with pixel spacing $\varepsilon$, partial derivatives are approximated by finite differences over a 2×2 neighbourhood:
-
 $$\frac{\partial I}{\partial x} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i,j+1}) + (I_{i+1,j} - I_{i,j})\right]$$
-
 $$\frac{\partial I}{\partial y} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i+1,j}) + (I_{i,j+1} - I_{i,j})\right]$$
 
 Implemented as convolution with 2×2 kernels (up to $1/2\varepsilon$ scaling):
@@ -189,9 +182,7 @@ The **second derivative** $d^2f/dx^2$ has **zero-crossings** (sign changes from 
 #### 4.2 The 2D Laplacian
 
 The **Laplacian** is the sum of the pure second partial derivatives:
-
 $$\nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}$$
-
 It measures how much a pixel's intensity differs from its neighbours in **all directions** simultaneously.
 
 **Edge detection rule:** Edges are **zero-crossings** in the Laplacian image — points where the sign of $\nabla^2 I$ changes.
@@ -199,9 +190,7 @@ It measures how much a pixel's intensity differs from its neighbours in **all di
 **Important limitation:** The Laplacian does **not** provide the direction/orientation of edges. It gives location only.
 
 #### 4.3 Discrete Laplacian
-
 $$\frac{\partial^2 I}{\partial x^2} \approx \frac{1}{\varepsilon^2}(I_{i-1,j} - 2I_{i,j} + I_{i+1,j})$$
-
 $$\frac{\partial^2 I}{\partial y^2} \approx \frac{1}{\varepsilon^2}(I_{i,j-1} - 2I_{i,j} + I_{i,j+1})$$
 
 Three common discrete Laplacian convolution kernels:
@@ -239,27 +228,20 @@ Raw gradient computation on a noisy image completely obscures the true edge. The
 **Method 1 — Smooth then differentiate (two separate operations):**
 
 Convolve the image with a Gaussian $n_\sigma$, then take the gradient:
-
 $$\nabla(n_\sigma \ast f)$$
-
 This works but requires two passes.
 
 **Method 2 — Derivative of Gaussian (single operation):**
 
 Since both $\nabla$ and Gaussian convolution are linear:
-
 $$\nabla(n_\sigma \ast f) = (\nabla n_\sigma) \ast f$$
-
 Therefore, pre-compute $\nabla n_\sigma$ once and convolve directly with f. This single kernel performs smoothing and differentiation simultaneously. The result for a step-edge signal: the noisy f(x) produces a clean, localised peak in $(\nabla n_\sigma) \ast f$ at the true edge location.
 
 **Method 3 — Laplacian of Gaussian (LoG):**
 
 Analogously:
-
 $$\nabla^2(n_\sigma \ast f) = (\nabla^2 n_\sigma) \ast f$$
-
 The **Laplacian of Gaussian** kernel is:
-
 $$\nabla^2 G(x,y) = \frac{x^2 + y^2 - 2\sigma^2}{\sigma^4} \cdot \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
 
 Its 1-D cross-section has a distinctive **inverted Mexican hat (sombrero)** shape with two zero-crossings at $\pm\sqrt{2}\,\sigma$ from the centre. In 2D it looks like an inverted sombrero.

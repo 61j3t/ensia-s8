@@ -164,6 +164,7 @@ where $T$ = pitch period (in samples), and $k$ ranges over all integers.
 The glottal pulse model converts ideal impulses into a realistic airflow waveform:
 
 $$
+
 U_G(z) = G(z) \cdot S(z)
 $$
 
@@ -186,6 +187,7 @@ Glottal pulse time-domain shape (observed in a period of ~20 ms at 8 kHz):
 **Noise model:**
 
 $$
+
 u_n[n] \sim \mathcal{N}(0,\, \sigma^2)
 $$
 
@@ -196,6 +198,7 @@ White Gaussian noise with zero mean and variance $\sigma^2$. The voiced/unvoiced
 The vocal tract is modeled as an **all-pole (IIR) filter**:
 
 $$
+
 V(z) = \frac{1}{1 + \sum_{k=1}^{p} a_k \cdot z^{-k}}
 $$
 
@@ -209,6 +212,7 @@ $$
 The radiation of sound at the lips acts as a **first-order high-pass filter**:
 
 $$
+
 R(z) = 1 - 0.99\, z^{-1} \qquad \text{(general form: } R(z) = 1 - \alpha z^{-1},\; \alpha \approx 0.99\text{)}
 $$
 
@@ -221,6 +225,7 @@ $$
 The **complete speech production model** in Z-domain is a cascade:
 
 $$
+
 P_L(z) = R(z) \cdot V(z) \cdot G(z) \cdot S(z)
 $$
 
@@ -238,6 +243,7 @@ $$
 - Each pole is a complex number:
 
 $$
+
 z_k = r_k \cdot e^{j\omega_k}
 $$
 
@@ -280,6 +286,7 @@ Rules of thumb:
 **Linear Predictive Coding (LPC)** estimates the all-pole vocal tract filter coefficients $a_k$ by minimizing prediction error:
 
 $$
+
 V(z) = \frac{1}{1 + a_1 z^{-1} + a_2 z^{-2} + \cdots + a_p z^{-p}}
 $$
 
@@ -297,6 +304,7 @@ LPC provides:
 All short-time measures follow the general form:
 
 $$
+
 Q_{\hat{n}} = \left( \sum_{m=-\infty}^{\infty} T(x[m]) \cdot \tilde{w}[\hat{n}-m] \right)\bigg|_{n=\hat{n}}
 $$
 
@@ -314,6 +322,7 @@ The window $\tilde{w}$ slides along the signal; the output $Q_{\hat{n}}$ is samp
 **Definition:**
 
 $$
+
 E_{\hat{n}} = \sum_{m=-\infty}^{\infty} \bigl[x[m] \cdot \tilde{w}[\hat{n} - m]\bigr]^2
            = \sum_{m=-\infty}^{\infty} x^2[m] \cdot h[\hat{n} - m]
 $$
@@ -336,6 +345,7 @@ x[n] ---> ( )^2 ---> x^2[n] ---> h[n] (lowpass) ---> E_{n-hat}   (at rate F_s/R)
 An alternative to STE that is less sensitive to large outliers:
 
 $$
+
 M_{\hat{n}} = \sum_{m=-\infty}^{\infty} |x[m]| \cdot \tilde{w}[\hat{n} - m]
 $$
 
@@ -354,6 +364,7 @@ $$
 **Formal definition:**
 
 $$
+
 Z_{\hat{n}} = \frac{1}{2L_{\text{eff}}} \sum_{m=\hat{n}-L+1}^{\hat{n}} \bigl|\operatorname{sgn}(x[m]) - \operatorname{sgn}(x[m-1])\bigr| \cdot \tilde{w}[\hat{n} - m]
 $$
 
@@ -364,10 +375,12 @@ where:
 **Key property for a sinusoid at frequency $F_0$:**
 
 $$
+
 z_1 = \frac{2F_0}{F_s} \quad \text{crossings/sample} \qquad \text{(ZCR proportional to frequency)}
 $$
 
 $$
+
 z_M = M \cdot \frac{2F_0}{F_s} \quad \text{crossings per } M \text{ samples}
 $$
 
@@ -393,6 +406,7 @@ x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] --->
 **Definition:** the autocorrelation of a windowed segment at lag $k$:
 
 $$
+
 r_k = \sum_{i=0}^{N-k-1} s_i \cdot s_{i+k}
 $$
 
@@ -417,6 +431,7 @@ $$
 **Definition:**
 
 $$
+
 \gamma_{\hat{n}}[k] = \sum_{m=-\infty}^{\infty} \bigl|x[\hat{n}+m]\cdot\tilde{w}_1[m] - x[\hat{n}+m-k]\cdot\tilde{w}_2[m-k]\bigr|
 $$
 

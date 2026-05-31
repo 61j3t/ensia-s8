@@ -60,6 +60,7 @@ In words:
 Speech is modeled as a convolution:
 
 $$
+
 s[n] = e[n] \ast h[n]
 $$
 
@@ -70,6 +71,7 @@ where:
 In the frequency domain, convolution becomes multiplication:
 
 $$
+
 S(k) = E(k) \cdot H(k)
 $$
 
@@ -78,12 +80,14 @@ $$
 Taking the log converts multiplication to addition:
 
 $$
+
 \log S(k) = \log E(k) + \log H(k)
 $$
 
 Applying the inverse DFT:
 
 $$
+
 c_s[n] = c_e[n] + c_h[n]
 $$
 
@@ -101,6 +105,7 @@ This is the key insight: **in the cepstral domain the contributions of excitatio
 For most speech tasks (MFCCs, formant analysis, speaker recognition), we use the **real cepstrum**:
 
 $$
+
 c[n] = \mathcal{F}^{-1}\left\{ \log |X(k)| \right\}
 $$
 
@@ -111,6 +116,7 @@ $$
 #### 3.2 Complex cepstrum
 
 $$
+
 \hat{c}[n] = \mathcal{F}^{-1}\left\{ \log X(k) \right\}
 $$
 
@@ -127,11 +133,12 @@ where $\log X(k) = \log|X(k)| + j\,\arg X(k)$.
 #### 4.1 The three-step pipeline
 
 $$
+
 s[n] \xrightarrow{\mathcal{F}} \log|\cdot| \xrightarrow{\mathcal{F}^{-1}} c[n]
 $$
 
 Step by step:
-1. **Linear transform (DFT)**: convolution $s[n] = e[n]\asth[n]$ becomes multiplication $S(k) = E(k)\cdot H(k)$.
+1. **Linear transform (DFT)**: convolution $s[n] = e[n]\ast h[n]$ becomes multiplication $S(k) = E(k)\cdot H(k)$.
 2. **Logarithm**: multiplication becomes addition: $\log S(k) = \log E(k) + \log H(k)$.
 3. **Inverse linear transform (IDFT)**: returns to a time-like (quefrency) domain where the two components are additive: $c_s[n] = c_e[n] + c_h[n]$.
 
@@ -146,18 +153,21 @@ Once in the cepstral domain, apply a lifter (a window in quefrency):
 Ideal low-pass lifter formula:
 
 $$
+
 l_{lp}[n] = \begin{cases} 1 & \text{if } |n| \leq N_c \\\\ 0 & \text{otherwise} \end{cases}
 $$
 
 Filtered cepstrum:
 
 $$
+
 c_{\text{filter}}[n] = c[n] \cdot l_{lp}[n]
 $$
 
 Recovering the spectral envelope (vocal tract filter frequency response):
 
 $$
+
 H(k) = \exp\!\left( \mathcal{F}\{ c_{\text{filter}}[n] \} \right)
 $$
 
@@ -168,6 +178,7 @@ This gives the smooth spectral envelope showing the formant peaks.
 To represent the spectral envelope compactly, keep only the first $K$ low-quefrency coefficients (typically $K = 12$–$20$):
 
 $$
+
 \mathbf{c} = [c_0,\, c_1,\, c_2,\, \ldots,\, c_{K-1}]
 $$
 
@@ -229,6 +240,7 @@ Evidence: a 100 Hz impulse train and a 40 Hz impulse train through the **same vo
 The Mel scale maps physical frequency (Hz) to perceived pitch (mel), modeling human auditory perception:
 
 $$
+
 \text{Mel}(f) = 2595 \cdot \log_{10}\!\left(1 + \frac{f}{700}\right)
 $$
 
@@ -287,6 +299,7 @@ Speech Waveform
 **Solution**: apply a first-order high-pass FIR filter:
 
 $$
+
 x[n] = x'[n] - \alpha \cdot x'[n-1]
 $$
 
@@ -312,6 +325,7 @@ Standard parameters:
 Apply a window function $w[n]$ (e.g., **Hamming window**) to each frame to reduce spectral leakage at frame edges:
 
 $$
+
 w[n] = 0.54 - 0.46 \cdot \cos\!\left(\frac{2\pi n}{N-1}\right)
 $$
 
@@ -322,6 +336,7 @@ The windowed frame $x_w[n] = x[n] \cdot w[n]$ tapers to zero at both ends, preve
 Apply the DFT (FFT) to each windowed frame $t$:
 
 $$
+
 X_t[k] = \text{DFT}\{x_t[n]\} \qquad k = 0, 1, \ldots, N-1
 $$
 
@@ -339,6 +354,7 @@ Filterbank diagram: $M$ overlapping triangular filters covering the frequency ax
 Formal definition of filter $m$ ($m = 1, 2, \ldots, M$):
 
 $$
+
 H_{t,m}[k] = \begin{cases}
 0 & k < f[m-1] \\\\[4pt]
 \dfrac{k - f[m-1]}{f[m] - f[m-1]} & f[m-1] \leq k \leq f[m] \\\\[6pt]
@@ -350,6 +366,7 @@ $$
 The filterbank center frequencies in FFT bins are:
 
 $$
+
 f[m] = \frac{N}{F_s} \cdot B^{-1}\!\left( B(f_l) + m \cdot \frac{B(f_h) - B(f_l)}{M+1} \right)
 $$
 
@@ -362,6 +379,7 @@ Each filter output represents the **energy in one perceptual frequency band**.
 The log-energy of the $m$-th Mel filter at frame $t$:
 
 $$
+
 MF_t[m] = \log_{10}\!\left( \sum_{k=0}^{N-1} H_{t,m}[k] \cdot |X[k]|^2 \right) \qquad 1 \leq m \leq M
 $$
 
@@ -377,6 +395,7 @@ The resulting $M$-dimensional vector at each frame is called **MELSPEC** (log Me
 Since the log power spectrum is real and symmetric, the inverse DFT reduces to a DCT. Apply DCT to the $M$ log filter energies to get the MFCC coefficients:
 
 $$
+
 \text{MFCC}_t[d] = \sum_{m=1}^{M} MF_t[m] \cdot \cos\!\left( \pi \cdot d \cdot \frac{m - \tfrac{1}{2}}{M} \right)
 $$
 
@@ -389,6 +408,7 @@ Key points:
 - The **energy feature** (MFCC[0]) is often replaced by the log frame energy:
 
 $$
+
 \text{logEng} = \log\!\left( \sum_t |x[k]|^2 \right)
 $$
 
@@ -403,6 +423,7 @@ Speech is inherently **dynamic** — spectral properties change over time. Stati
 **Delta MFCC (first-order time derivative)**: estimates the rate of change of each MFCC coefficient across frames:
 
 $$
+
 \delta_t[d] = \frac{\displaystyle\sum_{\tau=1}^{R} \tau \cdot \bigl(c_{t+\tau}[d] - c_{t-\tau}[d]\bigr)}{2\displaystyle\sum_{\tau=1}^{R} \tau^2}
 $$
 
@@ -502,7 +523,7 @@ Both aim to capture the **spectral envelope** without the harmonic structure:
 
 1. **Define the cepstrum** mathematically and explain the meaning of "quefrency." Write: $c[n] = \mathcal{F}^{-1}\{\log|\mathcal{F}\{x[n]\}|\}$.
 
-2. **Derive the source-filter separation** in the cepstral domain: starting from $s[n] = e[n]\asth[n]$, show step by step how $c_s[n] = c_e[n] + c_h[n]$ follows by taking log of the DFT.
+2. **Derive the source-filter separation** in the cepstral domain: starting from $s[n] = e[n]\ast h[n]$, show step by step how $c_s[n] = c_e[n] + c_h[n]$ follows by taking log of the DFT.
 
 3. **Distinguish real cepstrum from complex cepstrum**: give both formulas, state which discards phase and why the real cepstrum is preferred in speech recognition.
 

@@ -67,6 +67,7 @@ M is computed **at every pixel** in the image (every pixel is a candidate corner
 **Relationship to covariance:** M is mathematically very similar to the covariance matrix of gradient vectors in the window:
 
 $$
+
 \text{Cov}(I_x, I_y) = \mathbb{E}\!\left[(\nabla I)(\nabla I)^T\right]
 $$
 
@@ -96,6 +97,7 @@ Imagine a plot with $\lambda_1$ on the horizontal axis and $\lambda_2$ on the ve
 Computing eigenvalues explicitly is expensive. Harris proposes an empirically designed scalar **Corner Response Function** that avoids eigendecomposition:
 
 $$
+
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2
 $$
 
@@ -115,6 +117,7 @@ Where:
 Expanding R in terms of eigenvalues:
 
 $$
+
 R = \lambda_1 \lambda_2 - k\,(\lambda_1 + \lambda_2)^2
 $$
 
@@ -133,6 +136,7 @@ The k term penalises large traces (i.e., edge-like responses where one eigenvalu
 2. **Compute the structure tensor M at every pixel:**
 
 $$
+
 M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
 $$
 
@@ -141,6 +145,7 @@ $$
 3. **Compute the corner response score R at every pixel:**
 
 $$
+
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2
 $$
 
@@ -242,6 +247,7 @@ All three detectors below share the same structure tensor M and its eigenvalues.
 3. **Write and explain the structure tensor M:**
 
 $$
+
 M = \sum_{(x,y) \in \text{window}} w(x,y) \begin{bmatrix} I_x^2 & I_x I_y \\\\ I_x I_y & I_y^2 \end{bmatrix}
 $$
 
@@ -258,6 +264,7 @@ $$
 5. **Write and derive the corner response R:**
 
 $$
+
 R = \det(M) - k \cdot \bigl(\text{tr}(M)\bigr)^2 = \lambda_1\lambda_2 - k(\lambda_1+\lambda_2)^2
 $$
 

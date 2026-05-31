@@ -27,6 +27,7 @@ where $z$ is a continuous complex variable. $X(z)$ is in general complex-valued.
 **Polar form of z.** Writing $z = r e^{j\omega}$ ($r = |z| > 0$, $\omega$ = angle of $z$):
 
 $$
+
 X(z)\big|_{z = r e^{j\omega}} = X(r e^{j\omega}) = \sum_{n=-\infty}^{\infty} \bigl(x[n]\, r^{-n}\bigr) e^{-j\omega n} \quad (5.7)
 $$
 
@@ -35,6 +36,7 @@ This is the DTFT of the exponentially weighted sequence $x[n]\, r^{-n}$.
 **Link to DTFT (5.8).** When $r = 1$, i.e. $z = e^{j\omega}$ (the unit circle):
 
 $$
+
 X(z)\big|_{z = e^{j\omega}} = X(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]\, e^{-j\omega n}
 $$
 
@@ -51,6 +53,7 @@ Fig 5.1 (description): The z-plane with real axis Re and imaginary axis Im. The 
 **Definition.** The ROC is the set of $z$ for which the sum converges absolutely:
 
 $$
+
 |X(z)| = \left|\sum x[n] z^{-n}\right| \leq \sum |x[n] z^{-n}| < \infty \quad (5.10)
 $$
 
@@ -73,6 +76,7 @@ Fig 5.2 (description): Three z-planes side by side. Left: $X_+(z)$ with ROC = ex
 For a rational $X(z) = P(z)/Q(z)$ in factored form:
 
 $$
+
 X(z) = \frac{b_0\,(z - d_1)(z - d_2)\cdots(z - d_M)}{a_0\,(z - c_1)(z - c_2)\cdots(z - c_N)} \quad (5.19)
 $$
 
@@ -111,6 +115,7 @@ Fig 5.7 (description): For $X(z)$ with three poles at $|a| < |b| < |c|$, there a
 Example (causal, page 20): $x[n] = \{1, 2, 5, 7, 0, 1\}$ with $n=0$ at first element.
 
 $$
+
 X(z) = 1 + 2z^{-1} + 5z^{-2} + 7z^{-3} + z^{-5}
 $$
 
@@ -140,6 +145,7 @@ ROC = entire z-plane except $z = 0$.
 #### Example 5.1: $x[n] = a^n u[n]$
 
 $$
+
 X(z) = \sum_{n=0}^{\infty} (az^{-1})^n = \frac{1}{1 - az^{-1}} = \frac{z}{z-a}, \quad |z| > |a|
 $$
 
@@ -150,6 +156,7 @@ $$
 #### Example 5.2: $x[n] = -a^n u[-n-1]$
 
 $$
+
 X(z) = \frac{z}{z-a}, \quad |z| < |a|
 $$
 
@@ -160,6 +167,7 @@ Same expression as Example 5.1 but ROC is the interior. DTFT exists when $|a| > 
 Using results of Ex 5.1 and 5.2:
 
 $$
+
 X(z) = \frac{1}{1-az^{-1}} - \frac{1}{1-bz^{-1}} = \frac{(a-b)z}{(z-a)(z-b)}, \quad |a| < |z| < |b|
 $$
 
@@ -168,12 +176,14 @@ ROC is a ring (two-sided signal, aligns with P7).
 #### Example 5.4: $x[n] = \delta[n+1]$
 
 $$
+
 X(z) = z, \quad \text{ROC} = \text{all } z \text{ except } z = 0 \quad \text{(anti-causal finite, aligns with table above)}
 $$
 
 #### Example 5.5: $x[n] = a^n$ for $0 \leq n \leq N-1$, $0$ otherwise
 
 $$
+
 X(z) = \sum_{n=0}^{N-1} (az^{-1})^n = \frac{1 - (az^{-1})^N}{1 - az^{-1}} = \frac{1}{z^{N-1}} \cdot \frac{z^N - a^N}{z - a}
 $$
 
@@ -186,6 +196,7 @@ ROC = entire z-plane except $z = 0$ (finite causal duration).
 **Formal definition (5.20)**:
 
 $$
+
 x[n] = \frac{1}{2\pi j} \oint_{\Gamma} X(z)\, z^{n-1}\, dz
 $$
 
@@ -200,6 +211,7 @@ Given $X(z) = z/(2z-1) = 0.5/(1 - 0.5 z^{-1})$, $|z| > 0.5$.
 Using $a^n u[n] \leftrightarrow 1/(1-az^{-1})$ with $a = 0.5$:
 
 $$
+
 x[n] = 0.5 \cdot (0.5)^n u[n] = (0.5)^{n+1} u[n]
 $$
 
@@ -208,6 +220,7 @@ $$
 Express $X(z)$ as a ratio of polynomials in $z^{-1}$:
 
 $$
+
 X(z) = \frac{\sum_{k=0}^{M} b_k z^{-k}}{\sum_{k=0}^{N} a_k z^{-k}} \quad (5.21)
 $$
 
@@ -216,12 +229,14 @@ To find poles and zeros: multiply numerator and denominator by $z^{M+N}$ to get 
 **Case 1: $M < N$, all poles of first order (distinct)**
 
 $$
+
 X(z) = \sum_{k=1}^{N} \frac{A_k}{1 - c_k z^{-1}} \quad (5.23)
 $$
 
 Residue formula:
 
 $$
+
 A_k = (1 - c_k z^{-1})\, X(z)\big|_{z = c_k} \quad (5.24)
 $$
 
@@ -230,6 +245,7 @@ Steps: (i) find poles $c_k$; (ii) compute $A_k$ via (5.24); (iii) invert each te
 **Case 2: $M \geq N$, all poles of first order**
 
 $$
+
 X(z) = \sum_{l=0}^{M-N} B_l z^{-l} + \sum_{k=1}^{N} \frac{A_k}{1 - c_k z^{-1}} \quad (5.26)
 $$
 
@@ -238,12 +254,14 @@ $B_l$ are found by long division of numerator by denominator (stop when remainde
 **Case 3: $M < N$, one multiple-order pole at $c_i$ of order $s \geq 2$**
 
 $$
+
 X(z) = \sum_{\substack{k=1\\\\k\neq i}}^{N} \frac{A_k}{1-c_k z^{-1}} + \sum_{m=1}^{s} \frac{C_m}{(1-c_i z^{-1})^m} \quad (5.27)
 $$
 
 Coefficient formula:
 
 $$
+
 C_m = \frac{1}{(s-m)!\,(-c_i)^{s-m}} \cdot \frac{d^{s-m}}{dw^{s-m}} \left[(1-c_i w)^s X(w^{-1})\right]\bigg|_{w = c_i^{-1}} \quad (5.28)
 $$
 
@@ -258,6 +276,7 @@ PFE (no ROC specified — investigate all 3 ROC cases):
 $A_1 = (1-0.8z^{-1}) H(z)|_{z=0.8} = 2$; $A_2 = -3$.
 
 $$
+
 H(z) = \frac{2}{1-0.8z^{-1}} - \frac{3}{1-1.25z^{-1}}
 $$
 
@@ -272,6 +291,7 @@ The stable case is the annular ROC that includes the unit circle.
 $M = N = 2$ (Case 2). Poles: $z = 0.5$, $z = 1$. Long division gives $B_0 = 2$.
 
 $$
+
 X(z) = 2 + \frac{A_1}{1-0.5z^{-1}} + \frac{A_2}{1-z^{-1}}
 $$
 
@@ -282,6 +302,7 @@ $A_1 = -4$, $A_2 = 6$. With $|z| > 1$: $x[n] = 2\delta[n] - 4(0.5)^n u[n] + 6u[n
 $X(z) = 4 / [(1+z^{-1})(1-z^{-1})^2]$, one first-order pole at $z=-1$, one second-order pole at $z=1$.
 
 $$
+
 X(z) = \frac{A_1}{1+z^{-1}} + \frac{C_1}{1-z^{-1}} + \frac{C_2}{(1-z^{-1})^2}
 $$
 
@@ -292,6 +313,7 @@ $A_1 = 1$, $C_1 = 1$ (using 5.28), $C_2 = 2$.
 Expand $X(z)$ directly as a power series in $z^{-1}$:
 
 $$
+
 X(z) = \cdots + x[-1]z^{1} + x[0] + x[1]z^{-1} + x[2]z^{-2} + \cdots \quad (5.30)
 $$
 
@@ -308,6 +330,7 @@ Key point: The ROC determines which direction to expand. Different ROCs give dif
 Example 5.12: $X(z) = \log(1+az^{-1})$, $|z|>|a|$. Using $\log(1+\lambda) = \sum_{n=1}^{\infty} (-1)^{n+1} \lambda^n / n$ with $\lambda = az^{-1}$:
 
 $$
+
 x[n] = \frac{(-1)^{n+1} a^n}{n}\, u[n-1]
 $$
 
@@ -322,6 +345,7 @@ Use the contour integral formula (5.20) directly with residue theorem. Rarely do
 #### Property 1: Linearity (5.31)
 
 $$
+
 a\, x_1[n] + b\, x_2[n] \;\longleftrightarrow\; a\, X_1(z) + b\, X_2(z)
 $$
 
@@ -332,6 +356,7 @@ Example 5.15: $y[n] = (0.2)^n u[n] + (-0.3)^n u[n]$ $\Rightarrow$ $Y(z) = 1/(1-0
 #### Property 2: Time Shifting (5.32)
 
 $$
+
 x[n - n_0] \;\longleftrightarrow\; z^{-n_0} X(z)
 $$
 
@@ -340,12 +365,14 @@ ROC same as $X(z)$ except possibly $z = 0$ or $z = \infty$ are added/removed.
 Example 5.16: $x[n] = a^{n-1} u[n-1]$. Using time-shift with $n_0=1$ on $a^n u[n] \leftrightarrow 1/(1-az^{-1})$:
 
 $$
+
 X(z) = \frac{z^{-1}}{1-az^{-1}}, \quad |z| > |a|
 $$
 
 #### Property 3: Modulation / Multiplication by Exponential (5.33)
 
 $$
+
 z_0^n\, x[n] \;\longleftrightarrow\; X(z/z_0)
 $$
 
@@ -355,6 +382,7 @@ Application (Example 5.17): Derive $a^n \cos(bn)\, u[n]$ from $u[n] \leftrightar
 Write $\cos(bn) = (e^{jbn}+e^{-jbn})/2$, apply modulation with $z_0 = ae^{jb}$ and $z_0 = ae^{-jb}$, then add via linearity to obtain:
 
 $$
+
 a^n \cos(bn)\, u[n] \;\longleftrightarrow\; \frac{1 - a\cos(b)\, z^{-1}}{1 - 2a\cos(b)\, z^{-1} + a^2 z^{-2}}, \quad |z| > |a|
 $$
 
@@ -363,6 +391,7 @@ $$
 #### Property 4: Differentiation (5.34)
 
 $$
+
 n\, x[n] \;\longleftrightarrow\; -z\,\frac{dX(z)}{dz}
 $$
 
@@ -373,6 +402,7 @@ Example 5.18: $n\, a^n u[n] \leftrightarrow -z \cdot \frac{d}{dz}\left[\frac{1}{
 #### Property 5: Conjugation (5.35)
 
 $$
+
 x^{\ast}[n] \;\longleftrightarrow\; X^{\ast}(z^{\ast})
 $$
 
@@ -381,6 +411,7 @@ ROC identical to that of $X(z)$.
 #### Property 6: Time Reversal (5.36)
 
 $$
+
 x[-n] \;\longleftrightarrow\; X(z^{-1})
 $$
 
@@ -389,12 +420,14 @@ If ROC of $x[n]$ is $R_+ < |z| < R_-$, then ROC of $x[-n]$ is $1/R_- < |z| < 1/R
 Example 5.19: $x[n] = -n\,a^{-n} u[-n]$. Using $n\,a^n u[n] \leftrightarrow az^{-1}/(1-az^{-1})^2$ and time reversal:
 
 $$
+
 X(z) = \frac{az}{(1-az)^2} = \frac{a^{-1}z^{-1}}{(1-a^{-1}z^{-1})^2}, \quad |z| < |a^{-1}|
 $$
 
 #### Property 7: Convolution (5.37)
 
 $$
+
 x_1[n] \ast x_2[n] \;\longleftrightarrow\; X_1(z)\, X_2(z)
 $$
 
@@ -411,18 +444,21 @@ ROC includes $R_{x_1} \cap R_{x_2}$.
 Starting from the general difference equation:
 
 $$
+
 \sum_{k=0}^{N} a_k\, y[n-k] = \sum_{k=0}^{M} b_k\, x[n-k] \quad (5.40)
 $$
 
 Applying z-transform with linearity and time-shift properties:
 
 $$
+
 Y(z) \sum_{k=0}^{N} a_k z^{-k} = X(z) \sum_{k=0}^{M} b_k z^{-k} \quad (5.41)
 $$
 
 The **transfer function** (system function):
 
 $$
+
 H(z) = \frac{Y(z)}{X(z)} = \frac{\sum_{k=0}^{M} b_k z^{-k}}{\sum_{k=0}^{N} a_k z^{-k}} \quad (5.42)
 $$
 
@@ -452,6 +488,7 @@ From Example 5.8 analysis (poles at $0.8$ and $1.25$):
 Applying z-transform: $Y(z)(1 - 0.1z^{-1}) = X(z)(1 + z^{-1})$
 
 $$
+
 H(z) = \frac{1 + z^{-1}}{1 - 0.1z^{-1}}
 $$
 
@@ -462,6 +499,7 @@ Two ROC possibilities: $|z| > 0.1$ (causal) or $|z| < 0.1$ (anti-causal).
 Cross-multiply: $(1+1.5z^{-1}-z^{-2})\, Y(z) = (1-z^{-1}-2z^{-2})\, X(z)$
 
 $$
+
 y[n] + 1.5\,y[n-1] - y[n-2] = x[n] - x[n-1] - 2x[n-2]
 $$
 
@@ -472,6 +510,7 @@ Shows that $H(z)$ and the difference equation are equivalent representations.
 Applying z-transform: $Y(z) = X(z)(1 - z^{-1})$
 
 $$
+
 H(z) = 1 - z^{-1}, \quad |z| > 0
 $$
 
@@ -482,6 +521,7 @@ $h[n] = \delta[n] - \delta[n-1]$ (finite-duration causal).
 $X(z) = 1/(1-z^{-1})$, $H(z) = 1 + 0.5z^{-1}$.
 
 $$
+
 Y(z) = H(z)X(z) = \frac{1}{1-z^{-1}} + \frac{0.5\,z^{-1}}{1-z^{-1}}, \quad |z| > 1
 $$
 

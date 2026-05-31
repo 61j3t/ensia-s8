@@ -315,9 +315,7 @@ U-Net uses **pixel-wise softmax** followed by **cross-entropy loss**:
 **Softmax** converts raw logits $a_k(x)$ into class probabilities for pixel $x$:
 
 $$p_k(x) = \frac{\exp(a_k(x))}{\sum_{k'} \exp(a_{k'}(x))}$$
-
 **Cross-entropy loss** (minimised over all pixels):
-
 $$H(p, q) = -\sum_x p(x) \log q(x)$$
 
 where $p(x)$ is the ground-truth distribution (one-hot) and $q(x)$ is the predicted distribution. The loss is computed **for every pixel** in the segmentation map — this makes U-Net a fully dense prediction model.
