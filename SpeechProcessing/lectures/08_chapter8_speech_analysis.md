@@ -42,8 +42,9 @@ The goal of **speech signal analysis** is to extract a **representation** from $
 
 Because speech is **quasi-stationary** on short time scales but changes rapidly on longer scales:
 
-```
-x[n]  -->  short-time processing  -->  feature vector f[m]
+```mermaid
+flowchart LR
+    A["x[n]"] --> B[Short-time processing] --> C["Feature vector f[m]"]
 ```
 
 - $x[n]$ = speech samples at, e.g., 8000 samples/sec
@@ -123,14 +124,25 @@ The speech production process is an **LTI system** that convolves the excitation
 
 **Full discrete-time source–filter block diagram:**
 
-```
-Pitch Period N_p
-      |
-[Impulse Train]  -->  [Glottal Pulse Model G(z)]  -->  x A_V  -->  \
-   Generator                                                          [Voiced/Unvoiced Switch] --> e[n] --> [Vocal Tract V(z)] --> [Radiation R(z)] --> s[n]
-   P(z), p[n]           G(z), g[n]                                  /
-                                                                    /
-[Random Noise Generator U(z), u[n]]  -->  x A_N  ----------------/
+```mermaid
+flowchart LR
+    Np["Pitch Period N_p"]
+    ImpTrain["Impulse Train Generator<br/>P(z), p[n]"]
+    Glottal["Glottal Pulse Model<br/>G(z), g[n]"]
+    AV(["× A_V"])
+    Noise["Random Noise Generator<br/>U(z), u[n]"]
+    AN(["× A_N"])
+    Switch{"Voiced/Unvoiced<br/>Switch"}
+    Vocal["Vocal Tract<br/>V(z)"]
+    Radiation["Radiation<br/>R(z)"]
+    Output(["s[n]"])
+
+    Np --> ImpTrain
+    ImpTrain --> Glottal --> AV
+    Noise --> AN
+    AV --> Switch
+    AN --> Switch
+    Switch -->|"e[n]"| Vocal --> Radiation --> Output
 ```
 
 Each block and its parameters:
@@ -311,8 +323,9 @@ E_{\hat{n}} = \sum_{m=-\infty}^{\infty} \bigl[x[m] \cdot \tilde{w}[\hat{n} - m]\
 where $h[n] = \tilde{w}^2[n]$ (the squared window acts as a low-pass filter).
 
 **Block diagram:**
-```
-x[n] ---> ( )^2 ---> x^2[n] ---> h[n] (lowpass) ---> E_{n-hat}   (at rate F_s/R)
+```mermaid
+flowchart LR
+    X["x[n]"] --> Sq["( )²"] --> X2["x²[n]"] --> H["h[n] (lowpass)"] --> E["E_n̂<br/>(at rate F_s/R)"]
 ```
 
 **Properties:**
@@ -358,8 +371,9 @@ z_1 = \frac{2F_0}{F_s} \quad \text{crossings/sample} \qquad \text{(ZCR proportio
 z_M = M \cdot \frac{2F_0}{F_s} \quad \text{crossings per } M \text{ samples}
 ```
 **Block diagram:**
-```
-x[n] ---> [sign( )] ---> first difference ---> |·| ---> lowpass w-tilde[n] ---> Z_{n-hat}
+```mermaid
+flowchart LR
+    X["x[n]"] --> Sgn["sign( )"] --> Diff["first difference"] --> Abs["|·|"] --> LP["lowpass w̃[n]"] --> Z["Z_n̂"]
 ```
 (Same structural form as $E_{\hat{n}}$ and $M_{\hat{n}}$.)
 
@@ -544,8 +558,9 @@ For speech at $F_s = 10$ kHz with pitch period in the range [5.5, 8] ms:
 
 From the signal $x[n]$, short-time analysis extracts an alternate representation $Q_{\hat{n}}$, which is then used for **parameter estimation** of the model:
 
-```
-x[n]  --[Short-Time Analysis]-->  Q_{n-hat}  --[Parameter Estimation]-->  Model parameters
+```mermaid
+flowchart LR
+    X["x[n]"] -->|Short-Time Analysis| Q["Q_n̂"] -->|Parameter Estimation| M[Model parameters]
 ```
 
 Model parameters include:

@@ -241,30 +241,26 @@ MFCCs are the preferred choice for recognition tasks.
 
 The block diagram flows as follows:
 
-```
-Speech Waveform
-      |
-  [Pre-emphasis]
-      |
-  [x Window function]  <-- Hamming/Hann window
-      |
-    [FFT]
-      |
-   [|·|^2]   --> Power Spectrum
-      |
-  [Mel-scale Filterbank]
-      |
-  [Filter Energy (sum per band)]
-      |
-    [Log(·)]
-      |
-    [DCT]
-      |
-  MFCC Feature Vectors (Static)
-      |                  |
-  [Delta op]         [Delta op]
-      |                  |
-  Delta MFCC       Delta-Delta MFCC
+```mermaid
+flowchart TD
+    SW[Speech Waveform]
+    PE[Pre-emphasis]
+    WIN["× Window function<br/>(Hamming / Hann)"]
+    FFT[FFT]
+    PS["|·|²<br/>Power Spectrum"]
+    MEL[Mel-scale Filterbank]
+    FE["Filter Energy<br/>(sum per band)"]
+    LOG["Log(·)"]
+    DCT[DCT]
+    MFCC["MFCC Feature Vectors<br/>(Static)"]
+    D1[Δ op]
+    D2[ΔΔ op]
+    DMF[Δ MFCC]
+    DDMF[ΔΔ MFCC]
+
+    SW --> PE --> WIN --> FFT --> PS --> MEL --> FE --> LOG --> DCT --> MFCC
+    MFCC --> D1 --> DMF
+    MFCC --> D2 --> DDMF
 ```
 
 #### Step 1: Pre-emphasis
