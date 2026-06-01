@@ -108,8 +108,8 @@ The number of frequency bins and frames are computed as:
 ```
 **Worked example (from slides):**
 - Signal = 10,000 samples; frame size = 1000; hop size = 500
-- # frequency bins = 1000/2 + 1 = **501** (covering 0 to sampling_rate/2)
-- # frames = (10000 − 1000)/500 + 1 = **19**
+- Number of frequency bins = 1000/2 + 1 = **501** (covering 0 to sampling_rate/2)
+- Number of frames = (10000 − 1000)/500 + 1 = **19**
 
 #### 3.3 Practical parameter choices
 
