@@ -17,7 +17,9 @@
 
 A spatial-domain process is written:
 
-$$g(x, y) = T[ f(x, y) ]$$
+```math
+g(x, y) = T[ f(x, y) ]
+```
 - $f(x,y)$: input image (intensity at pixel (x,y))
 - $g(x,y)$: output image
 - T: operator defined over a **neighborhood** of (x,y)
@@ -25,7 +27,9 @@ $$g(x, y) = T[ f(x, y) ]$$
 The neighborhood is typically **rectangular**, **centered on (x,y)**, and much smaller than the image. The origin is at the top-left; x increases downward, y increases rightward.
 
 **Point operations** are the special case where the neighborhood has size **1x1**. Then g depends only on f at (x,y), and T reduces to:
-$$s = T(r)$$
+```math
+s = T(r)
+```
 where r = f(x,y) and s = g(x,y) are scalar intensity values. All transforms in this part are of this form.
 
 ---
@@ -35,13 +39,17 @@ where r = f(x,y) and s = g(x,y) are scalar intensity values. All transforms in t
 #### 2.1 Image negative
 
 For an image with intensity range [0, L-1]:
-$$s = L - 1 - r$$
+```math
+s = L - 1 - r
+```
 - Maps black (0) to white (L-1) and vice versa; linearly inverts the curve.
 - Produces a photographic negative.
 - **Use case:** enhances white or gray details embedded in dark regions (e.g. mammogram negatives, where dark lesions become light and are easier to inspect).
 
 #### 2.2 Gain and bias (linear scaling)
-$$s = \alpha \cdot r + \beta \quad (\alpha > 0)$$
+```math
+s = \alpha \cdot r + \beta \quad (\alpha > 0)
+```
 - $\alpha$ = gain: controls **contrast**. $\alpha > 1$ increases contrast (steeper slope); $\alpha < 1$ reduces it.
 - $\beta$ = bias: controls **brightness**. Positive $\beta$ shifts the image brighter; negative $\beta$ darker.
 - Example: $\alpha = 2$ doubles contrast (image becomes harsher, darker shadows and brighter highlights). $\beta = 100$ adds 100 to every pixel (overall brightening, clipped at L-1).
@@ -50,12 +58,16 @@ $$s = \alpha \cdot r + \beta \quad (\alpha > 0)$$
 ---
 
 ### 3. Log transformations
-$$s = c \cdot \log(1 + r)$$
+```math
+s = c \cdot \log(1 + r)
+```
 Variables:
 - r: input pixel intensity (normalized, e.g. in [0, 1] or [0, 255])
 - s: output pixel intensity
 - c: scaling constant, chosen so that the maximum output equals the maximum allowed value ($S_{\max}$):
-$$c = \frac{S_{\max}}{\log(1 + R_{\max})}$$
+```math
+c = \frac{S_{\max}}{\log(1 + R_{\max})}
+```
 The **+1** avoids log(0).
 
 **Shape of the curve:** concave (steep rise for low r, then flattens). Plotted on axes 0-255 by 0-255, the curve climbs rapidly from (0,0) and approaches 255 asymptotically.
@@ -77,7 +89,9 @@ The **+1** avoids log(0).
 ---
 
 ### 4. Power-law (gamma) transformations
-$$s = c \cdot r^{\gamma} \quad (c > 0,\ \gamma > 0)$$
+```math
+s = c \cdot r^{\gamma} \quad (c > 0,\ \gamma > 0)
+```
 Both c and $\gamma$ are positive constants.
 
 **Family of curves (the classic gamma fan diagram):**
@@ -89,7 +103,9 @@ Both c and $\gamma$ are positive constants.
 **Gamma correction for display devices:**
 
 *Problem:* Displays (historically CRT, but also modern monitors and projectors) are **not linear**. Their intensity-to-voltage response is a power law:
-$$L \propto v^{\gamma_{\text{display}}} \quad \text{with } \gamma_{\text{display}} \approx 2.2$$
+```math
+L \propto v^{\gamma_{\text{display}}} \quad \text{with } \gamma_{\text{display}} \approx 2.2
+```
 This means:
 - Sending pixel value 128 does NOT produce half the brightness of 255.
 - Dark values are compressed (appear too dark).
@@ -104,7 +120,9 @@ This means:
 - This is called the **Image Gamma**.
 - Algorithms like JPEG automatically apply this encoding gamma at capture/conversion time.
 - The gamma-corrected image combined with the display's gamma produces an overall linear response:
-$$\gamma_{\text{correction}}\ (0.4) + \gamma_{\text{display}}\ (2.2) \approx \text{linear final output} \approx 1.0$$
+```math
+\gamma_{\text{correction}}\ (0.4) + \gamma_{\text{display}}\ (2.2) \approx \text{linear final output} \approx 1.0
+```
 *Practical example:* A gradient from black to white:
 - Original linear image fed to a $\gamma_{\text{display}} = 2.5$ monitor → darker on screen.
 - Pre-process with gamma correction ($\gamma = 0.4$) → the corrected image looks brighter, but when displayed, the combination is correct and appears as intended.
@@ -121,7 +139,9 @@ $$\gamma_{\text{correction}}\ (0.4) + \gamma_{\text{display}}\ (2.2) \approx \te
 #### 5.1 Contrast stretching (piecewise-linear)
 
 A family of transformations built from **piecewise-linear functions** controlled by two points:
-$$\text{Control points: } (r_1, s_1) \text{ and } (r_2, s_2)$$
+```math
+\text{Control points: } (r_1, s_1) \text{ and } (r_2, s_2)
+```
 The transform T(r) is a piecewise-linear function connecting:
 - $(0, 0) \to (r_1, s_1)$: low-input slope
 - $(r_1, s_1) \to (r_2, s_2)$: mid-range slope (this segment is steep to stretch the middle range)
@@ -136,7 +156,9 @@ The shape resembles an S-curve (sigmoid). By setting $r_1 < r_2$ and $s_1 < s_2$
 #### 5.2 Thresholding
 
 An **extreme case** of contrast stretching where the transform collapses to a binary step function:
-$$s = \begin{cases} 0 & \text{if } r \leq t \\\\ 1 & \text{if } r > t \end{cases}$$
+```math
+s = \begin{cases} 0 & \text{if } r \leq t \\ 1 & \text{if } r > t \end{cases}
+```
 - Produces a binary (black-and-white) image.
 - t is the threshold; if t is constant across the whole image it is **global thresholding**.
 - If t depends on the spatial coordinates (x,y) it is **adaptive thresholding** (local threshold adjusted region by region).
@@ -149,13 +171,17 @@ $$s = \begin{cases} 0 & \text{if } r \leq t \\\\ 1 & \text{if } r > t \end{cases
 #### 6.1 Definition
 
 The image histogram is a discrete function:
-$$h(r_k) = n_k$$
+```math
+h(r_k) = n_k
+```
 where:
 - $r_k$ = the k-th intensity level, $k = 0, 1, \ldots, L-1$
 - $n_k$ = number of pixels in the image with intensity $r_k$
 
 The histogram can be **normalized** by dividing by the total number of pixels MN:
-$$p_r(r_k) = \frac{n_k}{MN}$$
+```math
+p_r(r_k) = \frac{n_k}{MN}
+```
 This gives the **probability** that a randomly chosen pixel has intensity $r_k$. It is an empirical estimate of the PDF of the image's intensity distribution.
 
 **The image histogram is the empirical distribution of image intensities** — it discards all spatial information and treats I(x,y) as a random intensity emitter.
@@ -184,17 +210,27 @@ Stretch the histogram to fill the dynamic range [0, L-1] **and** make it as unif
 #### 7.2 The four-step algorithm (discrete)
 
 **Step 1:** Compute histogram of input intensities.
-$$n_k = \text{number of pixels with intensity } r_k$$
+```math
+n_k = \text{number of pixels with intensity } r_k
+```
 **Step 2:** Convert to probabilities (normalize).
-$$p_r(r_k) = \frac{n_k}{M \cdot N}$$
+```math
+p_r(r_k) = \frac{n_k}{M \cdot N}
+```
 $M \cdot N$ = total number of pixels. $p_r(r_k)$ is the probability that a randomly chosen pixel has intensity $r_k$.
 
 **Step 3:** Compute the Cumulative Distribution Function (CDF).
-$$T(r_k) = \sum_{j=0}^{k} p_r(r_j) \quad \text{[fraction of pixels with intensity} \leq r_k\text{]}$$
+```math
+T(r_k) = \sum_{j=0}^{k} p_r(r_j) \quad \text{[fraction of pixels with intensity} \leq r_k\text{]}
+```
 **Step 4:** Compute new intensity values.
-$$s_k = (L - 1) \cdot T(r_k)$$
+```math
+s_k = (L - 1) \cdot T(r_k)
+```
 Which expands to:
-$$s_k = (L - 1) \cdot \sum_{j=0}^{k} \frac{n_j}{MN} = \frac{L-1}{MN} \cdot \sum_{j=0}^{k} h(r_j)$$
+```math
+s_k = (L - 1) \cdot \sum_{j=0}^{k} \frac{n_j}{MN} = \frac{L-1}{MN} \cdot \sum_{j=0}^{k} h(r_j)
+```
 **Application:** Every pixel whose input intensity is $r_k$ is replaced with $s_k$. Round to the nearest integer.
 
 #### 7.3 Why does this work? (Mathematical justification)
@@ -202,7 +238,9 @@ $$s_k = (L - 1) \cdot \sum_{j=0}^{k} \frac{n_j}{MN} = \frac{L-1}{MN} \cdot \sum_
 Treat pixel intensities as continuous random variables r (input) and s (output). The image histogram of r approximates the PDF $p_r(r)$.
 
 From probability theory, if $s = T(r)$:
-$$p_s(s) = p_r(r) \cdot \left|\frac{dr}{ds}\right|$$
+```math
+p_s(s) = p_r(r) \cdot \left|\frac{dr}{ds}\right|
+```
 We want **$p_s(s) = \text{constant}$** (uniform output). Setting $p_s(s) = 1$ (normalized, s in [0,1]):
 ```math
 \frac{ds}{dr} = p_r(r) \\
@@ -212,7 +250,9 @@ s = \int_0^r p_r(w)\, dw
 This is precisely the **CDF of r**. Therefore $s = \text{CDF}(r)$ is the unique transformation that maps any input distribution to a uniform output distribution.
 
 In the continuous case:
-$$T(r) = (L-1) \cdot \int_0^r p_r(w)\, dw$$
+```math
+T(r) = (L-1) \cdot \int_0^r p_r(w)\, dw
+```
 This yields $p_s(s) = \frac{1}{L-1}$, a uniform distribution over [0, L-1].
 
 **Requirements on T:** T must be continuous, differentiable, and **strictly monotonic** (so the inverse exists and intensities are not re-ordered).
@@ -256,8 +296,9 @@ The histogram provides clues about the optimal threshold level.
 #### 8.2 Otsu thresholding
 
 **Goal:** find the threshold T that **minimizes the weighted sum of within-class variances** of the two classes:
-$$\arg\min_{T}\ \left(P_1 \cdot \sigma_{C_1}^2 + P_2 \cdot \sigma_{C_2}^2\right)$$
-
+```math
+\arg\min_{T}\ \left(P_1 \cdot \sigma_{C_1}^2 + P_2 \cdot \sigma_{C_2}^2\right)
+```
 Definitions:
 - $C_1$ = pixels with intensity $\leq T$ (dark class)
 - $C_2$ = pixels with intensity $> T$ (bright class)

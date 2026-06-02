@@ -228,7 +228,9 @@ To eliminate the **negative values** in the CIE RGB color matching functions, th
 These primaries are **mathematical constructs** — they do not correspond to real physical light sources. You cannot build a lamp that emits "pure X light."
 
 **RGB → XYZ conversion matrix**:
-$$\begin{bmatrix} X \\\\ Y \\\\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\\\ 0.17697 & 0.81240 & 0.01063 \\\\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\\\ G \\\\ B \end{bmatrix}$$
+```math
+\begin{bmatrix} X \\ Y \\ Z \end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix} 0.49 & 0.31 & 0.20 \\ 0.17697 & 0.81240 & 0.01063 \\ 0.00 & 0.01 & 0.99 \end{bmatrix} \begin{bmatrix} R \\ G \\ B \end{bmatrix}
+```
 Or compactly: $[X, Y, Z]^T = M \cdot [R, G, B]^T$
 
 Key property: **Y corresponds to luminance**.
@@ -251,7 +253,9 @@ Limitations:
 #### 7.3 Chromaticity coordinates
 
 Dividing XYZ values by their sum removes the luminance component:
-$$x = \frac{X}{X+Y+Z}, \quad y = \frac{Y}{X+Y+Z}, \quad z = \frac{Z}{X+Y+Z}$$
+```math
+x = \frac{X}{X+Y+Z}, \quad y = \frac{Y}{X+Y+Z}, \quad z = \frac{Z}{X+Y+Z}
+```
 Note: $x + y + z = 1$, so $z = 1 - x - y$. Only **two coordinates $(x, y)$ are needed** to fully describe chromaticity. This gives the **CIE 1931 chromaticity diagram**.
 
 ---
@@ -338,9 +342,13 @@ In **OpenCV** (slightly different encoding):
 ### 10. RGB → HSV Conversion (Full Algorithm)
 
 **Step 1**: Normalize RGB to $[0, 1]$:
-$$r = \frac{R}{255}, \quad g = \frac{G}{255}, \quad b = \frac{B}{255}$$
+```math
+r = \frac{R}{255}, \quad g = \frac{G}{255}, \quad b = \frac{B}{255}
+```
 **Step 2**: Compute Value:
-$$V = \max(r, g, b)$$
+```math
+V = \max(r, g, b)
+```
 **Step 3**: Compute Saturation:
 - If $V = 0$ (color is black): $S = 0$.
 - Otherwise: $S = \frac{V - \min(r, g, b)}{V}$
@@ -349,7 +357,9 @@ $$V = \max(r, g, b)$$
 - Let $\Delta = V - \min(r, g, b)$
 - If $\Delta = 0$: $H = 0$ (achromatic).
 - Otherwise:
-$$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\\\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\\\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}$$
+```math
+H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \text{ (dominant channel is red)} \\ 120° + 60° \times \frac{b - r}{\Delta} & \text{if } V = g \text{ (dominant channel is green)} \\ 240° + 60° \times \frac{r - g}{\Delta} & \text{if } V = b \text{ (dominant channel is blue)} \end{cases}
+```
 - If $H$ is negative, add 360° to bring into $[0°, 360°]$.
 
 **Intuition**:
@@ -395,8 +405,9 @@ m = V - C
 | $300° \leq H < 360°$ | $(C, 0, X)$ |
 
 **Step 4 — Adjust to $[0, 255]$**:
-$$R = (R' + m) \times 255, \quad G = (G' + m) \times 255, \quad B = (B' + m) \times 255$$
-
+```math
+R = (R' + m) \times 255, \quad G = (G' + m) \times 255, \quad B = (B' + m) \times 255
+```
 ---
 
 ### 12. HSI and HSL Color Models

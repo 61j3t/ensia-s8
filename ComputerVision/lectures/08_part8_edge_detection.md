@@ -37,13 +37,21 @@ In the presence of noise, smoothing before differentiation is essential.
 
 For a continuous 2D image $f(x, y)$, the **gradient** is:
 
-$$\nabla f = \left[\frac{\partial f}{\partial x},\ \frac{\partial f}{\partial y}\right]$$
+```math
+\nabla f = \left[\frac{\partial f}{\partial x},\ \frac{\partial f}{\partial y}\right]
+```
 The **gradient magnitude** (edge strength):
-$$\|\nabla f\| = \sqrt{\left(\frac{\partial f}{\partial x}\right)^2 + \left(\frac{\partial f}{\partial y}\right)^2}$$
+```math
+\|\nabla f\| = \sqrt{\left(\frac{\partial f}{\partial x}\right)^2 + \left(\frac{\partial f}{\partial y}\right)^2}
+```
 Approximation for speed:
-$$\|\nabla f\| \approx \left|\frac{\partial f}{\partial x}\right| + \left|\frac{\partial f}{\partial y}\right|$$
+```math
+\|\nabla f\| \approx \left|\frac{\partial f}{\partial x}\right| + \left|\frac{\partial f}{\partial y}\right|
+```
 The **gradient direction** (angle of maximum intensity change, perpendicular to the edge):
-$$\theta = \arctan\!\left(\frac{\partial f / \partial y}{\partial f / \partial x}\right)$$
+```math
+\theta = \arctan\!\left(\frac{\partial f / \partial y}{\partial f / \partial x}\right)
+```
 For discrete images, derivatives are approximated by finite differences.
 
 ---
@@ -53,17 +61,23 @@ For discrete images, derivatives are approximated by finite differences.
 #### 3.1 Roberts operator (2x2, diagonal differences)
 
 Detects diagonal edges. Very sensitive to noise because the kernel is tiny.
-$$G_x = \begin{bmatrix} 1 & 0 \\\\ 0 & -1 \end{bmatrix} \qquad G_y = \begin{bmatrix} 0 & 1 \\\\ -1 & 0 \end{bmatrix}$$
+```math
+G_x = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} \qquad G_y = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}
+```
 Apply each kernel by convolution; compute magnitude.
 
 #### 3.2 Prewitt operator (3x3)
 
 Averages over 3 rows/columns before differencing — slightly more noise-robust than Roberts.
-$$G_x = \begin{bmatrix} -1 & 0 & 1 \\\\ -1 & 0 & 1 \\\\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -1 & -1 \\\\ 0 & 0 & 0 \\\\ 1 & 1 & 1 \end{bmatrix}$$
+```math
+G_x = \begin{bmatrix} -1 & 0 & 1 \\ -1 & 0 & 1 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -1 & -1 \\ 0 & 0 & 0 \\ 1 & 1 & 1 \end{bmatrix}
+```
 #### 3.3 Sobel operator (3x3) — most commonly used
 
 Weights the central row/column by 2 for better noise suppression.
-$$G_x = \begin{bmatrix} -1 & 0 & 1 \\\\ -2 & 0 & 2 \\\\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -2 & -1 \\\\ 0 & 0 & 0 \\\\ 1 & 2 & 1 \end{bmatrix}$$
+```math
+G_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix} \qquad G_y = \begin{bmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{bmatrix}
+```
 Gradient magnitude: $M(x,y) = \sqrt{G_x^2 + G_y^2}$
 
 Gradient direction: $\theta(x,y) = \arctan(G_y / G_x)$
@@ -80,9 +94,13 @@ Gradient direction: $\theta(x,y) = \arctan(G_y / G_x)$
 ### 4. Laplacian — second-derivative approach
 
 The **Laplacian** is the sum of second partial derivatives:
-$$\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}$$
+```math
+\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
+```
 Discrete 3x3 approximation:
-$$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
+```math
+\begin{bmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{bmatrix}
+```
 (or with diagonals: replace $-4$ with $-8$ and add $1$s at corners)
 
 **Key property:** Edges correspond to **zero-crossings** of the Laplacian (where the second derivative changes sign), not to its maxima. This gives sub-pixel edge localization.
@@ -96,11 +114,17 @@ $$\begin{bmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \end{bmatrix}$$
 ### 5. Laplacian-of-Gaussian (LoG) — Marr-Hildreth detector
 
 Convolving the image with a Gaussian $g_\sigma$ and then taking the Laplacian:
-$$\text{LoG}(x,y) = \nabla^2 [g_\sigma(x,y) \ast I(x,y)]$$
+```math
+\text{LoG}(x,y) = \nabla^2 [g_\sigma(x,y) \ast I(x,y)]
+```
 Because convolution is linear and shift-invariant, this equals:
-$$[\nabla^2 g_\sigma(x,y)] \ast I(x,y)$$
+```math
+[\nabla^2 g_\sigma(x,y)] \ast I(x,y)
+```
 So you can precompute the LoG kernel once and apply it to the image directly. The LoG kernel in 2D is:
-$$\text{LoG}(x,y) = -\frac{1}{\pi \sigma^4} \left[1 - \frac{x^2+y^2}{2\sigma^2}\right] \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
+```math
+\text{LoG}(x,y) = -\frac{1}{\pi \sigma^4} \left[1 - \frac{x^2+y^2}{2\sigma^2}\right] \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)
+```
 This is the famous **"Mexican hat"** function (positive central peak, negative surrounding ring).
 
 **Algorithm (Marr-Hildreth):**
@@ -150,9 +174,13 @@ This approach is equivalent to Canny's non-maximum suppression step (see below).
 **Step 1: Noise reduction (Gaussian smoothing)**
 
 Convolve the image $I$ with a 2D Gaussian filter with standard deviation $\sigma$:
-$$I_{\text{smooth}} = G_\sigma \ast I$$
+```math
+I_{\text{smooth}} = G_\sigma \ast I
+```
 where
-$$G_\sigma(x,y) = \frac{1}{2\pi\sigma^2} \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)$$
+```math
+G_\sigma(x,y) = \frac{1}{2\pi\sigma^2} \exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)
+```
 Larger $\sigma$ → more smoothing → fewer fine edges detected, more robust to noise.
 Smaller $\sigma$ → less smoothing → more detail, more noise sensitivity.
 
@@ -239,7 +267,9 @@ Requires a **ground-truth edge map** (manually annotated by humans, multiple ann
 | **Pratt's Figure of Merit (FOM)** | See formula below |
 
 **Pratt's Figure of Merit:**
-$$\text{FOM} = \frac{1}{\max(N_d, N_g)} \sum_{i=1}^{N_d} \frac{1}{1 + \alpha\, d_i^2}$$
+```math
+\text{FOM} = \frac{1}{\max(N_d, N_g)} \sum_{i=1}^{N_d} \frac{1}{1 + \alpha\, d_i^2}
+```
 Where:
 - $N_d$ = number of detected edge pixels
 - $N_g$ = number of ground-truth edge pixels
@@ -282,7 +312,9 @@ Applications: image segmentation, industrial inspection, autonomous driving (lan
 #### 8.2 Fitting lines to edges — least-squares (vertical distance)
 
 Given edge points $(x_i, y_i)$, fit the line $y = mx + c$ by minimizing the average squared **vertical** distance:
-$$E = \frac{1}{N} \sum_i (y_i - m x_i - c)^2$$
+```math
+E = \frac{1}{N} \sum_i (y_i - m x_i - c)^2
+```
 Setting $\partial E/\partial m = 0$ and $\partial E/\partial c = 0$ (least-squares):
 ```math
 \frac{\partial E}{\partial m} = \frac{-2}{N} \sum_i x_i(y_i - m x_i - c) = 0 \\
@@ -300,15 +332,21 @@ c = \bar{y} - m\bar{x}
 #### 8.3 Fitting lines — perpendicular distance (PCA approach)
 
 Use the **polar (normal) form** of a line:
-$$x\cos\theta + y\sin\theta = \rho$$
+```math
+x\cos\theta + y\sin\theta = \rho
+```
 Where:
 - $\theta$ = angle between $x$-axis and the line's normal vector
 - $\rho$ = perpendicular distance from the origin to the line
 
 Signed distance from point $(x_i, y_i)$ to the line:
-$$d_i = x_i\cos\theta + y_i\sin\theta - \rho$$
+```math
+d_i = x_i\cos\theta + y_i\sin\theta - \rho
+```
 Minimize the sum of squared perpendicular distances:
-$$E(\theta, \rho) = \sum_{i=1}^{n} (x_i\cos\theta + y_i\sin\theta - \rho)^2$$
+```math
+E(\theta, \rho) = \sum_{i=1}^{n} (x_i\cos\theta + y_i\sin\theta - \rho)^2
+```
 This works for lines of any orientation including vertical.
 
 **Solution via 2D PCA:**
@@ -323,20 +361,28 @@ Equivalently: $y = \left(-\frac{\cos\theta}{\sin\theta}\right)x + \frac{\rho}{\s
 #### 8.4 Fitting curves (polynomials) to edges
 
 Given edge points $(x_i, y_i)$, fit a polynomial:
-$$y = f(x) = ax^3 + bx^2 + cx + d$$
+```math
+y = f(x) = ax^3 + bx^2 + cx + d
+```
 Minimize:
-$$E = \frac{1}{N} \sum_i (y_i - ax_i^3 - bx_i^2 - cx_i - d)^2$$
+```math
+E = \frac{1}{N} \sum_i (y_i - ax_i^3 - bx_i^2 - cx_i - d)^2
+```
 Set $\partial E/\partial a = \partial E/\partial b = \partial E/\partial c = \partial E/\partial d = 0$.
 
 With $n$ points and 4 unknowns $(a, b, c, d)$, for $n \gg 4$ this is an **over-determined linear system**:
-$$X \mathbf{a} = \mathbf{y}$$
+```math
+X \mathbf{a} = \mathbf{y}
+```
 Where $X$ is $n \times 4$ (the Vandermonde-like matrix), $\mathbf{a} = [a, b, c, d]^T$ is unknown, $\mathbf{y} = [y_0, \ldots, y_n]^T$.
 
 Since $X$ is not square, it cannot be directly inverted. Use the **least-squares (pseudo-inverse) solution**:
-$$X^T X\, \mathbf{a} = X^T \mathbf{y}$$
-
-$$\mathbf{a} = (X^T X)^{-1} X^T \mathbf{y}$$
-
+```math
+X^T X\, \mathbf{a} = X^T \mathbf{y}
+```
+```math
+\mathbf{a} = (X^T X)^{-1} X^T \mathbf{y}
+```
 The matrix $X^+ = (X^T X)^{-1} X^T$ is the **Moore-Penrose pseudo-inverse** of $X$.
 
 #### 8.5 The boundary detection problem and the Hough transform
