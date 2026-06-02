@@ -71,8 +71,10 @@ $$f(x) = \int_{-\infty}^{+\infty} F(u)\, e^{+i2\pi u x}\, du$$
 - Each F(u) encodes the amplitude and phase of the sinusoid of frequency u.
 
 **Extracting amplitude and phase:**
-$$A(u) = \sqrt{\text{Re}\{F(u)\}^2 + \text{Im}\{F(u)\}^2}$$
-$$\phi(u) = \text{atan2}\!\left(\text{Im}\{F(u)\},\, \text{Re}\{F(u)\}\right)$$
+```math
+A(u) = \sqrt{\text{Re}\{F(u)\}^2 + \text{Im}\{F(u)\}^2} \\
+\phi(u) = \text{atan2}\!\left(\text{Im}\{F(u)\},\, \text{Re}\{F(u)\}\right)
+```
 
 Note: atan2 (not atan) is used because it preserves the correct quadrant. atan(y/x) gives the same result for (1,1) and (-1,-1), but atan2(1,1) = 45 deg and atan2(-1,-1) = 225 deg, which is the correct distinction.
 
@@ -95,10 +97,12 @@ The Gaussian self-similarity under FT is a crucial property: it means Gaussian f
 $$g(x) = f(x) \ast h(x) = \int_{-\infty}^{+\infty} f(\tau)\, h(x - \tau)\, d\tau$$
 **Convolution theorem (derivation sketch):**
 Computing the FT of g(x) and expanding:
-$$G(u) = \int g(x)\, e^{-i2\pi ux}\, dx$$
-$$= \int\!\int f(\tau)\, h(x-\tau)\, e^{-i2\pi ux}\, d\tau\, dx$$
-$$= \left[\int f(\tau)\, e^{-i2\pi u\tau}\, d\tau\right] \times \left[\int h(x-\tau)\, e^{-i2\pi u(x-\tau)}\, dx\right]$$
-$$= F(u) \times H(u)$$
+```math
+G(u) = \int g(x)\, e^{-i2\pi ux}\, dx \\
+= \int\!\int f(\tau)\, h(x-\tau)\, e^{-i2\pi ux}\, d\tau\, dx \\
+= \left[\int f(\tau)\, e^{-i2\pi u\tau}\, d\tau\right] \times \left[\int h(x-\tau)\, e^{-i2\pi u(x-\tau)}\, dx\right] \\
+= F(u) \times H(u)
+```
 
 **Result — the duality table:**
 

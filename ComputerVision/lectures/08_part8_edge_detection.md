@@ -161,9 +161,11 @@ Example (Lena image): $\sigma=1$ gives many fine edges, $\sigma=2$ gives cleaner
 **Step 2: Gradient magnitude and direction**
 
 Apply Sobel (or equivalent) operator to the smoothed image:
-$$G_x = \text{Sobel}_x \ast I_{\text{smooth}}, \qquad G_y = \text{Sobel}_y \ast I_{\text{smooth}}$$
-$$M(x,y) = \sqrt{G_x^2 + G_y^2}$$
-$$\hat{n} = \frac{[G_x,\ G_y]}{M(x,y)} \quad \text{(unit vector in gradient direction)}$$
+```math
+G_x = \text{Sobel}_x \ast I_{\text{smooth}}, \qquad G_y = \text{Sobel}_y \ast I_{\text{smooth}} \\
+M(x,y) = \sqrt{G_x^2 + G_y^2} \\
+\hat{n} = \frac{[G_x,\ G_y]}{M(x,y)} \quad \text{(unit vector in gradient direction)}
+```
 **Step 3: Non-maximum suppression (edge thinning)**
 
 The gradient magnitude image has thick ridges (many pixels wide). This step thins them to single-pixel width by keeping only the local maxima along the gradient direction.
@@ -180,9 +182,11 @@ Visual interpretation: on the gradient image of a curved edge (e.g., a quarter-c
 **Step 4: Hysteresis thresholding (double threshold)**
 
 A single threshold would either miss real edges (too high) or include noise (too low). Canny uses two thresholds $T_0 < T_1$:
-$$\|\nabla I(x,y)\| < T_0 \quad \Rightarrow \quad \text{Definitely NOT an edge (suppress)}$$
-$$\|\nabla I(x,y)\| \geq T_1 \quad \Rightarrow \quad \text{Definitely AN EDGE (keep)}$$
-$$T_0 \leq \|\nabla I(x,y)\| < T_1 \quad \Rightarrow \quad \text{Edge IF a neighbouring pixel is definitely an edge}$$
+```math
+\|\nabla I(x,y)\| < T_0 \quad \Rightarrow \quad \text{Definitely NOT an edge (suppress)} \\
+\|\nabla I(x,y)\| \geq T_1 \quad \Rightarrow \quad \text{Definitely AN EDGE (keep)} \\
+T_0 \leq \|\nabla I(x,y)\| < T_1 \quad \Rightarrow \quad \text{Edge IF a neighbouring pixel is definitely an edge}
+```
 The "weak" pixels in the middle band are kept only if they are connected (8-connectivity) to a "strong" pixel. This hysteresis mechanism links edge chains together and rejects isolated noise spikes that happen to fall between $T_0$ and $T_1$.
 
 **Summary table:**
@@ -280,13 +284,17 @@ Applications: image segmentation, industrial inspection, autonomous driving (lan
 Given edge points $(x_i, y_i)$, fit the line $y = mx + c$ by minimizing the average squared **vertical** distance:
 $$E = \frac{1}{N} \sum_i (y_i - m x_i - c)^2$$
 Setting $\partial E/\partial m = 0$ and $\partial E/\partial c = 0$ (least-squares):
-$$\frac{\partial E}{\partial m} = \frac{-2}{N} \sum_i x_i(y_i - m x_i - c) = 0$$
-$$\frac{\partial E}{\partial c} = \frac{-2}{N} \sum_i (y_i - m x_i - c) = 0$$
+```math
+\frac{\partial E}{\partial m} = \frac{-2}{N} \sum_i x_i(y_i - m x_i - c) = 0 \\
+\frac{\partial E}{\partial c} = \frac{-2}{N} \sum_i (y_i - m x_i - c) = 0
+```
 
 Closed-form solution:
-$$\bar{x} = \frac{1}{N}\sum_i x_i, \qquad \bar{y} = \frac{1}{N}\sum_i y_i$$
-$$m = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}$$
-$$c = \bar{y} - m\bar{x}$$
+```math
+\bar{x} = \frac{1}{N}\sum_i x_i, \qquad \bar{y} = \frac{1}{N}\sum_i y_i \\
+m = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2} \\
+c = \bar{y} - m\bar{x}
+```
 **Problem with this approach:** Fails for **vertical lines** ($m \to \infty$, denominator $\to 0$).
 
 #### 8.3 Fitting lines — perpendicular distance (PCA approach)

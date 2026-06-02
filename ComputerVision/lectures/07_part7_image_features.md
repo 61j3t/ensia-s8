@@ -121,8 +121,10 @@ The gradient vector points in the direction of steepest intensity increase; the 
 #### 3.3 Discrete approximation (convolution kernels)
 
 For a discrete image with pixel spacing $\varepsilon$, partial derivatives are approximated by finite differences over a 2×2 neighbourhood:
-$$\frac{\partial I}{\partial x} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i,j+1}) + (I_{i+1,j} - I_{i,j})\right]$$
-$$\frac{\partial I}{\partial y} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i+1,j}) + (I_{i,j+1} - I_{i,j})\right]$$
+```math
+\frac{\partial I}{\partial x} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i,j+1}) + (I_{i+1,j} - I_{i,j})\right] \\
+\frac{\partial I}{\partial y} \approx \frac{1}{2\varepsilon}\left[(I_{i+1,j+1} - I_{i+1,j}) + (I_{i,j+1} - I_{i,j})\right]
+```
 
 Implemented as convolution with 2×2 kernels (up to $1/2\varepsilon$ scaling):
 
@@ -190,8 +192,10 @@ It measures how much a pixel's intensity differs from its neighbours in **all di
 **Important limitation:** The Laplacian does **not** provide the direction/orientation of edges. It gives location only.
 
 #### 4.3 Discrete Laplacian
-$$\frac{\partial^2 I}{\partial x^2} \approx \frac{1}{\varepsilon^2}(I_{i-1,j} - 2I_{i,j} + I_{i+1,j})$$
-$$\frac{\partial^2 I}{\partial y^2} \approx \frac{1}{\varepsilon^2}(I_{i,j-1} - 2I_{i,j} + I_{i,j+1})$$
+```math
+\frac{\partial^2 I}{\partial x^2} \approx \frac{1}{\varepsilon^2}(I_{i-1,j} - 2I_{i,j} + I_{i+1,j}) \\
+\frac{\partial^2 I}{\partial y^2} \approx \frac{1}{\varepsilon^2}(I_{i,j-1} - 2I_{i,j} + I_{i,j+1})
+```
 
 Three common discrete Laplacian convolution kernels:
 

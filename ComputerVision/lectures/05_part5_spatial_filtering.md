@@ -26,9 +26,11 @@ $$g(x, y) = \sum_{s=-a}^{a} \sum_{t=-b}^{b} w(s, t) \cdot f(x + s, y + t)$$
 - The output pixel sits at the center of the neighborhood.
 
 **Expanded example for a 3×3 kernel** (indices s,t run from -1 to +1):
-$$g(x, y) = w(-1,-1)\cdot f(x-1, y-1) + w(-1,0)\cdot f(x-1, y) + w(-1,1)\cdot f(x-1, y+1)$$
-$$+ w(0,-1)\cdot f(x, y-1) + w(0,0)\cdot f(x, y) + w(0,1)\cdot f(x, y+1)$$
-$$+ w(1,-1)\cdot f(x+1, y-1) + w(1,0)\cdot f(x+1, y) + w(1,1)\cdot f(x+1, y+1)$$
+```math
+g(x, y) = w(-1,-1)\cdot f(x-1, y-1) + w(-1,0)\cdot f(x-1, y) + w(-1,1)\cdot f(x-1, y+1) \\
++ w(0,-1)\cdot f(x, y-1) + w(0,0)\cdot f(x, y) + w(0,1)\cdot f(x, y+1) \\
++ w(1,-1)\cdot f(x+1, y-1) + w(1,0)\cdot f(x+1, y) + w(1,1)\cdot f(x+1, y+1)
+```
 ---
 
 ### 2. Properties of linear filters
@@ -205,9 +207,11 @@ A non-linear, **edge-preserving** smoothing filter. Unlike Gaussian smoothing (w
 **Formula:**
 $$I'(x) = \frac{1}{W_p} \sum_{x_i \in N(x)} I(x_i) \cdot f_s(\|x_i - x\|) \cdot f_r(|I(x_i) - I(x)|)$$
 where:
-$$f_s(\|x_i - x\|) = \exp\!\left(-\frac{\|x_i - x\|^2}{2\sigma_s^2}\right) \quad \text{[spatial Gaussian]}$$
-$$f_r(|I(x_i) - I(x)|) = \exp\!\left(-\frac{|I(x_i) - I(x)|^2}{2\sigma_r^2}\right) \quad \text{[range/intensity Gaussian]}$$
-$$W_p = \sum_{x_i} f_s(\cdots) \cdot f_r(\cdots) \quad \text{[normalization]}$$
+```math
+f_s(\|x_i - x\|) = \exp\!\left(-\frac{\|x_i - x\|^2}{2\sigma_s^2}\right) \quad \text{[spatial Gaussian]} \\
+f_r(|I(x_i) - I(x)|) = \exp\!\left(-\frac{|I(x_i) - I(x)|^2}{2\sigma_r^2}\right) \quad \text{[range/intensity Gaussian]} \\
+W_p = \sum_{x_i} f_s(\cdots) \cdot f_r(\cdots) \quad \text{[normalization]}
+```
 | Parameter | Effect |
 |---|---|
 | $\sigma_s$ | Spatial spread — how large the spatial neighborhood is |

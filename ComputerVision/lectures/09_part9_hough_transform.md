@@ -98,8 +98,10 @@ where:
 - $\theta$ = angle of the perpendicular from the x-axis, in $[0, \pi]$.
 
 Both parameters are **bounded and finite**:
-$$0 \leq \theta \leq \pi$$
-$$|\rho| \leq \sqrt{w^2 + h^2} \quad \text{(image diagonal)}$$
+```math
+0 \leq \theta \leq \pi \\
+|\rho| \leq \sqrt{w^2 + h^2} \quad \text{(image diagonal)}
+```
 
 **Geometric interpretation:** draw a perpendicular from the image origin to the line. The length of that perpendicular is $\rho$; the angle it makes with the x-axis is $\theta$.
 

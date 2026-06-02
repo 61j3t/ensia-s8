@@ -68,9 +68,11 @@ Key insight: **2% of cones are blue-sensitive (S) yet they are the most sensitiv
 
 A color is perceived through **simultaneous stimulation** of all three cone types. The brain receives three numbers — the **tristimulus values** S, M, L:
 
-$$S = \int I(\lambda)\, S(\lambda)\, d\lambda$$
-$$M = \int I(\lambda)\, M(\lambda)\, d\lambda$$
-$$L = \int I(\lambda)\, L(\lambda)\, d\lambda$$
+```math
+S = \int I(\lambda)\, S(\lambda)\, d\lambda \\
+M = \int I(\lambda)\, M(\lambda)\, d\lambda \\
+L = \int I(\lambda)\, L(\lambda)\, d\lambda
+```
 Where:
 - $I(\lambda)$ = incoming light spectrum (spectral power distribution).
 - $S(\lambda), M(\lambda), L(\lambda)$ = cone sensitivity functions.
@@ -358,11 +360,13 @@ $$H = \begin{cases} 0° + 60° \times \frac{g - b}{\Delta} & \text{if } V = r \t
 **RGB → HSV is not creating new information; it reorganizes color information into perceptual dimensions.**
 
 #### Worked example: RGB(255, 0, 0) → HSV
-$$\text{Normalize:} \quad r = 1,\; g = 0,\; b = 0$$
-$$V = \max(1, 0, 0) = 1$$
-$$S = \frac{1 - 0}{1} = 1$$
-$$\Delta = 1 - 0 = 1$$
-$$V = r, \text{ so } H = 0° + 60° \times \frac{0 - 0}{1} = 0°$$
+```math
+\text{Normalize:} \quad r = 1,\; g = 0,\; b = 0 \\
+V = \max(1, 0, 0) = 1 \\
+S = \frac{1 - 0}{1} = 1 \\
+\Delta = 1 - 0 = 1 \\
+V = r, \text{ so } H = 0° + 60° \times \frac{0 - 0}{1} = 0°
+```
 **Result: HSV(0°, 100%, 100%) — pure red**
 
 ---
@@ -374,9 +378,11 @@ A four-step process ($H$ in $[0°, 360°]$, $S$ and $V$ in $[0, 1]$):
 **Step 1 — Input normalization**: ensure $H \in [0°, 360°]$, $S$ and $V \in [0, 1]$.
 
 **Step 2 — Compute base values**:
-$$C = V \times S$$
-$$X = C \times \left(1 - \left|\left(\frac{H}{60°}\right) \bmod 2 - 1\right|\right)$$
-$$m = V - C$$
+```math
+C = V \times S \\
+X = C \times \left(1 - \left|\left(\frac{H}{60°}\right) \bmod 2 - 1\right|\right) \\
+m = V - C
+```
 **Step 3 — Assign pre-shift RGB based on hue sector**:
 
 | Hue range | $(R', G', B')$ |

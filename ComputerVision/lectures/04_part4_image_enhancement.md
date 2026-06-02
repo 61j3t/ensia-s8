@@ -204,8 +204,10 @@ Treat pixel intensities as continuous random variables r (input) and s (output).
 From probability theory, if $s = T(r)$:
 $$p_s(s) = p_r(r) \cdot \left|\frac{dr}{ds}\right|$$
 We want **$p_s(s) = \text{constant}$** (uniform output). Setting $p_s(s) = 1$ (normalized, s in [0,1]):
-$$\frac{ds}{dr} = p_r(r)$$
-$$s = \int_0^r p_r(w)\, dw$$
+```math
+\frac{ds}{dr} = p_r(r) \\
+s = \int_0^r p_r(w)\, dw
+```
 
 This is precisely the **CDF of r**. Therefore $s = \text{CDF}(r)$ is the unique transformation that maps any input distribution to a uniform output distribution.
 
