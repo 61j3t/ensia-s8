@@ -1,6 +1,6 @@
 # Computer Vision Exam Plan — Sun 1 June, 09:00
 
-> **Today is Sat 31 May.** ~8-10 productive hours total. **All 14 parts** in scope.
+> **Today is Sat 31 May.** ~8-10 productive hours total. **All 16 parts** in scope (Parts 15-16 are extra DL content added late — adjusted plan below).
 > Strategy: **strict triage**. Some chapters get deep coverage, some get just the bird's-eye + key formulas. Read each chapter's `0X_*.md` (especially the **Bird's eye view** + **Exam targets** sections — those are the high-value extracts).
 
 ---
@@ -33,10 +33,11 @@ The classic CV exam favorites — *specific algorithms with formulas you can be 
 
 - **Ch 6 Frequency Domain** (40 min) — 2D FT + convolution theorem + filter families
 - **Ch 7 Image Features** (30 min) — gradient/Laplacian/LoG, edge profiles
-- **Ch 4 Image Enhancement** (30 min) — histogram equalization, gamma transform
-- **Ch 13 Motion Analysis** (40 min) — optical flow constraint + Lucas-Kanade
+- **Ch 4 Image Enhancement** (25 min) — histogram equalization, gamma transform
+- **Ch 13 Motion Analysis** (35 min) — optical flow constraint + Lucas-Kanade
+- **Ch 15 DL — Object Localization & Detection** (35 min) — *new* — IoU, NMS, anchors, R-CNN vs YOLO
 
-**Tier 2 total: ~2-2.5 hours.**
+**Tier 2 total: ~2.5-3 hours.**
 
 ### Tier 3 — LOW (15-20 min each)
 Concepts only; just read the bird's-eye sections.
@@ -44,9 +45,10 @@ Concepts only; just read the bird's-eye sections.
 - **Ch 1 Introduction** (15 min) — three CV levels (low/mid/high)
 - **Ch 2 Image Formation** (15 min) — 2D sampling + image as 2D function
 - **Ch 3 Color & Basic Image Processing** (20 min) — RGB / HSV / Lab
-- **Ch 14 Deep Learning for CV** (20 min) — Gestalt + segmentation + modern arch
+- **Ch 14 Deep Learning for CV** (20 min) — Gestalt + segmentation + U-Net
+- **Ch 16 DL Model Optimization** (20 min) — *new* — pruning, quantization, edge vs cloud
 
-**Tier 3 total: ~1-1.5 hours.**
+**Tier 3 total: ~1.5 hours.**
 
 ---
 
@@ -72,9 +74,9 @@ Wake 06:30. Light breakfast.
 
 | Time | Activity |
 |---|---|
-| 06:45-07:15 | **Tier 2 remainder: Ch 13 Motion Analysis (30 min)** — optical flow + LK |
-| 07:15-07:55 | **Tier 3 sweep — bird's-eye sections only**: Ch 1, 2, 3, 14 (10 min each) |
-| 07:55-08:25 | **Cross-chapter cheatsheet pass**: redraw from memory — Canny pipeline, Hough accumulator, Harris response, SIFT pipeline |
+| 06:45-07:15 | **Tier 2: Ch 13 Motion (LK, OFCE) + Ch 15 Detection (IoU/NMS/anchors)** — 15 min each |
+| 07:15-07:50 | **Tier 3 sweep — bird's-eye sections only**: Ch 1, 2, 3, 14, 16 (~7 min each) |
+| 07:50-08:25 | **Cross-chapter cheatsheet pass**: redraw from memory — Canny pipeline, Hough accumulator, Harris response, SIFT pipeline, detection output vector |
 | 08:25-08:50 | Travel + settle |
 | 09:00 | Exam |
 
@@ -337,15 +339,96 @@ This is **1 equation, 2 unknowns** → the **aperture problem** (can only determ
 - **Multi-object tracking (MOT)**: tracking-by-detection + bipartite matching (Hungarian algorithm)
 
 ### Ch 14 — Deep Learning for CV (20 min) — Tier 3
-- **Gestalt theory**: humans see objects, not pixels
-- **Image segmentation goal**: divide image into meaningful regions
-- **Tasks**:
-  - Classification (whole image → label)
-  - Object detection (image → bounding boxes + labels)
-  - Semantic segmentation (image → per-pixel label)
-  - Instance segmentation (semantic + distinguish instances)
-- **CNNs** as feature extractors (replace hand-engineered features like SIFT)
-- **Modern architectures to know by name only**: AlexNet, VGG, ResNet, YOLO, Mask R-CNN, U-Net
+- **Gestalt theory**: humans see objects, not pixels — proximity / similarity / common fate / region / symmetry.
+- **Image segmentation goal**: divide image into meaningful regions.
+- **Segmentation as clustering**: pixels as $[R, G, B, x, y]$ feature vectors.
+  - **K-Means**: needs $K$, sensitive to init.
+  - **Mean Shift**: KDE mode-seeking, bandwidth parameter, no $K$ needed.
+- **CNN building blocks**: convolution + receptive field, pooling (max/avg), upsampling / transposed conv.
+- **U-Net** (encoder-decoder + **skip connections**): contracting path ↓spatial ↑channels → bottleneck → expanding path ↑spatial ↓channels; skips concatenate encoder maps to recover spatial detail. Used heavily in biomedical segmentation.
+- **Training**: pixel-wise softmax + cross-entropy; aggressive augmentation (elastic deformation) for small datasets.
+
+### Ch 15 — DL: Object Localization & Detection (35 min) — Tier 2 ★ *new*
+
+**Task ladder**:
+- **Classification** — whole image → label
+- **Classification + localization** — label + 1 bounding box (single object)
+- **Object detection** — label + bbox for **multiple objects** (often different classes)
+
+**Output vector** for classification + localization:
+```math
+y = [P_c, b_x, b_y, b_w, b_h, c_1, c_2, \ldots, c_C]^\top
+```
+- $P_c$ = probability that an object is present
+- $(b_x, b_y, b_w, b_h)$ = bbox params (normalized)
+- $c_i$ = class probabilities
+- **Conditional multi-task loss**: when $P_c = 0$, mask out the bbox + class terms.
+
+**Sliding window + FC→Conv trick** (the elegant insight):
+- Replace fully-connected layers with equivalent conv layers → a single forward pass over a full image computes all window positions simultaneously (gigantic speed-up).
+- Example: 16×16×3 input → 2×2×4 output grid (4 window positions × 4 classes).
+
+**IoU (Intersection over Union)** — the key metric:
+```math
+\mathrm{IoU} = \frac{|\text{box}_A \cap \text{box}_B|}{|\text{box}_A \cup \text{box}_B|}
+```
+- Evaluation: IoU > 0.5 = good detection
+- Training: assign anchors to ground truth by highest IoU
+
+**Non-Maximum Suppression (NMS)** — algorithm:
+1. Discard low-confidence boxes ($p < 0.6$)
+2. Pick the highest-confidence remaining box; output it
+3. Discard all boxes overlapping it with IoU > 0.5
+4. Repeat (per class)
+
+**Anchor boxes** — solve "one-object-per-cell" limitation:
+- Output tensor: $S \times S \times A \times (5 + C)$ (S×S grid, A anchors per cell)
+- YOLO v2+: k-means anchor design using **distance metric** $d = 1 - \mathrm{IoU}$
+
+**Two-stage vs single-stage detectors**:
+
+| | Two-stage (R-CNN family) | Single-stage (YOLO, SSD) |
+|---|---|---|
+| Pipeline | RPN → ROI pooling → classify | Grid + direct prediction |
+| Speed | Slower | Faster |
+| Accuracy | Higher | Lower |
+| Examples | R-CNN, Fast R-CNN, Faster R-CNN | YOLO v1-v8, SSD, RetinaNet |
+
+### Ch 16 — DL Model Optimization for Embedded (20 min) — Tier 3 *new*
+
+**Cloud vs edge** — trade-off table:
+
+| Axis | Cloud | Edge |
+|---|---|---|
+| Latency | network round-trip | local (low) |
+| Bandwidth | sends raw data | minimal |
+| Privacy | data leaves device | stays local |
+| Energy | offloaded | device-bounded |
+| Connectivity | needs network | works offline |
+| Compute | unlimited | constrained |
+
+**Quantization** — reduce numeric precision:
+- Affine map: $q = \mathrm{round}(r/\text{scale}) + \text{zero\_point}$
+- **PTQ** (post-training quantization) — quick but slight accuracy drop
+- **QAT** (quantization-aware training) — accuracy preserved, slower setup
+- FP32 → INT8 = **4× memory saving** + faster inference on int-optimized hardware
+- Applications: edge AI, mobile, automotive, IoT/MCUs
+
+**Pruning** — remove weights/channels:
+- **Unstructured pruning**: zero individual weights → sparse tensor → needs special engine (SparseDNN/EIE/Tiramisu) to actually speed up. Memory saved on disk, not at inference time.
+- **Structured pruning** (filter/channel pruning): remove whole filters → produces a **smaller dense model** that runs anywhere with no hardware mod. **Real-world speedup**.
+
+**Filter selection criteria** (which channels to drop):
+- **L1-norm / SFP** (Soft Filter Pruning) — pick lowest-L1 filters
+- **FPGM** (Filter Pruning via Geometric Median) — pick filters near the geometric median
+- **HRank** — based on feature-map rank
+- Learning-based: binary masks learned during training
+
+**Knowledge distillation**: train a small "student" network to mimic a large "teacher" — small model gets close to teacher accuracy.
+
+**Low-rank factorization**: replace a weight matrix $W$ with $W \approx U V^\top$ (smaller matrices), reducing parameters.
+
+**Efficient architectures**: MobileNet (depthwise separable convs), SqueezeNet, EfficientNet.
 
 ---
 
@@ -375,6 +458,14 @@ M = \sum_W w \begin{bmatrix} I_x^2 & I_x I_y \\ I_x I_y & I_y^2 \end{bmatrix}
 **Optical flow constraint**: $I_x u + I_y v + I_t = 0$
 
 **Lucas-Kanade**: solve $\mathbf{A}^\top \mathbf{A} \mathbf{v} = \mathbf{A}^\top \mathbf{b}$, $\mathbf{A}^\top \mathbf{A}$ = structure tensor
+
+**Detection output vector**: $y = [P_c, b_x, b_y, b_w, b_h, c_1, \ldots, c_C]^\top$
+
+**IoU**: $\mathrm{IoU} = |A \cap B| / |A \cup B|$ — threshold 0.5 = good detection
+
+**NMS threshold**: discard $p < 0.6$ → keep highest → discard overlaps with IoU > 0.5
+
+**Quantization saving**: FP32 → INT8 = **4× memory**, with affine map $q = \mathrm{round}(r/\text{scale}) + \text{zp}$
 
 ---
 

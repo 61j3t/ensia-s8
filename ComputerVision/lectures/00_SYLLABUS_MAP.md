@@ -10,13 +10,13 @@ The course climbs the classic **vision hierarchy** — pixels → features → u
 - **Foundations (P1-P3)**: what CV is, how images form, color.
 - **Low-level / image processing (P4-P6)**: enhancement, spatial filtering, frequency-domain filtering. *(image → image)*
 - **Mid-level / features (P7-P12)**: features, edges, lines, corners, SIFT detector & descriptor. *(image → features/descriptors)*
-- **High-level / advanced (P13-P14)**: motion analysis & tracking, deep learning & segmentation. *(image → concepts)*
+- **High-level / advanced (P13-P16)**: motion analysis & tracking, deep learning (segmentation, detection), and model optimization for embedded deployment. *(image → concepts)*
 
 | Vision level | Maps | Parts |
 |---|---|---|
 | Low (image processing) | image → image | P4, P5, P6 |
 | Medium (features) | image → features/descriptors | P7-P12 |
-| High (understanding) | image → concepts | P13, P14 |
+| High (understanding) | image → concepts | P13, P14, P15, P16 |
 
 **Recurring threads**: the gradient $\nabla I$ (edges P7/P8, corners P10, SIFT P11); scale & invariance (features P7, SIFT P11/P12); the spatial ↔ frequency duality (P5 convolution, P6 Fourier); voting/robust fitting (Hough + RANSAC P9).
 
@@ -122,6 +122,24 @@ The course climbs the classic **vision hierarchy** — pixels → features → u
 - **U-Net** (encoder-decoder + **skip connections**): contracting path (↓spatial, ↑channels) → bottleneck → expanding path (↑spatial, ↓channels); skips concatenate encoder maps to recover detail.
 - **Training**: pixel-wise softmax + cross-entropy; heavy elastic-deformation augmentation for tiny datasets.
 
+## Part 15 — DL for CV: Object Localization & Detection (27 pp)
+- **Task hierarchy**: image classification (label only) → classification-with-localization (label + 1 bounding box) → object **detection** (label + bbox for *multiple* objects).
+- **Output vector** for classification+localization: $y = [P_c, b_x, b_y, b_w, b_h, c_1, c_2, c_3]^\top$ with **conditional multi-task loss** masking regression + class terms when $P_c = 0$.
+- **Sliding-window + FC→Conv trick**: replace fully-connected layers with conv equivalents → single forward pass computes all window positions simultaneously (e.g., $16\times 16\times 3$ input → $2\times 2\times 4$ output grid).
+- **IoU** (Intersection over Union): evaluation threshold (IoU > 0.5 = good); also used for anchor-to-GT matching in training.
+- **Non-Maximum Suppression (NMS)**: discard $p < 0.6$ → keep highest-confidence box → discard overlapping boxes with IoU > 0.5 → repeat per class.
+- **Anchor boxes**: one-object-per-cell limitation → output tensor $S \times S \times A \times (5+C)$; YOLO v2+ k-means anchor design with distance $d = 1 - \text{IoU}$.
+- **Two-stage (R-CNN family)** vs **single-stage (YOLO/SSD)**: RPN proposes regions → classify (slower, accurate) vs grid + direct prediction (faster, less accurate).
+
+## Part 16 — Optimization of DNN Models for Embedded CV (19 pp)
+- **Cloud vs edge deployment trade-offs**: latency, bandwidth, **privacy**, energy, connectivity. Offline-optimize-then-flash vs online cloud inference with comms link.
+- **Quantization**: affine mapping $q = \mathrm{round}(r / \text{scale}) + \text{zero\_point}$; **PTQ** (post-training, quick) vs **QAT** (quantization-aware training, more accurate). FP32→INT8 = **4× memory saving**. Domains: Edge AI, mobile, automotive, IoT/MCU.
+- **Pruning — unstructured**: zero out individual weights. Needs special inference engine (SparseDNN/EIE) to actually accelerate.
+- **Pruning — structured (filter pruning)**: remove whole filters/channels → smaller dense model → runs anywhere with no hardware modification.
+- **Filter selection criteria**: L1-norm/SFP, geometric median (**FPGM**), **HRank**, learning-based binary masks.
+- **Lecturer's own methods**: **CCFP** (one-shot Correlation Circle Filter Pruning) and **MCFP** (iterative = CCFP + SFP + FPGM); CIFAR-10/ResNet56 + ImageNet/ResNet50 results.
+- **Knowledge distillation** and **low-rank factorization** as complementary compression techniques.
+
 ---
 
 ## Cross-cutting themes (likely exam targets)
@@ -131,6 +149,8 @@ The course climbs the classic **vision hierarchy** — pixels → features → u
 - **Voting & robust fitting**: Hough accumulator vs RANSAC (P9) — when to use which.
 - **Classic vs deep**: hand-crafted features (SIFT, Harris) vs learned (CNN/U-Net, FlowNet) — trade-offs.
 - **Filter design**: smoothing vs sharpening; ideal vs Butterworth/Gaussian (ringing).
+- **DL task ladder**: classification → localization → detection → segmentation (semantic, instance).
+- **Deployment**: accuracy ↔ size ↔ latency ↔ energy ↔ memory — pruning / quantization / distillation as the levers.
 
 ---
 
